@@ -51,6 +51,16 @@
     text-align: right;
 }
 
+.background-video {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.card-head-color {
+    background: linear-gradient(60deg, #1bb1b2, #0c385a) !important;
+}
+
 @media (max-width: 500px) {
     .dataTables_filter {
         float: left;
@@ -79,5 +89,10 @@
     }
     .sort {
         display: none;
+    }
+    .background-video {
+        height: unset;
+        width: unset;
+        max-height: -webkit-fill-available;
     }
 }

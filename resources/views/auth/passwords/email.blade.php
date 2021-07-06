@@ -1,4 +1,4 @@
-@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'email', 'title' => __('Material Dashboard')])
+@extends('layouts.app', ['class' => 'off-canvas-sidebar', 'activePage' => 'email', 'title' => __('INFO SER')])
 
 @section('content')
 <div class="container" style="height: auto;">
@@ -8,8 +8,8 @@
         @csrf
 
         <div class="card card-login card-hidden mb-3">
-          <div class="card-header card-header-primary text-center">
-            <h4 class="card-title"><strong>{{ __('Forgot Password') }}</strong></h4>
+          <div class="card-header card-header-primary text-center card-head-color">
+            <h4 class="card-title"><strong>{{ __('Olvide mi contraseña') }}</strong></h4>
           </div>
           <div class="card-body">
             @if (session('status'))
@@ -31,7 +31,7 @@
                     <i class="material-icons">email</i>
                   </span>
                 </div>
-                <input type="email" name="email" class="form-control" placeholder="{{ __('Email...') }}" value="{{ old('email') }}" required>
+                <input type="email" name="email" class="form-control" placeholder="{{ __('Correo electrónico...') }}" value="{{ old('email') }}" required>
               </div>
               @if ($errors->has('email'))
                 <div id="email-error" class="error text-danger pl-3" for="email" style="display: block;">
@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="card-footer justify-content-center">
-            <button type="submit" class="btn btn-primary btn-link btn-lg">{{ __('Send Password Reset Link') }}</button>
+            <button type="submit" class="btn btn-primary btn-link btn-lg">{{ __('Enviar correo para restablecer') }}</button>
           </div>
         </div>
       </form>
