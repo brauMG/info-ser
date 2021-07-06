@@ -16290,9 +16290,14 @@ thead.thead-inverse th,
 }
 
 body {
-    background: linear-gradient(60deg, #000103, #010614);
+    background-color: #ffffff;
     color: #3C4858;
     font-weight: 300;
+}
+
+.canvas-login {
+    background: unset !important;
+    background: linear-gradient(60deg, #000103, #010614) !important;
 }
 
 legend {
