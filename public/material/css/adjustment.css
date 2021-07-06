@@ -1,0 +1,83 @@
+/*hide the mostrar from data tables*/
+.dataTables_length {
+    float: right;
+}
+
+.dataTables_filter {
+    float: right;
+    margin: 0 50px 0 0;
+}
+
+.plus {
+    display: none;
+}
+
+.sort {
+    vertical-align: middle;
+    font-size: 18px;
+    display: inline;
+    float: right;
+    cursor: pointer;
+}
+
+.thead-color {
+    background-color: #b8c0c7;
+}
+
+.odd {
+    background-color: white; !important;
+}
+
+.even {
+    background-color: #e6e6e6 !important;
+}
+
+.buttons-pdf:hover {
+    background-color: #bf0e0e !important;
+    color: white !important;
+}
+
+.buttons-csv:hover {
+    background-color: green !important;
+    color: white !important;
+}
+
+.btn-adjust {
+    padding: 5px !important;
+    font-size: 12px !important;
+}
+
+.action-row {
+    text-align: right;
+}
+
+@media (max-width: 500px) {
+    .dataTables_filter {
+        float: left;
+        width: 40%;
+        text-align: center;
+        margin: 10px 0 10px 0;
+    }
+    .dataTables_length {
+        float: right;
+        width: 40%;
+        text-align: center;
+        margin: 10px 0 10px 0;
+    }
+    .plus {
+        vertical-align: top;
+        font-size: 21px;
+        color: green;
+        display: inline;
+        cursor: pointer;
+    }
+    .btn-group>.btn:first-child {
+        margin: 5px auto !important;
+    }
+    .btn-group>.btn:not(:first-child), .btn-group>.btn-group:not(:first-child)>.btn {
+        margin: auto !important;
+    }
+    .sort {
+        display: none;
+    }
+}
