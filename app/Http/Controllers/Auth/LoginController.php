@@ -52,7 +52,7 @@ class LoginController extends Controller
         $user->save();
 
         if ($user->id_rol == 1) {
-            return redirect('/compania');
+            return redirect('/companias');
         }
         elseif ($user->id_rol == 2) {
             return redirect('/areas');
