@@ -16290,9 +16290,9 @@ thead.thead-inverse th,
 }
 
 body {
-  background-color: #eee;
-  color: #3C4858;
-  font-weight: 300;
+    background: linear-gradient(60deg, #000103, #010614);
+    color: #3C4858;
+    font-weight: 300;
 }
 
 legend {
