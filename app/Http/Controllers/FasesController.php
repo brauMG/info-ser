@@ -5,123 +5,86 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Fase;
-use App\Compania;
+use App\Models\Fase;
+use App\Models\Companias;
+
 class FasesController extends Controller
 {
     public function __construct(){
         $this->middleware(['auth', 'verified']);
     }
 
-
     public function index(){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $fase=DB::table('Fases')
-            ->leftJoin('Companias', 'Fases.Clave_Compania', '=', 'Companias.Clave')
-            ->select('Fases.Clave','Companias.Descripcion as Compania','Fases.Descripcion','Fases.FechaCreacion','Fases.Activo', 'Fases.Orden')
-            ->where('Fases.Clave_Compania','=',Auth::user()->Clave_Compania)
-            ->orderBy('Orden', 'asc')
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $fase=DB::table('fases')
+            ->leftJoin('companias', 'fases.id_compania', '=', 'companias.id')
+            ->select('fases.id','companias.descripcion as compania','fases.descripcion','fases.fecha_creacion','fases.activo', 'fases.orden')
+            ->where('fases.id_compania','=',Auth::user()->id_compania)
+            ->orderBy('orden', 'asc')
             ->get();
-        return view('Admin.Fases.index',['fase'=>$fase,'compania'=>$compania]);
+        return view('pages.fases.index',['fase'=>$fase,'compania'=>$compania]);
     }
 
     public function edit($id){
-        $userRol = Auth::user()->Clave_Rol;
-        $fase=Fase::where('Clave', $id)->get()->toArray();
-        $faseId = $fase[0]['Clave'];
+        $userRol = Auth::user()->id_rol;
+        $fase=Fase::where('id', $id)->get()->toArray();
+        $faseId = $fase[0]['id'];
         $fase = $fase[0];
-        $company = Compania::all();
-        $faseCompany = $fase['Clave_Compania'];
-        return view('Admin.Fases.edit', compact('fase', 'faseId', 'company', 'faseCompany', 'userRol'));
+        $company = Companias::all();
+        $faseCompany = $fase['id_compania'];
+        return view('pages.fases.edit', compact('fase', 'faseId', 'company', 'faseCompany', 'userRol'));
     }
 
     public function new(){
-        return view('Admin.Fases.new');
+        return view('pages.fases.new');
     }
 
     public function store(Request $request){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
         $fase = $request->validate([
             'descripcion' => ['required', 'string', 'max:150'],
             'orden' => ['required', 'numeric']
         ]);
         Fase::create([
-            'Descripcion' => $fase['descripcion'],
-            'Activo' => 1,
-            'FechaCreacion' => Carbon::today()->toDateString(),
-            'Clave_Compania' => $compania['Clave'],
-            'Orden' => $fase['orden']
+            'descripcion' => $fase['descripcion'],
+            'activo' => 1,
+            'fecha_creacion' => Carbon::today()->toDateString(),
+            'id_compania' => $compania['id'],
+            'orden' => $fase['orden']
         ]);
-        return redirect('/Admin/Fases')->with('mensaje', "Nueva fase agregada correctamente");
+        return redirect('/fases')->with('mensaje', "Nueva fase agregada correctamente");
     }
 
     public function prepare($id){
-        $fase=Fase::where('Clave', $id)->get()->toArray();
+        $fase=Fase::where('id', $id)->get()->toArray();
         $fase = $fase[0];
-        return view('Admin.Fases.delete', compact('fase'));
+        return view('pages.fases.delete', compact('fase'));
     }
 
     public function delete($id){
         $fase = Fase::find($id);
         $fase->delete();
-        return redirect('/Admin/Fases')->with('mensajeAlert', "Fase eliminada correctamente");
+        return redirect('/fases')->with('mensajeAlert', "Fase eliminada correctamente");
     }
 
-    public function update(Request $request, $Clave){
-        $fase = Fase::where('Clave', $Clave)->firstOrFail();
-        $faseNew = $request->input('fase');
-        $ordenNew = $request->input('orden');
+    public function update(Request $request, $id){
+        $this->validate($request, [
+            'fase' => 'required|string|max:150',
+            'company' => 'required',
+            'orden' => 'required|numeric'
+        ]);
 
-        if ($faseNew == $fase->Descripcion) {
-            if ($ordenNew == $fase->Orden) {
-                $data = $request->validate([
-                    'company' => ['required']
-                ]);
-                Fase::where('Clave', $Clave)->update([
-                    'Activo' => 1,
-                    'FechaCreacion' => Carbon::today()->toDateString(),
-                    'Clave_Compania' => $data['company']
-                ]);
-            }
-            else {
-                $data = $request->validate([
-                    'company' => ['required'],
-                    'orden' => ['required', 'numeric']
-                ]);
-                Fase::where('Clave', $Clave)->update([
-                    'Activo' => 1,
-                    'FechaCreacion' => Carbon::today()->toDateString(),
-                    'Clave_Compania' => $data['company'],
-                    'Orden' => $data['orden']
-                ]);
-            }
-        }
-        elseif ($ordenNew == $fase->Orden) {
-            $data = $request->validate([
-                'company' => ['required'],
-                'fase' => ['required', 'string', 'max:150']
-            ]);
-            Fase::where('Clave', $Clave)->update([
-                'Activo' => 1,
-                'FechaCreacion' => Carbon::today()->toDateString(),
-                'Clave_Compania' => $data['company'],
-                'Descripcion' => $data['fase']
-            ]);
-        }
-        else {
-            $data = $request->validate([
-                'fase' => ['required', 'string', 'max:150'],
-                'company' => ['required'],
-                'orden' => ['required', 'numeric']
-            ]);
-            Fase::where('Clave', $Clave)->update([
-                'Descripcion' => $data['fase'],
-                'Orden' => $data['orden'],
-                'Activo' => 1,
-                'FechaCreacion' => Carbon::today()->toDateString(),
-                'Clave_Compania' => $data['company']
-            ]);
-        }
-        return redirect('/Admin/Fases')->with('mensaje', "La fase fue editada correctamente");
+        $requestData = $request->except(['_token', '_method']);
+
+        $fase = Fase::findOrFail($id);
+
+        $fase->update([
+            'descripcion' => $requestData['fase'],
+            'orden' => $requestData['orden'],
+            'fecha_creacion' => Carbon::today()->toDateString(),
+            'activo' => 1,
+            'id_compania' => $requestData['company']
+        ]);
+        return redirect('/fases')->with('mensaje', "La fase fue editada correctamente");
     }
 }

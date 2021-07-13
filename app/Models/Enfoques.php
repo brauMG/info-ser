@@ -10,6 +10,6 @@ class Enfoques extends Model
     protected $fillable = ['id_enfoque','descripcion','fecha_creacion','activo','id_compania'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Enfoques';
+    protected $table = 'enfoques';
     public $timestamps = false;
 }

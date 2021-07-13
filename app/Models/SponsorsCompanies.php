@@ -10,6 +10,6 @@ class SponsorsCompanies extends Model
     public $table  = "patrocinadores_companias";
     public $timestamps = false;
     protected $fillable = [
-        'id','id_compania'
+        'id_patrocinador','id_compania'
     ];
 }

@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Enfoque;
-use App\Fase;
-use App\Indicador;
-use App\Proyecto;
-use App\Status;
-use App\Trabajo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Areas;
-use App\Compania;
 use Excel;
-use App\Rol;
-use App\Puesto;
-use App\User;
 use PDF;
+
+use App\Models\Enfoques;
+use App\Models\Fase;
+use App\Models\Indicador;
+use App\Models\Proyecto;
+use App\Models\Status;
+use App\Models\Trabajo;
+use App\Models\Areas;
+use App\Models\Companias;
+use App\Models\Rol;
+use App\Models\Puesto;
+use App\Models\User;
+
+
 
 class UsuariosController extends Controller
 {
@@ -28,18 +31,18 @@ class UsuariosController extends Controller
     }
 
     public function index(){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        if(Auth::user()->Clave_Rol==1||Auth::user()->Clave_Rol==2){
-            $Usuarios=DB::table('Usuarios')
-                ->leftJoin('Companias', 'Usuarios.Clave_Compania', '=', 'Companias.Clave')
-                ->leftJoin('Areas','Usuarios.Clave_Area','=','Areas.Clave')
-                ->leftJoin('Puestos','Usuarios.Clave_Puesto','=','Puestos.Clave')
-                ->leftJoin('Roles','Usuarios.Clave_Rol','=','Roles.Clave')
-                ->select('Usuarios.Clave','Companias.Descripcion as Compania','Usuarios.Iniciales','Usuarios.Nombres','Usuarios.email','Areas.Descripcion as Area','Puestos.Puesto as Puesto','Roles.Rol AS Rol','Usuarios.Nombres','Usuarios.UltimoLogin as UltimoLogin','Areas.FechaCreacion','Areas.Activo', 'Usuarios.envio_de_correo as Send')
-                ->where('Usuarios.Clave_Compania','=',Auth::user()->Clave_Compania)
-                ->where('Usuarios.Clave', '!=', '1')
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        if(Auth::user()->id_rol==1||Auth::user()->id_rol==2){
+            $Usuarios=DB::table('usuarios')
+                ->leftJoin('companias', 'usuarios.id_compania', '=', 'companias.id')
+                ->leftJoin('areas','usuarios.id_area','=','areas.id')
+                ->leftJoin('puestos','usuarios.id_puesto','=','puestos.id')
+                ->leftJoin('roles','usuarios.id_rol','=','roles.id')
+                ->select('usuarios.id','companias.descripcion as compania','usuarios.iniciales','usuarios.nombres','usuarios.email','areas.descripcion as area','puestos.descripcion as puesto','roles.rol as rol','usuarios.nombres','usuarios.ultima_sesion as ultima_sesion','areas.fecha_creacion','areas.activo', 'usuarios.envio_de_correo as send')
+                ->where('usuarios.id_compania','=',Auth::user()->id_compania)
+                ->where('usuarios.id', '!=', '1')
                 ->get();
-            return view('Admin.Usuarios.index',['usuarios'=>$Usuarios,'compania'=>$compania]);
+            return view('pages.usuarios.index',['usuarios'=>$Usuarios,'compania'=>$compania]);
         }else{
             return redirect('/');
         }
@@ -50,36 +53,36 @@ class UsuariosController extends Controller
     }
 
     public function edit($id){
-        $userRol = Auth::user()->Clave_Rol;
-        $usuario=User::where('Clave', $id)->get()->toArray();
-        $userId = $usuario[0]['Clave'];
+        $userRol = Auth::user()->id_rol;
+        $usuario=User::where('id', $id)->get()->toArray();
+        $userId = $usuario[0]['id'];
         $send = $usuario[0]['envio_de_correo'];
         $usuario = $usuario[0];
-        $usuarioArea = $usuario['Clave_Area'];
-        $usuarioRol = $usuario['Clave_Rol'];
-        $usuarioPuesto = $usuario['Clave_Puesto'];
-        $area=Areas::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
+        $usuarioArea = $usuario['id_area'];
+        $usuarioRol = $usuario['id_rol'];
+        $usuarioPuesto = $usuario['id_puesto'];
+        $area=Areas::where('id_companias',Auth::user()->id_compania)->get();
         $rol=Rol::all();
-        $puesto=Puesto::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->get();
-        return view('Admin.Usuarios.edit', compact('send','userRol','usuario', 'userId', 'area', 'rol', 'puesto', 'compania', 'usuarioArea', 'usuarioRol', 'usuarioPuesto'));
+        $puesto=Puesto::where('id_companias',Auth::user()->id_compania)->get();
+        $compania=Companias::where('id',Auth::user()->id_compania)->get();
+        return view('pages.usuarios.edit', compact('send','userRol','usuario', 'userId', 'area', 'rol', 'puesto', 'compania', 'usuarioArea', 'usuarioRol', 'usuarioPuesto'));
     }
 
     public function new(){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $area=Areas::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $puesto=Puesto::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $rol=Rol::all();
-        return view('Admin.Usuarios.new', compact('compania', 'puesto', 'area', 'rol'));
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $area=Areas::where('id_companias',Auth::user()->id_compania)->get();
+        $puesto=Puesto::where('id_companias',Auth::user()->id_compania)->get();
+        $rol= Rol::all();
+        return view('pages.usuarios.new', compact('compania', 'puesto', 'area', 'rol'));
     }
 
     public function store(Request $request){
         $user = new User;
-        $company=$user->Clave_Compania=Auth::user()->Clave_Compania;
+        $company=$user->id_compania = Auth::user()->id_compania;
 
         $user = $request->validate([
             'nombres' => ['required', 'string', 'max:150'],
-            'email' => ['required', 'email', 'max:50', 'unique:Usuarios'],
+            'email' => ['required', 'email', 'max:50', 'unique:usuarios'],
             'area' => ['required'],
             'puesto' => ['required'],
             'rol' => ['required'],
@@ -92,184 +95,90 @@ class UsuariosController extends Controller
             $iniciales .=$l[0];
         }
         User::create([
-            'Clave_Compania' => $company,
-            'Iniciales' => $iniciales,
-            'Nombres' => $user['nombres'],
+            'id_compania' => $company,
+            'iniciales' => $iniciales,
+            'nombres' => $user['nombres'],
             'email' => $user['email'],
-            'Clave_Area' => $user['area'],
-            'Clave_Puesto' => $user['puesto'],
-            'Clave_Rol' => $user['rol'],
+            'id_area' => $user['area'],
+            'id_puesto' => $user['puesto'],
+            'id_rol' => $user['rol'],
             'password' => Hash::make($user['password']),
-            'UltimoLogin' => Carbon::today()->toDateString(),
-            'Activo' => 1,
-            'FechaCreacion' => Carbon::today()->toDateString(),
+            'ultima_sesion' => Carbon::today()->toDateString(),
+            'activo' => 1,
+            'fecha_creacion' => Carbon::today()->toDateString(),
             'envio_de_correo' => true
 
         ]);
-        return redirect('/Admin/Usuarios')->with('mensaje', "Nuevo usuario agregado correctamente");
+        return redirect('/usuarios')->with('mensaje', "Nuevo usuario agregado correctamente");
     }
 
     public function prepare($id){
-        $user=User::where('Clave', $id)->get()->toArray();
+        $user=User::where('id', $id)->get()->toArray();
         $user = $user[0];
-        return view('Admin.Usuarios.delete', compact('user'));
+        return view('pages.usuarios.delete', compact('user'));
     }
 
     public function delete($id){
         $user = User::find($id);
         $user->delete();
-        return redirect('/Admin/Usuarios')->with('mensajeAlert', "Usuario eliminado correctamente");
+        return redirect('/usuarios')->with('mensajeAlert', "Usuario eliminado correctamente");
     }
-    public function update(Request $request, $Clave){
-        $user = new User;
-        $company=$user->Clave_Compania=Auth::user()->Clave_Compania;
-        $user = User::where('Clave', $Clave)->firstOrFail();
-        $email = $request->input('email');
-        $name = $request->input('nombres');
+    public function update(Request $request, $id){
+        $this->validate($request, [
+            'nombres' => 'required|unique:usuarios,nombres,' . $id,
+            'email' => 'required|email',
+            'area' => 'required',
+            'puesto' => 'required',
+            'rol' => 'required'
+        ]);
 
-        if ($email == $user->email) {
-            if ($name == $user->Nombres) {
-                $user = $request->validate([
-                    'area' => ['required'],
-                    'puesto' => ['required'],
-                    'rol' => ['required']
-                ]);
+        $requestData = $request->except(['_token', '_method']);
 
-                User::where('Clave', $Clave)->update([
-                    'Clave_Area' => $user['area'],
-                    'Clave_Puesto' => $user['puesto'],
-                    'Clave_Rol' => $user['rol'],
-                ]);
-            }
-            else {
-                $user = $request->validate([
-                    'nombres' => ['required', 'max:150', 'string', 'unique:Usuarios'],
-                    'area' => ['required'],
-                    'puesto' => ['required'],
-                    'rol' => ['required']
-                ]);
+        $nombres = explode(" ", $request->input('nombres'));
+        $iniciales = "";
 
-                $nombres = explode(" ", $request->input('nombres'));
-                $iniciales = "";
-
-                foreach ($nombres as $l) {
-                    $iniciales .= $l[0];
-                }
-                User::where('Clave', $Clave)->update([
-                    'Iniciales' => $iniciales,
-                    'Nombres' => $user['nombres'],
-                    'Clave_Area' => $user['area'],
-                    'Clave_Puesto' => $user['puesto'],
-                    'Clave_Rol' => $user['rol'],
-                ]);
-            }
+        foreach ($nombres as $l) {
+            $iniciales .= $l[0];
         }
-        else if ($name = $user->Nombres){
-            $user = $request->validate([
-                'email' => ['required', 'max:150', 'email', 'unique:Usuarios'],
-                'area' => ['required'],
-                'puesto' => ['required'],
-                'rol' => ['required']
-            ]);
+        $requestData['iniciales'] = $iniciales;
 
-            User::where('Clave', $Clave)->update([
-                'email' => $user['email'],
-                'Clave_Area' => $user['area'],
-                'Clave_Puesto' => $user['puesto'],
-                'Clave_Rol' => $user['rol'],
-                'email_verified_at' => null
-            ]);
-        }
-        else {
-            $nombres = explode(" ", $request->input('nombres'));
-            $iniciales = "";
+        $user = User::findOrFail($id);
 
-            foreach ($nombres as $l) {
-                $iniciales .= $l[0];
-            }
-            User::where('Clave', $Clave)->update([
-                'Iniciales' => $iniciales,
-                'Nombres' => $user['nombres'],
-                'email' => $user['email'],
-                'Clave_Area' => $user['area'],
-                'Clave_Puesto' => $user['puesto'],
-                'Clave_Rol' => $user['rol'],
-                'email_verified_at' => null
-            ]);
-        }
+        $user->update([
+            'nombres' => $requestData['nombres'],
+            'email' => $requestData['email'],
+            'id_area' => $requestData['area'],
+            'id_rol' => $requestData['rol'],
+            'id_puesto' => $requestData['puesto'],
+            'iniciales' => $requestData['iniciales'],
+        ]);
 
-        return redirect('/Admin/Usuarios')->with('mensaje', "El usuario fue editado correctamente");
+        return redirect('/usuarios')->with('mensaje', "El usuario fue editado correctamente");
     }
 
     public function editSend($id) {
-        $userSend  =User::where('Clave', $id)->get()->toArray();
+        $userSend  =User::where('id', $id)->get()->toArray();
         $userSend = $userSend[0];
-        $OldUser=User::where('Clave', $id)->get()->toArray();
+        $OldUser=User::where('id', $id)->get()->toArray();
         $OldUser = $OldUser[0]['envio_de_correo'];
-        return view('Admin.Usuarios.editSend', compact('OldUser', 'userSend'));
+        return view('pages.usuarios.editSend', compact('OldUser', 'userSend'));
     }
 
-    public function updateSend(Request $request, $Clave) {
+    public function updateSend(Request $request, $id) {
         $send = $request->validate([
             'send' => ['required']
         ]);
-        User::where('Clave', $Clave)->update([
+        User::where('id', $id)->update([
             'envio_de_correo' => $send['send']
         ]);
-        return redirect('/Admin/Usuarios')->with('mensaje', "El estado del envio de correos fue actualizado correctamente");
+        return redirect('/usuarios')->with('mensaje', "El estado del envio de correos fue actualizado correctamente");
     }
 
     public function changeCompany($id){
-        $user = User::find(Auth::user()->Clave);
-        $user->Clave_Compania=$id;
+        $user = User::find(Auth::user()->id);
+        $user->id_compania = $id;
         $user->save();
         Auth::user()->fresh();
         return back();
-    }
-
-    public function preparePdf(Request $request) {
-        $areas=Areas::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $puestos=Puesto::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $roles=Rol::where('Clave', '!=', 1)->get();
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-
-        return view('Admin.Usuarios.prepare', compact('areas', 'puestos', 'roles', 'compania'));
-    }
-
-    public function exportPdf(Request $request)
-    {
-        $areas = $request->input('areas');
-        $puestos = $request->input('puestos');
-        $roles = $request->input('roles');
-        $datetime = Carbon::now();
-        $datetime->setTimezone('GMT-7');
-        $date = $datetime->toDateString();
-        $time = $datetime->toTimeString();
-
-        $usuarios = DB::table('Usuarios')
-            ->join('Areas', 'Usuarios.Clave_Area', '=', 'Areas.Clave')
-            ->where(function($query) use ($areas, $request) {
-                if ($areas != null) {
-                    $query->whereIn('Usuarios.Clave_Area', $areas);
-                }
-            })
-            ->join('Puestos', 'Usuarios.Clave_Puesto', '=', 'Puestos.Clave')
-            ->where(function($query) use ($puestos, $request) {
-                if ($puestos != null) {
-                    $query->whereIn('Usuarios.Clave_Puesto', $puestos);
-                }
-            })
-            ->join('Roles', 'Usuarios.Clave_Rol', '=', 'Roles.Clave')
-            ->where(function($query) use ($roles, $request) {
-                if ($roles != null) {
-                    $query->whereIn('Usuarios.Clave_Rol', $roles);
-                }
-            })
-            ->select('Usuarios.*', 'Areas.Descripcion as Area', 'Roles.Rol as Rol', 'Puestos.Puesto as Puesto')
-            ->get();
-
-        $pdf = PDF::loadView('pdf.users', compact('usuarios', 'date', 'time'));
-
-        return $pdf->download('usuarios.pdf');
     }
 }

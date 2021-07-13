@@ -1,13 +1,13 @@
 <div class="modal-dialog modal-lg" role="document" aria-labelledby="exampleModalCenterTitle" id="DeleteModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #761b18">
+            <div class="modal-header bg-danger">
                 <h5 class="modal-title upcase"  id="exampleModalLongTitle" style="color: white">Eliminar Indicador</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
-                    <span aria-hidden="true">&times;</span>
+                    <i class="material-icons">close</i>
                 </button>
             </div>
-            <form action="{{route('DeleteIndicator', [$indicador['Clave']])}}" method="POST">
+            <form action="{{route('DeleteIndicator', [$indicador['id']])}}" method="POST">
                 @csrf
                 <div style="background-color: white;color: black;">
                     <center>
@@ -21,8 +21,8 @@
                 </div>
 
                 <div class="modal-footer" style="background-color: white;color: black;">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="material-icons">close</i>Cerrar</button>
+                    <button type="submit" class="btn btn-danger"><i class="material-icons">delete</i>Confirmar</button>
                 </div>
             </form>
         </div>

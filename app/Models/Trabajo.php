@@ -10,6 +10,6 @@ class Trabajo extends Model
     protected $fillable = ['descripcion','fecha_creacion','activo'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Trabajos';
+    protected $table = 'trabajos';
     public $timestamps = false;
 }

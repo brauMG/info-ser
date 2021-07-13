@@ -5,8 +5,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Areas;
-use App\Compania;
+use App\Models\Areas;
+use App\Models\Companias;
 class AreaController extends Controller
 {
     public function __construct(){
@@ -14,61 +14,61 @@ class AreaController extends Controller
     }
 
     public function index(){
-        if( Auth::user()->Clave_Rol==1 ||Auth::user()->Clave_Rol==2 ){
-            $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-            $area=DB::table('Areas')
-            ->leftJoin('Companias', 'Areas.Clave_Compania', '=', 'Companias.Clave')
-            ->where('Companias.Clave','=',Auth::user()->Clave_Compania)
-            ->select('Areas.Clave','Companias.Descripcion as Compania','Areas.Descripcion','Areas.FechaCreacion','Areas.Activo')
+        if( Auth::user()->id_rol == 1 ||Auth::user()->id_rol ==2 ){
+            $compania= Companias::where('id',Auth::user()->id_compania)->first();
+            $area= DB::table('areas')
+            ->leftJoin('companias', 'areas.id_companias', '=', 'companias.id')
+            ->where('companias.id','=',Auth::user()->id_compania)
+            ->select('areas.id','companias.descripcion as compania','areas.descripcion','areas.fecha_creacion','areas.activo')
             ->get();
-            return view('Admin.Areas.index',['area'=>$area,'compania'=>$compania]);
+            return view('pages.areas.index',['areas'=>$area, 'compania'=>$compania]);
         }
         else{
             return redirect('/');
         }
     }
     public function edit($id){
-        $userRol = Auth::user()->Clave_Rol;
-        $area=Areas::where('Clave', $id)->get()->toArray();
-        $company=Compania::where('Clave', Auth::user()->Clave_Compania)->get();
-        $areaId = $area[0]['Clave'];
+        $userRol = Auth::user()->id_rol;
+        $area=Areas::where('id', $id)->get()->toArray();
+        $company=Companias::all();
+        $areaId = $area[0]['id'];
         $area = $area[0];
-        return view('Admin.Areas.edit', compact('area', 'company', 'areaId', 'userRol'));
+        return view('pages.areas.edit', compact('area', 'company', 'areaId', 'userRol'));
     }
 
-    public function update(Request $request, $Clave){
+    public function update(Request $request, $id){
         $area = $request->validate([
-            'descripcion' => ['required', 'string', 'max:500150'],
+            'descripcion' => ['required', 'string', 'max:500'],
             'compania' => ['required']
         ]);
-        Areas::where('Clave', $Clave)->update([
-            'Descripcion' => $area['descripcion'],
-            'Clave_Compania' => $area['compania'],
-            'Activo' => 1,
-            'FechaCreacion' => Carbon::today()->toDateString()
+        Areas::where('id', $id)->update([
+            'descripcion' => $area['descripcion'],
+            'id_companias' => $area['compania'],
+            'activo' => 1,
+            'fecha_creacion' => Carbon::today()->toDateString()
         ]);
-        return redirect('/Admin/Areas')->with('mensaje', "Área editada correctamente");
+        return redirect('/areas')->with('mensaje', "Área editada correctamente");
     }
 
     public function new(){
-        $company = Compania::all();
-        return view('Admin.Areas.new', compact('company'));
+        $company = Companias::all();
+        return view('pages.areas.new', compact('company'));
     }
 
     public function store(Request $request)
     {
-        if (Auth::user()->Clave_Rol == 1) {
+        if (Auth::user()->id_rol == 1) {
             $area = $request->validate([
-                'descripcion' => ['required', 'string', 'max:500150'],
+                'descripcion' => ['required', 'string', 'max:500'],
                 'compania' => ['required']
             ]);
             Areas::create([
-                'Descripcion' => $area['descripcion'],
-                'Clave_Compania' => $area['compania'],
-                'Activo' => 1,
-                'FechaCreacion' => Carbon::today()->toDateString()
+                'descripcion' => $area['descripcion'],
+                'id_companias' => $area['compania'],
+                'activo' => 1,
+                'fecha_creacion' => Carbon::today()->toDateString()
             ]);
-            return redirect('/Admin/Areas')->with('mensaje', "Nueva área agregada correctamente");
+            return redirect('/areas')->with('mensaje', "Nueva área agregada correctamente");
         }
         else {
             $area = $request->validate([
@@ -85,14 +85,14 @@ class AreaController extends Controller
     }
 
     public function prepare($id){
-        $area=Areas::where('Clave', $id)->get()->toArray();
+        $area=Areas::where('id', $id)->get()->toArray();
         $area = $area[0];
-        return view('Admin.Areas.delete', compact('area'));
+        return view('pages.areas.delete', compact('area'));
     }
 
     public function delete($id){
         $area = Areas::find($id);
         $area->delete();
-        return redirect('/Admin/Areas')->with('mensajeAlert', "Área eliminada correctamente");
+        return redirect('/areas')->with('mensajeAlert', "Área eliminada correctamente");
     }
 }

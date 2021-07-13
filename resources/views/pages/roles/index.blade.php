@@ -1,123 +1,109 @@
-@extends('layouts.app')
-@if($compania!=null)
-    @section('company',$compania->Descripcion)
-@endif
-@section('content')
-    @include('layouts.top-nav')
-    <div class="container container-rapi2">
-        <main role="main" class="ml-sm-auto">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2 h2-less">Roles</h1>
-            </div>
-        </main>
-        <div id="Alert"></div>
-    </div>
+@extends('layouts.app', ['activePage' => 'Roles', 'titlePage' => __('Roles')])
 
-    <div class="container">
-        <div data-simplebar class="table-responsive table-height">
-            <div class="col text-center">
-                <table class="table table-striped table-bordered mydatatable">
-                    <thead class="table-header">
-                    <tr>
-                        <th scope="col" style="text-transform: uppercase">Clave</th>
-                        <th scope="col" style="text-transform: uppercase">Descripción</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($rol as $item)
-                            <tr id="{{$item->Clave}}">
-                                <td class="td td-center">{{$item->Clave}}</td>
-                                <td class="td td-center">{{$item->Rol}}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="table-footer">
-                        <tr>
-                            <th style="text-transform: uppercase">Clave</th>
-                            <th style="text-transform: uppercase">Descripción</th>
-                        </tr>
-                    </tfoot>
-                </table>
+@section('content')
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @if ( session('mensaje') )
+                        <div class="alert alert-success" role="alert" id="message">
+                            {{ session('mensaje') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeAlert') )
+                        <div class="alert alert-warning" role="alert" id="message">
+                            {{ session('mensajeAlert') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeDanger') )
+                        <div class="alert alert-danger" role="alert" id="message">
+                            {{ session('mensajeDanger') }}
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger" role="alert" id="message">
+                            Se encontraron los siguientes errores: <br>
+                            @foreach($errors->all() as $error)
+                                <br>
+                                {{'• '.$error }}
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title ">Lista de Roles</h4>
+                            <p class="card-category">Estas son los roles registrados en el sistema</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered data-table">
+                                    <thead class="text-primary thead-color">
+                                    <th>ID<i class="material-icons sort">sort</i></th>
+                                    <th>Descripción<i class="material-icons sort">sort</i></th>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($rol as $item)
+                                        <tr>
+                                            <td>{{$item->id}}<i class="material-icons plus">add_circle</i></td>
+                                            <td>{{$item->rol}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <script>
-        $('.mydatatable').DataTable();
 
-        function edit(button){
-            var clave = $(button).attr('clave');
-            $('#myModal').load( '{{ url('/Admin/Roles/Edit') }}/'+clave,function(response, status, xhr){
-                if ( status == "success" ) {
-                    $('#myModal').modal('show');
-                }
-            } );
-        }
-        function deleted(button){
-            var clave = $(button).attr('clave');
-            var tr=$(button).closest('tr');
-            Swal.fire({
-                title: '¿Está seguro?',
-                text: "¡No podrás revertir esto!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar!'
-            }).then(function(result){
-                if (result.value) {
-                    $.post('{{ url('/Admin/Roles/Delete/') }}/'+clave,{_token:'{{ csrf_token() }}'},function(data){
-                        if(data.error==false){
-                            table
-                            .row(tr )
-                            .remove()
-                            .draw();
-                            Swal.fire(
-                                'Eliminar!',
-                                'Registro eliminado.',
-                                'success'
-                            )
-                        }
-                    })
-                    .fail(function(data){
-                        Swal.fire({
-                            type: 'error',
-                            title: 'Error',
-                            text: data.responseJSON.message
-                        })
-                    });
-                }
-            })
-        }
-        $(document).ready(function(){
-            table=$('#table').DataTable({
-                language:
-                {
-                    processing: "Cargando",
-                    search: "_INPUT_",
-                    searchPlaceholder: "Buscar en Registros",
-                    lengthMenu: "Mostrar _MENU_ Registros",
-                    info: "Registros _START_  al  _END_  de _TOTAL_",
-                    infoEmpty: "No hay registros disponibles",
-                    infoFiltered: "(filtrado de _MAX_ registros)",
-                    oPaginate:
-                        {
-                            sFirst: "Primero",
-                            sPrevious: "Anterior",
-                            sNext: "Siguiente",
-                            sLast: "Ultimo"
-                        },
-                    zeroRecords: "No hay registros"
-                }
-            });
-            $('#new').click(function(){
-                $('#myModal').load( '{{ url('/Admin/Roles/New') }}',function(response, status, xhr){
-                    if ( status == "success" ) {
-                        $('#myModal').modal('show');
+    <script>
+        $('.data-table').DataTable({
+                responsive: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    ['10 Filas', '25 Filas', '50 Filas', 'Mostrar todo']
+                ],
+                dom: 'Blfrtip',
+                buttons: [
+                    { extend: 'pdf', text: 'Exportar a PDF',charset: 'UTF-8' },
+                    { extend: 'csv', text: 'Exportar a EXCEL',charset: 'UTF-8'  }
+                ],
+                language: {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "buttons": {
+                        "copy": "Copiar",
+                        "colvis": "Visibilidad",
+                        "print": "Imprimir",
+                        "csv": "Excel"
                     }
-                });
-            });
-            $('#nav-roles').addClass('active');
-            $('#nav-roles').css({"background": "#9b9634","color": "white"});
-        });
+                },
+
+            }
+        );
     </script>
 @endsection

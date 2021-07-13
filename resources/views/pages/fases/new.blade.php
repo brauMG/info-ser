@@ -3,14 +3,14 @@
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Nuevo Enfoque</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                <i class="material-icons">close</i>
             </button>
         </div>
         <form action="{{route('CreateFase')}}" method="POST">
             @csrf
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label>Descripción</label>
                             <input class="form-control" type="text" id="descripcion" name="descripcion">
@@ -18,7 +18,7 @@
                             <div class="invalid-feedback" id="error_descripcion" style="display: none;"></div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label>Orden</label>
                             <input class="form-control" type="number" id="descripcion" name="orden">
@@ -29,8 +29,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="material-icons">close</i>Cerrar</button>
+                <button type="submit" class="btn btn-primary"><i class="material-icons">check</i>Guardar</button>
             </div>
         </form>
     </div>

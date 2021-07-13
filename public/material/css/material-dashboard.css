@@ -14820,40 +14820,40 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
   color: rgba(60, 72, 88, 0.8);
 }
 
-.sidebar[data-background-color="red"] .nav .nav-item .nav-link {
+.sidebar[data-background-color="blue"] .nav .nav-item .nav-link {
   color: #fff;
 }
 
-.sidebar[data-background-color="red"] .nav .nav-item i {
+.sidebar[data-background-color="blue"] .nav .nav-item i {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.sidebar[data-background-color="red"] .nav .nav-item.active [data-toggle="collapse"],
-.sidebar[data-background-color="red"] .nav .nav-item:hover [data-toggle="collapse"] {
+.sidebar[data-background-color="blue"] .nav .nav-item.active [data-toggle="collapse"],
+.sidebar[data-background-color="blue"] .nav .nav-item:hover [data-toggle="collapse"] {
   color: #fff;
 }
 
-.sidebar[data-background-color="red"] .nav .nav-item.active [data-toggle="collapse"] i,
-.sidebar[data-background-color="red"] .nav .nav-item:hover [data-toggle="collapse"] i {
+.sidebar[data-background-color="blue"] .nav .nav-item.active [data-toggle="collapse"] i,
+.sidebar[data-background-color="blue"] .nav .nav-item:hover [data-toggle="collapse"] i {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.sidebar[data-background-color="red"] .user a {
+.sidebar[data-background-color="blue"] .user a {
   color: #fff;
 }
 
-.sidebar[data-background-color="red"] .simple-text {
+.sidebar[data-background-color="blue"] .simple-text {
   color: #fff;
 }
 
-.sidebar[data-background-color="red"] .sidebar-background:after {
-  background: #f44336;
+.sidebar[data-background-color="blue"] .sidebar-background:after {
+  background: #0c385a;
   opacity: .8;
 }
 
-.sidebar[data-background-color="red"] .user:after,
-.sidebar[data-background-color="red"] .logo:after,
-.sidebar[data-background-color="red"] .nav li.separator:after {
+.sidebar[data-background-color="blue"] .user:after,
+.sidebar[data-background-color="blue"] .logo:after,
+.sidebar[data-background-color="blue"] .nav li.separator:after {
   background-color: rgba(255, 255, 255, 0.3);
 }
 

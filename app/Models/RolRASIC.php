@@ -10,7 +10,7 @@ class RolRASIC extends Model
     protected $fillable = ['rol_rasic','fecha_creacion','activo'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'RolesRASIC';
+    protected $table = 'roles_rasic';
     public $timestamps = false;
     protected $keyType = 'string';
     public $incrementing = false;

@@ -10,7 +10,7 @@ class Rol extends Model
     protected $fillable = ['rol','fecha_creacion','activo'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Roles';
+    protected $table = 'roles';
     public $timestamps = false;
 
     public function users()

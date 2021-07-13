@@ -3,7 +3,7 @@
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Nuevo Estado</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
+                <i class="material-icons">close</i>
             </button>
         </div>
         <form action="{{route('CreateStatus')}}" method="POST">
@@ -30,8 +30,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="material-icons">close</i>Cerrar</button>
+                <button type="submit" class="btn btn-primary"><i class="material-icons">check</i>Guardar</button>
             </div>
         </form>
     </div>

@@ -11,12 +11,14 @@ class Sponsors extends Model
 
     protected $guarded = [];
 
+    protected $table = 'patrocinadores';
+
     protected $fillable = [
         'nombre', 'description', 'enlace', 'imagen', 'mostrar'
     ];
 
     public function companies()
     {
-        return $this->belongsToMany(Sponsors::class, 'patrocinadores_companias', 'id','id_compania');
+        return $this->belongsToMany(Sponsors::class, 'patrocinadores_companias', 'id_patrocinador','id_compania');
     }
 }

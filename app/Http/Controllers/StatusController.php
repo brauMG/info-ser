@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Puesto;
+use App\Models\Puesto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Compania;
-use App\Status;
+use App\Models\Companias;
+use App\Models\Status;
 use Illuminate\Support\Facades\DB;
 
 class StatusController extends Controller
@@ -17,143 +17,143 @@ class StatusController extends Controller
     }
 
     public function index(){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $status=DB::table('Status')
-            ->leftJoin('Companias', 'Status.Clave_Compania', '=', 'Companias.Clave')
-            ->select('Status.Clave','Companias.Descripcion as Compania','Status.status','Status.FechaCreacion','Status.Activo')
-            ->where('Status.Clave_Compania','=',Auth::user()->Clave_Compania)
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $status=DB::table('estado')
+            ->leftJoin('companias', 'estado.id_compania', '=', 'companias.id')
+            ->select('estado.id','companias.descripcion as Compania','estado.estado','estado.fecha_creacion','estado.activo')
+            ->where('estado.id_compania','=',Auth::user()->id_compania)
             ->get();
-        return view('Admin.Status.index',['status'=>$status,'compania'=>$compania]);
+        return view('pages.estados.index',['status'=>$status,'compania'=>$compania]);
     }
-    public function edit($id){
-        $userRol = Auth::user()->Clave_Rol;
-        $status=Status::where('Clave', $id)->get()->toArray();
-        $statusId = $status[0]['Clave'];
-        $status = $status[0];
-        $company = Compania::all();
-        $statusActivo = $status['Clave_Compania'];
-        $statusCompany = $status['Activo'];
-        $activos = [
-            0,
-            1
-        ];
-        return view('Admin.Status.edit', compact('status', 'statusId', 'company', 'statusCompany','statusActivo', 'userRol', 'activos'));
-    }
+//    public function edit($id){
+//        $userRol = Auth::user()->id_rol;
+//        $status=Status::where('id', $id)->get()->toArray();
+//        $statusId = $status[0]['id'];
+//        $status = $status[0];
+//        $company = Companias::all();
+//        $statusActivo = $status['id_compania'];
+//        $statusCompany = $status['activo'];
+//        $activos = [
+//            0,
+//            1
+//        ];
+//        return view('pages.estados.edit', compact('status', 'statusId', 'company', 'statusCompany','statusActivo', 'userRol', 'activos'));
+//    }
 
     public function new(){
-        return view('Admin.Status.new');
+        return view('pages.estados.new');
     }
     public function store(Request $request){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
         $status = $request->validate([
             'status' => ['required', 'string', 'max:150'],
             'activo' => ['required']
         ]);
         Status::create([
-            'Status' => $status['status'],
-            'Activo' => $status['activo'],
-            'FechaCreacion' => Carbon::today()->toDateString(),
-            'Clave_Compania' => $compania['Clave']
+            'estado' => $status['status'],
+            'activo' => $status['activo'],
+            'fecha_creacion' => Carbon::today()->toDateString(),
+            'id_compania' => $compania['id']
         ]);
-        return redirect('/Admin/Status')->with('mensaje', "Nuevo estado agregado correctamente");
+        return redirect('/estados')->with('mensaje', "Nuevo estado agregado correctamente");
     }
 
     public function prepare($id){
-        $status=Status::where('Clave', $id)->get()->toArray();
+        $status=Status::where('id', $id)->get()->toArray();
         $status = $status[0];
-        return view('Admin.Status.delete', compact('status'));
+        return view('pages.estados.delete', compact('status'));
     }
 
     public function delete($id){
         $status = Status::find($id);
         $status->delete();
-        return redirect('/Admin/Status')->with('mensajeAlert', "Estado eliminado correctamente");
+        return redirect('/estados')->with('mensajeAlert', "Estado eliminado correctamente");
     }
 
-    public function update(Request $request, $Clave){
-        $status = Status::where('Clave', $Clave)->firstOrFail();
-        $statusNew = $request->input('status');
-        $statusActive = $request->input('activo');
-
-        if (Auth::user()->Clave_Rol == 2) {
-            if ($statusNew == $status->status) {
-                if ($statusActive == $status->activo) {
-
-                } else {
-                    $data = $request->validate([
-                        'activo' => ['required']
-                    ]);
-                    Status::where('Clave', $Clave)->update([
-                        'FechaCreacion' => Carbon::today()->toDateString(),
-                        'Activo' => $data['activo']
-                    ]);
-                }
-            } else if ($statusActive == $status->activo) {
-                $data = $request->validate([
-                    'status' => ['required', 'string', 'max:150']
-                ]);
-                Status::where('Clave', $Clave)->update([
-                    'Status' => $data['status'],
-                    'FechaCreacion' => Carbon::today()->toDateString()
-                ]);
-            } else {
-                $data = $request->validate([
-                    'status' => ['required', 'string', 'max:150'],
-                    'activo' => ['required'],
-                ]);
-                Status::where('Clave', $Clave)->update([
-                    'Status' => $data['status'],
-                    'FechaCreacion' => Carbon::today()->toDateString(),
-                    'Activo' => $data['activo']
-                ]);
-            }
-            return redirect('/Admin/Status')->with('mensaje', "El estado fue editado correctamente");
-        }
-        if (Auth::user()->Clave_Rol == 1) {
-            if ($statusNew == $status->status) {
-                if ($statusActive == $status->activo) {
-                    $data = $request->validate([
-                        'company' => ['required']
-                    ]);
-                    Status::where('Clave', $Clave)->update([
-                        'FechaCreacion' => Carbon::today()->toDateString(),
-                        'Clave_Compania' => $data['company']
-                    ]);
-                } else {
-                    $data = $request->validate([
-                        'company' => ['required'],
-                        'activo' => ['required']
-                    ]);
-                    Status::where('Clave', $Clave)->update([
-                        'FechaCreacion' => Carbon::today()->toDateString(),
-                        'Clave_Compania' => $data['company'],
-                        'Activo' => $data['activo']
-                    ]);
-                }
-            } else if ($statusActive == $status->activo) {
-                $data = $request->validate([
-                    'status' => ['required', 'string', 'max:150'],
-                    'company' => ['required']
-                ]);
-                Status::where('Clave', $Clave)->update([
-                    'Status' => $data['status'],
-                    'FechaCreacion' => Carbon::today()->toDateString(),
-                    'Clave_Compania' => $data['company']
-                ]);
-            } else {
-                $data = $request->validate([
-                    'status' => ['required', 'string', 'max:150'],
-                    'activo' => ['required'],
-                    'company' => ['required']
-                ]);
-                Status::where('Clave', $Clave)->update([
-                    'Status' => $data['status'],
-                    'FechaCreacion' => Carbon::today()->toDateString(),
-                    'Clave_Compania' => $data['company'],
-                    'Activo' => $data['activo']
-                ]);
-            }
-            return redirect('/Admin/Status')->with('mensaje', "El estado fue editado correctamente");
-        }
-    }
+//    public function update(Request $request, $id){
+//        $status = Status::where('id', $id)->firstOrFail();
+//        $statusNew = $request->input('status');
+//        $statusActive = $request->input('activo');
+//
+//        if (Auth::user()->id_rol == 2) {
+//            if ($statusNew == $status->status) {
+//                if ($statusActive == $status->activo) {
+//
+//                } else {
+//                    $data = $request->validate([
+//                        'activo' => ['required']
+//                    ]);
+//                    Status::where('id', $id)->update([
+//                        'fecha_creacion' => Carbon::today()->toDateString(),
+//                        'activo' => $data['activo']
+//                    ]);
+//                }
+//            } else if ($statusActive == $status->activo) {
+//                $data = $request->validate([
+//                    'status' => ['required', 'string', 'max:150']
+//                ]);
+//                Status::where('id', $id)->update([
+//                    'estado' => $data['status'],
+//                    'fecha_creacion' => Carbon::today()->toDateString()
+//                ]);
+//            } else {
+//                $data = $request->validate([
+//                    'status' => ['required', 'string', 'max:150'],
+//                    'activo' => ['required'],
+//                ]);
+//                Status::where('id', $id)->update([
+//                    'estado' => $data['status'],
+//                    'fecha_creacion' => Carbon::today()->toDateString(),
+//                    'activo' => $data['activo']
+//                ]);
+//            }
+//            return redirect('/estados')->with('mensaje', "El estado fue editado correctamente");
+//        }
+//        if (Auth::user()->id_Rol == 1) {
+//            if ($statusNew == $status->status) {
+//                if ($statusActive == $status->activo) {
+//                    $data = $request->validate([
+//                        'company' => ['required']
+//                    ]);
+//                    Status::where('id', $id)->update([
+//                        'fecha_creacion' => Carbon::today()->toDateString(),
+//                        'id_compania' => $data['company']
+//                    ]);
+//                } else {
+//                    $data = $request->validate([
+//                        'company' => ['required'],
+//                        'activo' => ['required']
+//                    ]);
+//                    Status::where('id', $id)->update([
+//                        'fecha_creacion' => Carbon::today()->toDateString(),
+//                        'id_compania' => $data['company'],
+//                        'activo' => $data['activo']
+//                    ]);
+//                }
+//            } else if ($statusActive == $status->activo) {
+//                $data = $request->validate([
+//                    'status' => ['required', 'string', 'max:150'],
+//                    'company' => ['required']
+//                ]);
+//                Status::where('id', $id)->update([
+//                    'estado' => $data['status'],
+//                    'fecha_creacion' => Carbon::today()->toDateString(),
+//                    'id_compania' => $data['company']
+//                ]);
+//            } else {
+//                $data = $request->validate([
+//                    'status' => ['required', 'string', 'max:150'],
+//                    'activo' => ['required'],
+//                    'company' => ['required']
+//                ]);
+//                Status::where('id', $id)->update([
+//                    'estado' => $data['status'],
+//                    'fecha_creacion' => Carbon::today()->toDateString(),
+//                    'id_compania' => $data['company'],
+//                    'activo' => $data['activo']
+//                ]);
+//            }
+//            return redirect('/estados')->with('mensaje', "El estado fue editado correctamente");
+//        }
+//    }
 }

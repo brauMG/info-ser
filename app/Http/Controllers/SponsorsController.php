@@ -3,77 +3,103 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Compania;
-use App\Sponsors;
-use App\SponsorsCompanies;
-use App\User;
+use App\Models\Companias;
+use App\Models\Sponsors;
+use App\Models\SponsorsCompanies;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SponsorsController extends Controller
 {
 
-    public function showList(Request $request)
+    public function index(Request $request)
     {
-        if (Auth::user()->Clave_Rol == 1) {
-            $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        if (Auth::user()->id_rol == 1) {
+            $compania=Companias::where('id',Auth::user()->id_compania)->first();
             $sponsors = Sponsors::all();
-            return view('Admin/viewSponsors/listSponsors', compact('sponsors', 'compania'));
+            return view('pages.patrocinadores.index', compact('sponsors', 'compania'));
         }
     }
 
-    public function show(Request $request, $id)
+    public function new(){
+        $companies = Companias::all();
+        return view('pages.patrocinadores.new', compact('companies'));
+    }
+
+    public function store(Request $request)
     {
-        if (Auth::user()->Clave_Rol == 1) {
-            $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-            $sponsor = Sponsors::where('sponsorId', $id)->firstOrFail();
+        if (Auth::user()->id_rol == 1) {
+            $companies = $request->input('companies');
+            $show = $request->input('show');
+            $request->validate([
+                'name' => ['required', 'string'],
+                'description' => ['required', 'string', 'max:5000'],
+                'link' => ['required', 'string', 'regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'],
+                'image' => ['required', 'image', 'mimes:png'],
+            ]);
 
-            $companies = Compania::join('sponsors_companies', 'sponsors_companies.companyId', 'Companias.Clave')
-                ->where('sponsors_companies.sponsorId', $id)
-                ->get()->toArray();
+            $image = $request->file('image');
+            $new_name = rand() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('sponsors'), $new_name);
 
-            return view('Admin/viewSponsors/showSponsors', compact('sponsor', 'companies', 'compania'));
+            if ($show == null) {
+                $sponsor_data = array(
+                    'nombre' => $request->name,
+                    'description' => $request->description,
+                    'enlace' => $request->link,
+                    'imagen' => $new_name,
+                    'mostrar' => 0
+                );
+            } else {
+                $sponsor_data = array(
+                    'nombre' => $request->name,
+                    'description' => $request->description,
+                    'enlace' => $request->link,
+                    'imagen' => $new_name,
+                    'mostrar' => 1
+                );
+            }
+
+            $addSponsors = Sponsors::create($sponsor_data);
+
+            foreach ($companies as $company) {
+                $addSponsors->companies()->attach($company);
+            }
+
+            return redirect('/patrocinadores')->with('mensaje', 'El patrocinador fue agregado exitosamente');
         }
     }
 
     public function edit(Request $request, $id)
     {
-        if (Auth::user()->Clave_Rol == 1) {
-            $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-            $sponsor = Sponsors::where('sponsorId', $id)->firstOrFail();
-            $companies = Compania::all();
-            $sponsors_companies = Compania::join('sponsors_companies', 'sponsors_companies.companyId', 'Companias.Clave')
-                ->where('sponsors_companies.sponsorId', $id)
+        if (Auth::user()->id_rol == 1) {
+            $compania=Companias::where('id',Auth::user()->id_compania)->first();
+            $sponsor = Sponsors::where('id', $id)->firstOrFail();
+            $companies = Companias::all();
+            $sponsors_companies = Companias::join('patrocinadores_companias', 'patrocinadores_companias.id_compania', 'companias.id')
+                ->where('patrocinadores_companias.id_patrocinador', $id)
                 ->get();
 
             $valid = false;
             $array_companies = array();
             foreach ($companies as $company) {
                 foreach ($sponsors_companies as $SC) {
-                    if ($company->Clave == $SC->companyId) {
+                    if ($company->id == $SC->id_compania) {
                         $valid = true;
                     }
                 }
-                $array_companies[] = array('valid' => $valid, 'name' => $company->Descripcion, 'companyId' => $company->Clave);
+                $array_companies[] = array('valid' => $valid, 'name' => $company->descripcion, 'id_compania' => $company->id);
                 $valid = false;
             }
 
-
-            return view('Admin/viewSponsors/editSponsor', compact('compania','sponsor', 'companies', 'array_companies'));
-        }
-    }
-
-    public function cancel(Request $request)
-    {
-        if (Auth::user()->Clave_Rol == 1) {
-            return back()->with('mensajeError', 'La edición fue cancelada');
+            return view('pages.patrocinadores.edit', compact('compania','sponsor', 'companies', 'array_companies'));
         }
     }
 
     public function update(Request $request, $sponsorId)
     {
-        if (Auth::user()->Clave_Rol == 1) {
+        if (Auth::user()->id_rol == 1) {
             $companies = $request->input('companies');
             $show = $request->input('show');
 
@@ -99,30 +125,30 @@ class SponsorsController extends Controller
 
             if ($show == null) {
                 $sponsor_data = array(
-                    'name' => $request->name,
+                    'nombre' => $request->name,
                     'description' => $request->description,
-                    'link' => $request->link,
-                    'image' => $image_name,
-                    'show' => 0
+                    'enlace' => $request->link,
+                    'imagen' => $image_name,
+                    'mostrar' => 0
                 );
             } else {
                 $sponsor_data = array(
-                    'name' => $request->name,
+                    'nombre' => $request->name,
                     'description' => $request->description,
-                    'link' => $request->link,
-                    'image' => $image_name,
-                    'show' => 1
+                    'enlace' => $request->link,
+                    'imagen' => $image_name,
+                    'mostrar' => 1
                 );
             }
 
-            $addSponsors = Sponsors::where('sponsorId', $sponsorId)->update($sponsor_data);
+            $addSponsors = Sponsors::where('id', $sponsorId)->update($sponsor_data);
 
-            SponsorsCompanies::where('sponsorId', $sponsorId)->delete();
+            SponsorsCompanies::where('id_patrocinador', $sponsorId)->delete();
 
             foreach ($companies as $company) {
                 SponsorsCompanies::insert([
-                    'sponsorId' => $sponsorId,
-                    'companyId' => $company
+                    'id_patrocinador' => $sponsorId,
+                    'id_compania' => $company
                 ]);
             }
 
@@ -130,64 +156,17 @@ class SponsorsController extends Controller
         }
     }
 
+    public function prepare($id){
+        $patrocinador = Sponsors::where('id', $id)->get()->toArray();
+        $patrocinador = $patrocinador[0];
+        return view('pages.patrocinadores.delete', compact('patrocinador'));
+    }
+
     public function delete(Request $request, $id)
     {
-        if (Auth::user()->Clave_Rol == 1) {
-            Sponsors::where('sponsorId', $id)->delete();
-            return redirect('Admin/viewSponsors/listSponsors')->with('mensaje', 'El patrocinador fue eliminado exitosamente.');
-        }
-    }
-
-    public function createSponsor(Request $request)
-    {
-        if (Auth::user()->Clave_Rol == 1) {
-            $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-            $companies = Compania::all();
-            return view('Admin/addSponsors/create', compact('companies', 'compania'));
-        }
-    }
-
-    public function storeSponsor(Request $request)
-    {
-        if (Auth::user()->Clave_Rol == 1) {
-            $companies = $request->input('companies');
-            $show = $request->input('show');
-            $request->validate([
-                'name' => ['required', 'string'],
-                'description' => ['required', 'string', 'max:5000'],
-                'link' => ['required', 'string', 'regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'],
-                'image' => ['required', 'image', 'mimes:png'],
-            ]);
-
-            $image = $request->file('image');
-            $new_name = rand() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('sponsors'), $new_name);
-
-            if ($show == null) {
-                $sponsor_data = array(
-                    'name' => $request->name,
-                    'description' => $request->description,
-                    'link' => $request->link,
-                    'image' => $new_name,
-                    'show' => 0
-                );
-            } else {
-                $sponsor_data = array(
-                    'name' => $request->name,
-                    'description' => $request->description,
-                    'link' => $request->link,
-                    'image' => $new_name,
-                    'show' => 1
-                );
-            }
-
-            $addSponsors = Sponsors::create($sponsor_data);
-
-            foreach ($companies as $company) {
-                $addSponsors->companies()->attach($company);
-            }
-
-            return redirect('Admin/viewSponsors/listSponsors')->with('mensaje', 'El patrocinador fue agregado exitosamente');
+        if (Auth::user()->id_rol == 1) {
+            Sponsors::where('id', $id)->delete();
+            return redirect('/patrocinadores')->with('mensaje', 'El patrocinador fue eliminado exitosamente.');
         }
     }
 }

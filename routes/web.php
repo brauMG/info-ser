@@ -22,6 +22,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/','App\Http\Controllers\HomeController@index');
+
     // Compañia
     Route::get('/companias/selectCompany','App\Http\Controllers\HomeController@selectCompany');
     Route::get('/companias', 'App\Http\Controllers\CompaniaController@index');
@@ -89,20 +91,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/usuarios/update/{id}', 'App\Http\Controllers\UsuariosController@update')->name('UpdateUser');
     Route::post('/usuarios/delete/{id}', 'App\Http\Controllers\UsuariosController@delete')->name('DeleteUser');
     Route::get('/usuarios/change-company/{id}', 'App\Http\Controllers\UsuariosController@changeCompany');
-    Route::get('/usuarios/prepare','App\Http\Controllers\UsuariosController@preparePdf')->name('FiltersUsers');
-    Route::post('/usuarios/PDF','App\Http\Controllers\UsuariosController@exportPdf')->name('UsersPDF');
     Route::get('/usuarios/ChangeSend/{id}','App\Http\Controllers\UsuariosController@editSend');
     Route::put('/usuarios/UpdateSend/{id}','App\Http\Controllers\UsuariosController@updateSend')->name('UpdateSend');
 
     //Patrocinadores
-    Route::get('/viewSponsors/listSponsors', 'App\Http\Controllers\SponsorsController@showList');
-    Route::get('/addSponsors/create', 'App\Http\Controllers\SponsorsController@createSponsor');
-    Route::get('/viewSponsors/showSponsors/{id}', 'App\Http\Controllers\SponsorsController@show')->name('ShowSponsor');
-    Route::get('/viewSponsors/editSponsor/{id}', 'App\Http\Controllers\SponsorsController@edit')->name('EditSponsor');
-    Route::get('/viewSponsors/cancelSponsor', 'App\Http\Controllers\SponsorsController@cancel')->name('CancelSponsor');
-    Route::post('/viewSponsors/editSponsor/update/{id}', 'App\Http\Controllers\SponsorsController@update')->name('UpdateSponsor');
-    Route::post('/viewSponsors/editSponsor/delete/{id}', 'App\Http\Controllers\SponsorsController@delete')->name('DeleteSponsor');
-    Route::post('/addSponsors/create', 'App\Http\Controllers\SponsorsController@storeSponsor');
+    Route::get('/patrocinadores', 'App\Http\Controllers\SponsorsController@index');
+    Route::get('/patrocinadores/new', 'App\Http\Controllers\SponsorsController@new');
+    Route::get('/patrocinadores/edit/{id}', 'App\Http\Controllers\SponsorsController@edit');
+    Route::get('/patrocinadores/delete/{id}', 'App\Http\Controllers\SponsorsController@prepare');
+    Route::post('/patrocinadores/create', 'App\Http\Controllers\SponsorsController@store')->name('CreateSponsor');
+    Route::put('/patrocinadores/update/{id}', 'App\Http\Controllers\SponsorsController@update')->name('UpdateSponsor');
+    Route::post('/patrocinadores/delete/{id}', 'App\Http\Controllers\SponsorsController@delete')->name('DeleteSponsor');
 
     //Fases
     Route::get('/fases', 'App\Http\Controllers\FasesController@index');

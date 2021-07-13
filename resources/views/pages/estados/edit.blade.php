@@ -3,7 +3,7 @@
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Actualizar Estado</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
+                <i class="material-icons">close</i>
             </button>
         </div>
         <form class="form" id="from" method="POST" action="{{ route('UpdateStatusStatus',$statusId) }}">
@@ -11,34 +11,34 @@
             @csrf
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label>Estado</label>
-                            <input class="form-control" type="text" id="status" name="status" value="{{$status['status']}}">
+                            <input class="form-control" type="text" id="status" name="status" value="{{$status['estado']}}">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}" id="_token"/>
-                            <input type="hidden" name="clave" value="{{$status['Clave']}}" id="clave"/>
+                            <input type="hidden" name="clave" value="{{$status['id']}}" id="clave"/>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="compania">Compañia</label>
                             <select class="form-control" id="compania" name="company" required @if($userRol == 2) disabled @else @endif>
                                 @php($count=0)
                                 @foreach($company as $item)
-                                    @if($item->Clave == $statusCompany)
-                                        <option selected value="{{ $item->Clave }}">{{ $item->Descripcion}}</option>
+                                    @if($item->id == $statusCompany)
+                                        <option selected value="{{ $item->id }}">{{ $item->descripcion}}</option>
                                     @else
-                                        <option value="{{ $item->Clave }}">{{ $item->Descripcion }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->descripcion }}</option>
                                     @endif
                                     @php($count++)
                                 @endforeach
                                 @if($count ==0)
-                                    <option disabled selected>No Hay Compañias</option>
+                                    <option disabled selected>No hay compañias</option>
                                 @endif
                             </select>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="compania">¿Bloquea el proyecto?</label>
                             <select class="form-control" id="activo" name="activo" required>
@@ -55,8 +55,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="material-icons">close</i>Cerrar</button>
+                <button type="submit" class="btn btn-primary"><i class="material-icons">check</i>Actualizar</button>
             </div>
         </form>
     </div>

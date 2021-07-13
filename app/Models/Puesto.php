@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Puesto extends Model
 {
-    protected $fillable = ['id_compania','puesto','fecha_creacion','activo'];
+    protected $fillable = ['id_companias','descripcion','fecha_creacion','activo'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Puestos';
+    protected $table = 'puestos';
     public $timestamps = false;
 }

@@ -10,6 +10,6 @@ class Areas extends Model
     protected $fillable = ['id_companias','descripcion','fecha_creacion','activo'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Areas';
+    protected $table = 'areas';
     public $timestamps = false;
 }

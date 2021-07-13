@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Indicador extends Model
 {
-    protected $fillable = ['descripcion','fecha_creacion','activo','id_compania'];
+    protected $fillable = ['descripcion','fecha_descripcion','activo','id_compania'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Indicador';
+    protected $table = 'indicadores';
     public $timestamps = false;
 }

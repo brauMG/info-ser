@@ -1,90 +1,125 @@
-@extends('layouts.app')
-@if($compania!=null)
-    @section('company',$compania->Descripcion)
-@endif
+@extends('layouts.app', ['activePage' => 'Fases', 'titlePage' => __('Fases')])
+
 @section('content')
-    @include('layouts.top-nav')
-    <div class="container container-rapi2">
-        <main role="main" class="ml-sm-auto">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2 h2-less">Fases</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <div class="btn-group mr-2">
-                        <button type="button" class="btn-less btn btn-info" id="new" onclick="AddFase();"><i class="fas fa-plus"></i> Agregar Fase</button>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @if ( session('mensaje') )
+                        <div class="alert alert-success" role="alert" id="message">
+                            {{ session('mensaje') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeAlert') )
+                        <div class="alert alert-warning" role="alert" id="message">
+                            {{ session('mensajeAlert') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeDanger') )
+                        <div class="alert alert-danger" role="alert" id="message">
+                            {{ session('mensajeDanger') }}
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger" role="alert" id="message">
+                            Se encontraron los siguientes errores: <br>
+                            @foreach($errors->all() as $error)
+                                <br>
+                                {{'• '.$error }}
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title ">Lista de Fases</h4>
+                            <p class="card-category">Estas son las fases registradas en el sistema</p>
+                            <button type="button" class="btn btn-info" id="new" onclick="AddFase();">Agregar Fase <i class="material-icons">add_circle_outline</i></button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered data-table">
+                                    <thead class="text-primary thead-color">
+                                    <th>ID<i class="material-icons sort">sort</i></th>
+                                    <th>Descripción<i class="material-icons sort">sort</i></th>
+                                    <th>Orden<i class="material-icons sort">sort</i></th>
+                                    <th class="action-row">Acción</th>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($fase as $item)
+                                        <tr>
+                                            <td>{{$item->id}}<i class="material-icons plus">add_circle</i></td>
+                                            <td>{{$item->descripcion}}</td>
+                                            <td>{{$item->orden}}</td>
+                                            <td class="action-row">
+                                                <button clave="{{$item->id}}" onclick="edit(this);" type="button" rel="tooltip" class="btn btn-sm btn-warning btn-adjust">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button clave="{{$item->id}}" onclick="deleted(this);" type="button" rel="tooltip" class="btn btn-sm btn-danger btn-adjust">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
-        <div id="Alert"></div>
-    </div>
-    @if ( session('mensaje') )
-        <div class="container-edits" style="margin-top: 2%">
-            <div class="alert alert-success" class='message' id='message'>{{ session('mensaje') }}</div>
-        </div>
-    @endif
-    @if ( session('mensajeAlert') )
-        <div class="container-edits" style="margin-top: 2%">
-            <div class="alert alert-warning" class='message' id='message'>{{ session('mensajeAlert') }}</div>
-        </div>
-    @endif
-    @if ( session('mensajeDanger') )
-        <div class="container-edits" style="margin-top: 2%">
-            <div class="alert alert-danger" class='message' id='message'>{{ session('mensajeDanger') }}</div>
-        </div>
-    @endif
-    @if($errors->any())
-        <div class="container-edits" style="margin-top: 1%">
-            <div class="alert alert-danger" class='message' id='message'>
-                Se encontraron los siguientes errores: <br>
-                @foreach($errors->all() as $error)
-                    <br>
-                    {{'• '.$error }}
-                @endforeach
-            </div>
-        </div>
-    @endif
-    <div class="container">
-        <div data-simplebar class="table-responsive table-height">
-            <div class="col text-center">
-                <table class="table table-striped table-bordered mydatatable">
-                    <thead class="table-header">
-                    <tr>
-                        <th scope="col" style="text-transform: uppercase">Clave</th>
-                        <th scope="col" style="text-transform: uppercase">Descripción</th>
-                        <th scope="col" style="text-transform: uppercase">Orden</th>
-                        <th scope="col" style="text-transform: uppercase">Acción</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($fase as $item)
-                        <tr id="{{$item->Clave}}">
-                            <td class="td td-center">{{$item->Clave}}</td>
-                            <td class="td td-center">{{$item->Descripcion}}</td>
-                            <td class="td td-center">{{$item->Orden}}</td>
-                            <td class="td td-center">
-                                <a class="btn-row btn btn-warning no-href" clave="{{$item->Clave}}" onclick="edit(this);"><i class="fas fa-edit"></i>Editar</a>
-                                <a class="btn-row btn btn-danger no-href" clave="{{$item->Clave}}" onclick="deleted(this);"><i class="fas fa-trash-alt"></i>Eliminar</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                    <tfoot class="table-footer">
-                    <tr>
-                        <th style="text-transform: uppercase">Clave</th>
-                        <th style="text-transform: uppercase">Descripción</th>
-                        <th style="text-transform: uppercase">Orden</th>
-                        <th style="text-transform: uppercase">Acción</th>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
         </div>
     </div>
+
     <script>
-        $('.mydatatable').DataTable();
+        $('.data-table').DataTable({
+                responsive: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    ['10 Filas', '25 Filas', '50 Filas', 'Mostrar todo']
+                ],
+                dom: 'Blfrtip',
+                buttons: [
+                    { extend: 'pdf', text: 'Exportar a PDF',charset: 'UTF-8' },
+                    { extend: 'csv', text: 'Exportar a EXCEL',charset: 'UTF-8'  }
+                ],
+                language: {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "buttons": {
+                        "copy": "Copiar",
+                        "colvis": "Visibilidad",
+                        "print": "Imprimir",
+                        "csv": "Excel"
+                    }
+                },
+
+            }
+        );
 
         function AddFase() {
-            $('#myModal').load( '{{ url('/Admin/Fases/New') }}',function(response, status, xhr)
+            $('#myModal').load( '{{ url('/fases/new') }}',function(response, status, xhr)
             {
                 if (status == "success")
                     $('#myModal').modal('show');
@@ -92,8 +127,9 @@
         }
 
         function edit(button){
+            console.warn('edit');
             var clave = $(button).attr('clave');
-            $('#myModal').load( '{{ url('/Admin/Fases/Edit') }}/'+clave,function(response, status, xhr){
+            $('#myModal').load( '{{ url('/fases/edit') }}/'+clave,function(response, status, xhr){
                 if ( status == "success" ) {
                     $('#myModal').modal('show');
                 }
@@ -101,8 +137,9 @@
         }
 
         function deleted(button){
+            console.warn('delete');
             var clave = $(button).attr('clave');
-            $('#myModal').load( '{{ url('/Admin/Fases/Delete') }}/'+clave,function(response, status, xhr){
+            $('#myModal').load( '{{ url('/fases/delete') }}/'+clave,function(response, status, xhr){
                 if ( status == "success" ) {
                     $('#myModal').modal('show');
                 }
