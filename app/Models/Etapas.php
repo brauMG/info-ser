@@ -10,6 +10,6 @@ class Etapas extends Model
     protected $fillable = ['id_proyecto','id_fase','descripcion','fecha_vencimiento','hora_vencimiento', 'id_compania'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Etapas';
+    protected $table = 'etapas';
     public $timestamps = true;
 }

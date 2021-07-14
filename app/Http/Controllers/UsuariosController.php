@@ -22,8 +22,6 @@ use App\Models\Rol;
 use App\Models\Puesto;
 use App\Models\User;
 
-
-
 class UsuariosController extends Controller
 {
     public function __construct(){
@@ -174,11 +172,49 @@ class UsuariosController extends Controller
         return redirect('/usuarios')->with('mensaje', "El estado del envio de correos fue actualizado correctamente");
     }
 
-    public function changeCompany($id){
-        $user = User::find(Auth::user()->id);
-        $user->id_compania = $id;
-        $user->save();
-        Auth::user()->fresh();
-        return back();
+    public function preparePdf(Request $request) {
+        $areas=Areas::where('id_companias',Auth::user()->id_compania)->get();
+        $puestos=Puesto::where('id_companias',Auth::user()->id_compania)->get();
+        $roles=Rol::where('id', '!=', 1)->get();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+
+        return view('pages.usuarios.prepare', compact('areas', 'puestos', 'roles', 'compania'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $areas = $request->input('areas');
+        $puestos = $request->input('puestos');
+        $roles = $request->input('roles');
+        $datetime = Carbon::now();
+        $datetime->setTimezone('GMT-7');
+        $date = $datetime->toDateString();
+        $time = $datetime->toTimeString();
+
+        $usuarios = DB::table('Usuarios')
+            ->join('Areas', 'Usuarios.Clave_Area', '=', 'Areas.Clave')
+            ->where(function($query) use ($areas, $request) {
+                if ($areas != null) {
+                    $query->whereIn('Usuarios.Clave_Area', $areas);
+                }
+            })
+            ->join('Puestos', 'Usuarios.Clave_Puesto', '=', 'Puestos.Clave')
+            ->where(function($query) use ($puestos, $request) {
+                if ($puestos != null) {
+                    $query->whereIn('Usuarios.Clave_Puesto', $puestos);
+                }
+            })
+            ->join('Roles', 'Usuarios.Clave_Rol', '=', 'Roles.Clave')
+            ->where(function($query) use ($roles, $request) {
+                if ($roles != null) {
+                    $query->whereIn('Usuarios.Clave_Rol', $roles);
+                }
+            })
+            ->select('Usuarios.*', 'Areas.Descripcion as Area', 'Roles.Rol as Rol', 'Puestos.Puesto as Puesto')
+            ->get();
+
+        $pdf = PDF::loadView('pdf.users', compact('usuarios', 'date', 'time'));
+
+        return $pdf->download('usuarios.pdf');
     }
 }

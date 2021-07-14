@@ -1,25 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Areas;
-use App\Etapas;
-use App\Mail\ActivitiesTimeline;
-use App\Mail\AdviceActivity;
-use App\Mail\AdviceActivityStatus;
-use App\RolProyecto;
-use App\User;
+
+//use App\Mail\ActivitiesTimeline;
+//use App\Mail\AdviceActivity;
+//use App\Mail\AdviceActivityStatus;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Area;
-use App\Compania;
-use App\Actividad;
-use App\Fase;
-use App\Proyecto;
-use App\Status;
+use Barryvdh\DomPDF\PDF;
+
+use App\Models\Areas;
+use App\Models\Etapas;
+use App\Models\RolProyecto;
+use App\Models\User;
+use App\Models\Companias;
+use App\Models\Actividad;
+use App\Models\Fase;
+use App\Models\Proyecto;
+use App\Models\Status;
 use Illuminate\Support\Facades\Mail;
-use PDF;
 
 class ActividadesController extends Controller
 {
@@ -28,69 +30,70 @@ class ActividadesController extends Controller
     }
     public function index()
     {
-        if (Auth::user()->Clave_Rol == 4) {
-            $rol = Auth::user()->Clave_Rol;
-            $companyId = Auth::user()->Clave_Compania;
+        if (Auth::user()->id_rol == 4) {
+            $rol = Auth::user()->id_rol;
+            $companyId = Auth::user()->id_compania;
             $datetime = Carbon::now();
             $datetime->setTimezone('GMT-7');
             $date = $datetime->toDateString();
             $time = $datetime->toTimeString();
-            $compania = Compania::where('Clave', Auth::user()->Clave_Compania)->first();
-            $actividad = DB::table('Actividades')
-                ->leftJoin('Companias', 'Actividades.Clave_Compania', '=', 'Companias.Clave')
-                ->leftJoin('Proyectos', 'Actividades.Clave_Proyecto', '=', 'Proyectos.Clave')
-                ->leftJoin('Usuarios', 'Actividades.Clave_Usuario', '=', 'Usuarios.Clave')
-                ->leftJoin('Etapas', 'Actividades.Clave_Etapa', '=', 'Etapas.Clave')
-                ->leftJoin('Fases', 'Actividades.Clave_Fase', '=', 'Fases.Clave')
-                ->select('Actividades.Clave as Clave', 'Companias.Descripcion as Compania', 'Proyectos.Descripcion as Proyecto', 'Etapas.Descripcion as Etapa', 'Fases.Descripcion as Fase', 'Actividades.Descripcion', 'Actividades.Fecha_Vencimiento', 'Actividades.Hora_Vencimiento', 'Actividades.Fecha_Revision', 'Actividades.Hora_Revision', 'Actividades.Decision', 'Usuarios.nombres as Usuario', 'Actividades.FechaCreacion', 'Actividades.Estado')
-                ->where('Actividades.Clave_Compania', '=', $companyId)
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $actividad = DB::table('actividades')
+                ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
+                ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+                ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+                ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+                ->select('actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado')
+                ->where('actividades.id_compania', '=', $companyId)
                 ->get();
-            return view('Admin.Actividades.index', ['actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol]);
+
+            return view('pages.actividades.index', ['actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol]);
         }
 
-        if (Auth::user()->Clave_Rol == 3) {
-            $rol = Auth::user()->Clave_Rol;
-            $companyId = Auth::user()->Clave_Compania;
+        if (Auth::user()->id_rol == 3) {
+            $rol = Auth::user()->id_rol;
+            $companyId = Auth::user()->id_compania;
             $datetime = Carbon::now();
             $datetime->setTimezone('GMT-7');
             $date = $datetime->toDateString();
             $time = $datetime->toTimeString();
-            $compania = Compania::where('Clave', Auth::user()->Clave_Compania)->first();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
 
-            $actividad = DB::table('Actividades')
-                ->leftJoin('Companias', 'Actividades.Clave_Compania', '=', 'Companias.Clave')
-                ->leftJoin('RolesProyectos', 'Actividades.Clave_Proyecto', '=', 'RolesProyectos.Clave_Proyecto')
-                ->leftJoin('Proyectos', 'RolesProyectos.Clave_Proyecto', '=', 'Proyectos.Clave')
-                ->leftJoin('Usuarios', 'Actividades.Clave_Usuario', '=', 'Usuarios.Clave')
-                ->leftJoin('Etapas', 'Actividades.Clave_Etapa', '=', 'Etapas.Clave')
-                ->leftJoin('Fases', 'Actividades.Clave_Fase', '=', 'Fases.Clave')
-                ->select('Actividades.Clave as Clave', 'Companias.Descripcion as Compania', 'Proyectos.Descripcion as Proyecto', 'Etapas.Descripcion as Etapa', 'Fases.Descripcion as Fase', 'Actividades.Descripcion', 'Actividades.Fecha_Vencimiento', 'Actividades.Hora_Vencimiento', 'Actividades.Fecha_Revision', 'Actividades.Hora_Revision', 'Actividades.Decision', 'Usuarios.nombres as Usuario', 'Actividades.FechaCreacion', 'Actividades.Estado')
-                ->where('Actividades.Clave_Compania', '=', $companyId)
-                ->where('RolesProyectos.Clave_Usuario', Auth::user()->Clave)
+            $actividad = DB::table('actividades')
+                ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+                ->leftJoin('roles_proyectos', 'actividades.id_proyecto', '=', 'roles_proyectos.id_proyecto')
+                ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
+                ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+                ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+                ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+                ->select('actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado')
+                ->where('actividades.id_compania', '=', $companyId)
+                ->where('roles_proyectos.id_usuario', Auth::user()->id)
                 ->get();
-            return view('Admin.Actividades.index', ['actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol]);
+            return view('pages.actividades.index', ['actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol]);
         }
     }
 
     public function edit($id){
-        $actividad=Actividad::where('Clave', $id)->get()->toArray();
+        $actividad=Actividad::where('id', $id)->get()->toArray();
         $proyectos=Proyecto::all();
         $fases=Fase::all();
         $status=Status::all();
-        return view('Admin.Actividades.edit',compact('actividad','proyectos','fases', 'status'));
+        return view('pages.actividades.edit',compact('actividad','proyectos','fases', 'status'));
     }
 
     public function editStatus($id) {
-        $actividadEstado=Actividad::where('Clave', $id)->get()->toArray();
+        $actividadEstado=Actividad::where('id', $id)->get()->toArray();
         $actividadEstado = $actividadEstado[0];
         $estados= [
             1,
             2
         ];
-        return view('Admin.Actividades.editStatus', compact('estados', 'actividadEstado'));
+        return view('pages.actividades.editStatus', compact('estados', 'actividadEstado'));
     }
 
-    public function updateStatus(Request $request, $Clave){
+    public function updateStatus(Request $request, $id){
         $datetime = Carbon::now();
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
@@ -99,74 +102,74 @@ class ActividadesController extends Controller
             'status' => ['required']
         ]);
 
-        Actividad::where('Clave', $Clave)->update([
-            'Estado' => $status['status'],
-            'Fecha_Revision' => $date,
-            'Hora_Revision' => $time
+        Actividad::where('id', $id)->update([
+            'estado' => $status['status'],
+            'fecha_revision' => $date,
+            'hora_revision' => $time
         ]);
 
-        $actity = Actividad::where('Clave', $Clave)->get()->toArray();
+        $actity = Actividad::where('id', $id)->get()->toArray();
         $actity = $actity[0];
 
         // DATOS DEL CORREO
-        $user = Auth::user()->Nombres;
-        $activityName = $actity['Descripcion'];
-        $date = $actity['Fecha_Vencimiento'];
-        $time = $actity['Hora_Vencimiento'];
-        $status = $actity['Estado'];
-        $project = Proyecto::where('Clave', $actity['Clave_Proyecto'])->get();
-        $projectId = $project[0]->Clave;
-        $project = $project[0]->Descripcion;
-        $phase = Fase::where('Clave', $actity['Clave_Fase'])->get();
-        $phase = $phase[0]->Descripcion;
-        $stage = Etapas::where('Clave', $actity['Clave_Etapa'])->get();
-        $stage = $stage[0]->Descripcion;
+//        $user = Auth::user()->nombres;
+//        $activityName = $actity['descricion'];
+//        $date = $actity['fecha_vencimiento'];
+//        $time = $actity['hora_revision'];
+//        $status = $actity['estado'];
+//        $project = Proyecto::where('id', $actity['id_proyecto'])->get();
+//        $projectId = $project[0]->id;
+//        $project = $project[0]->descripcion;
+//        $phase = Fase::where('id', $actity['id_fase'])->get();
+//        $phase = $phase[0]->descripcion;
+//        $stage = Etapas::where('id', $actity['id_etapa'])->get();
+//        $stage = $stage[0]->descripcion;
 
         //A QUIEN DIRIGIR EL CORREO
-        $emailsAdmins = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 2)->where('envio_de_correo', true)->get();
-        $emailsAdmins = $emailsAdmins->pluck('email');
-        $emailsPMOs = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 4)->where('envio_de_correo', true)->get();
-        $emailsPMOs = $emailsPMOs->pluck('email');
-        $emailsUsers = DB::table('Usuarios')
-            ->leftJoin('RolesProyectos', 'Usuarios.Clave', 'RolesProyectos.Clave_Usuario')
-            ->select('Usuarios.email')
-            ->where('RolesProyectos.Clave_Proyecto', $projectId)
-            ->where('Usuarios.envio_de_correo', 1)
-            ->where('Usuarios.Clave_Rol', 3)
-            ->get();
-        $emailsUsers = $emailsUsers->pluck('email');
+//        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+//        $emailsAdmins = $emailsAdmins->pluck('email');
+//        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+//        $emailsPMOs = $emailsPMOs->pluck('email');
+//        $emailsUsers = DB::table('usuarios')
+//            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+//            ->select('usuarios.email')
+//            ->where('roles_proyectos.id_proyectos', $projectId)
+//            ->where('usuarios.envio_de_correo', 1)
+//            ->where('usuarios.id_rol', 3)
+//            ->get();
+//        $emailsUsers = $emailsUsers->pluck('email');
 
         //ENVIO DE CORREOS
-        foreach ($emailsAdmins as $email){
-            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
-        }
-        foreach ($emailsPMOs as $email){
-            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
-        }
-        foreach ($emailsUsers as $email){
-            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
-        }
+//        foreach ($emailsAdmins as $email){
+//            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
+//        }
+//        foreach ($emailsPMOs as $email){
+//            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
+//        }
+//        foreach ($emailsUsers as $email){
+//            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
+//        }
 
-        return redirect('/Admin/Actividades')->with('mensaje', "El estado de la revisión fue actualizado correctamente");
+        return redirect('/actividades')->with('mensaje', "El estado de la revisión fue actualizado correctamente");
     }
 
     public function type($id){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
         $proyectoID = $id;
         $datetime = Carbon::now();
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
-        $etapas = Etapas::where('Clave_Proyecto', $proyectoID)->where('Fecha_Vencimiento', '>', $date)->get();
-        return view('Admin.Actividades.type',compact('proyectoID', 'compania', 'etapas'));
+        $etapas = Etapas::where('id_proyecto', $proyectoID)->where('fecha_vencimiento', '>', $date)->get();
+        return view('pages.actividades.type',compact('proyectoID', 'compania', 'etapas'));
     }
 
     public function new(Request $request, $proyectoID){
         $etapa = $request->input('etapa');
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $companiaId=Auth::user()->Clave_Compania;
-        $usuarioId=Auth::user()->Clave;
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $companiaId=Auth::user()->id_compania;
+        $usuarioId=Auth::user()->id;
 
-        return view('Admin.Actividades.new',compact('etapa','proyectoID', 'companiaId', 'usuarioId', 'compania'));
+        return view('pages.actividades.new',compact('etapa','proyectoID', 'companiaId', 'usuarioId', 'compania'));
     }
 
     public function store(Request $request){
@@ -174,7 +177,7 @@ class ActividadesController extends Controller
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
         $etapa = $request->input('etapa');
-        $etapaData = Etapas::where('Clave', $etapa)->first();
+        $etapaData = Etapas::where('id', $etapa)->first();
 
         $companiaId= $request->input('compania');
         $proyectoId= $request->input('proyecto');
@@ -186,61 +189,61 @@ class ActividadesController extends Controller
         ]);
 
         $actity = Actividad::create([
-            'Clave_Compania' => $companiaId,
-            'Clave_Proyecto' => $proyectoId,
-            'Descripcion' => $actividad['descripcion'],
-            'Decision' => $actividad['decision'],
-            'FechaCreacion' => $date,
-            'Estado' => 0,
-            'Clave_Usuario' => $usuarioId,
-            'Clave_Fase' => $etapaData->Clave_Fase,
-            'Clave_Etapa' => $etapaData->Clave,
-            'Fecha_Vencimiento' => $etapaData->Fecha_Vencimiento,
-            'Hora_Vencimiento' => $etapaData->Hora_Vencimiento,
+            'id_compania' => $companiaId,
+            'id_proyecto' => $proyectoId,
+            'descricion' => $actividad['descripcion'],
+            'decision' => $actividad['decision'],
+            'fecha_creacion' => $date,
+            'estado' => 0,
+            'id_usuario' => $usuarioId,
+            'id_fase' => $etapaData->id_fase,
+            'id_etapa' => $etapaData->id,
+            'fecha_vencimiento' => $etapaData->fecha_vencimiento,
+            'hora_vencimiento' => $etapaData->hora_vencimiento,
         ]);
 
         // DATOS DEL CORREO
-        $user = Auth::user()->Nombres;
-        $area = Auth::user()->Clave_Area;
-        $area = Areas::where('Clave', $area)->get();
-        $InArea = $area[0]->Descripcion;
-        $activityName = $actity->Descripcion;
-        $date = $actity->Fecha_Vencimiento;
-        $time = $actity->Hora_Vencimiento;
-        $project = Proyecto::where('Clave', $actity->Clave_Proyecto)->get();
-        $projectId = $project[0]->Clave;
-        $project = $project[0]->Descripcion;
-        $phase = Fase::where('Clave', $actity->Clave_Fase)->get();
-        $phase = $phase[0]->Descripcion;
-        $stage = Etapas::where('Clave', $actity->Clave_Etapa)->get();
-        $stage = $stage[0]->Descripcion;
+//        $user = Auth::user()->nombres;
+//        $area = Auth::user()->id_area;
+//        $area = Areas::where('id', $area)->get();
+//        $InArea = $area[0]->descripcion;
+//        $activityName = $actity->descricion;
+//        $date = $actity->fecha_vencimiento;
+//        $time = $actity->hora_vencimiento;
+//        $project = Proyecto::where('id', $actity->id_proyecto)->get();
+//        $projectId = $project[0]->id;
+//        $project = $project[0]->descripcion;
+//        $phase = Fase::where('id', $actity->id_fase)->get();
+//        $phase = $phase[0]->descripcion;
+//        $stage = Etapas::where('id', $actity->id_etapa)->get();
+//        $stage = $stage[0]->descripcion;
 
         //A QUIEN DIRIGIR EL CORREO
-        $emailsAdmins = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 2)->where('envio_de_correo', true)->get();
-        $emailsAdmins = $emailsAdmins->pluck('email');
-        $emailsPMOs = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 4)->where('envio_de_correo', true)->get();
-        $emailsPMOs = $emailsPMOs->pluck('email');
-        $emailsUsers = DB::table('Usuarios')
-            ->leftJoin('RolesProyectos', 'Usuarios.Clave', 'RolesProyectos.Clave_Usuario')
-            ->select('Usuarios.email')
-            ->where('RolesProyectos.Clave_Proyecto', $projectId)
-            ->where('Usuarios.envio_de_correo', 1)
-            ->where('Usuarios.Clave_Rol', 3)
-            ->get();
-        $emailsUsers = $emailsUsers->pluck('email');
+//        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+//        $emailsAdmins = $emailsAdmins->pluck('email');
+//        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+//        $emailsPMOs = $emailsPMOs->pluck('email');
+//        $emailsUsers = DB::table('usuarios')
+//            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+//            ->select('usuarios.email')
+//            ->where('roles_proyectos.id_proyecto', $projectId)
+//            ->where('usuarios.envio_de_correo', 1)
+//            ->where('usuarios.id_rol', 3)
+//            ->get();
+//        $emailsUsers = $emailsUsers->pluck('email');
 
         //ENVIO DE CORREOS
-        foreach ($emailsAdmins as $email){
-            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
-        }
-        foreach ($emailsPMOs as $email){
-            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
-        }
-        foreach ($emailsUsers as $email){
-            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
-        }
+//        foreach ($emailsAdmins as $email){
+//            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
+//        }
+//        foreach ($emailsPMOs as $email){
+//            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
+//        }
+//        foreach ($emailsUsers as $email){
+//            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
+//        }
 
-        return redirect('/Admin/Actividades')->with('mensaje', "Nueva actividad agregada correctamente");
+        return redirect('/actividades')->with('mensaje', "Nueva actividad agregada correctamente");
     }
     public function delete($id){
         $actividad = Actividad::find($id);
@@ -248,36 +251,23 @@ class ActividadesController extends Controller
         $actividad->delete();
         return response()->json(['error'=>false]);
     }
-    public function update(Request $request){
-        $actividad = Actividad::find($request->clave);
-        $actividad->Clave_Compania=$request->compania;
-        $actividad->Clave_Proyecto = $request->proyecto;
-        $actividad->Clave_Fase = $request->fase;
-        $actividad->Descripcion = $request->descripcion;
-        $actividad->FechaAccion = $request->fechaAccion;
-        $actividad->Decision = $request->decision;
-        $actividad->Clave_Status = $request->status;
-        $actividad->Clave_Proyecto = $request->proyecto;
-        $actividad->save();
-        return response()->json(['actividad'=>$actividad]);
-    }
 
     public function preparePdf(Request $request) {
-        $etapas = DB::table('Etapas')
-            ->leftJoin('Proyectos', 'Etapas.Clave_Proyecto', '=', 'Proyectos.Clave')
-            ->select('Etapas.Clave as Clave', 'Proyectos.Descripcion as Proyecto', 'Etapas.Descripcion as Etapa')
-            ->where('Etapas.Clave_Compania', '=', Auth::user()->Clave_Compania)
+        $etapas = DB::table('etapas')
+            ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+            ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
+            ->where('etapas.id_compania', '=', Auth::user()->id_compania)
             ->get();
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $proyectos = Proyecto::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $fases = Fase::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $usuarios = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 3)->orWhere('Clave_Rol', 4)->get();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+        $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+        $usuarios = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 3)->orWhere('id_rol', 4)->get();
         $estados = [
             0,
             1,
             2
         ];
-        return view('Admin.Actividades.prepare', compact('proyectos', 'fases', 'usuarios', 'etapas', 'estados', 'compania'));
+        return view('pages.actividades.prepare', compact('proyectos', 'fases', 'usuarios', 'etapas', 'estados', 'compania'));
     }
 
     public function exportPdf(Request $request)
@@ -294,49 +284,49 @@ class ActividadesController extends Controller
         $date = $datetime->toDateString();
         $time = $datetime->toTimeString();
 
-        $actividades = DB::table('Actividades')
-            ->join('Companias', 'Actividades.Clave_Compania', '=', 'Companias.Clave')
-            ->where('Actividades.Clave_Compania', '=', Auth::user()->Clave_Compania)
-            ->join('Proyectos', 'Actividades.Clave_Proyecto', '=', 'Proyectos.Clave')
+        $actividades = DB::table('actividades')
+            ->join('companias', 'actividades.id_compania', '=', 'companias.id')
+            ->where('actividades.id_compania', '=', Auth::user()->id_compania)
+            ->join('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
             ->where(function($query) use ($proyectos, $request) {
                 if ($proyectos != null) {
-                    $query->whereIn('Actividades.Clave_Proyecto', $proyectos);
+                    $query->whereIn('actividades.id_proyecto', $proyectos);
                 }
             })
-            ->join('Usuarios', 'Actividades.Clave_Usuario', '=', 'Usuarios.Clave')
+            ->join('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
             ->where(function($query) use ($usuarios, $request) {
                 if ($usuarios != null) {
-                    $query->whereIn('Actividades.Clave_Usuario', $usuarios);
+                    $query->whereIn('actividades.id_usuario', $usuarios);
                 }
             })
-            ->join('Etapas', 'Actividades.Clave_Etapa', '=', 'Etapas.Clave')
+            ->join('etapas', 'actividades.id_etapa', '=', 'etapas.id')
             ->where(function($query) use ($etapas, $request) {
                 if ($etapas != null) {
-                    $query->whereIn('Actividades.Clave_Etapa', $etapas);
+                    $query->whereIn('actividades.id_etapa', $etapas);
                 }
             })
-            ->join('Fases', 'Actividades.Clave_Fase', '=', 'Fases.Clave')
+            ->join('fases', 'actividades.id_fase', '=', 'fases.id')
             ->where(function($query) use ($fases, $request) {
                 if ($fases != null) {
-                    $query->whereIn('Actividades.Clave_Fase', $fases);
+                    $query->whereIn('actividades.id_fase', $fases);
                 }
             })
             ->where(function($query) use ($desde, $request) {
                 if ($desde != null) {
-                    $query->whereDate('Actividades.FechaCreacion', '>=', $desde);
+                    $query->whereDate('actividades.fecha_creacion', '>=', $desde);
                 }
             })
             ->where(function($query) use ($hasta, $request) {
                 if ($hasta != null) {
-                    $query->whereDate('Actividades.FechaCreacion', '<=', $hasta);
+                    $query->whereDate('actividades.fecha_creacion', '<=', $hasta);
                 }
             })
             ->where(function($query) use ($estados, $request) {
                 if ($estados != null) {
-                    $query->whereIn('Actividades.Estado', $estados);
+                    $query->whereIn('actividades.estado', $estados);
                 }
             })
-            ->select('Actividades.*', 'Etapas.Descripcion as Etapa', 'Companias.Descripcion as Compania', 'Fases.Descripcion as Fase', 'Usuarios.Nombres as Usuario', 'Proyectos.Descripcion as Proyecto')
+            ->select('actividades.*', 'etapas.descripcion as etapa', 'companias.descripcion as compania', 'fases.descripcion as fase', 'usuarios.nombres as usuario', 'proyectos.descripcion as proyecto')
             ->get();
 
         $pdf = PDF::loadView('pdf.activities', compact('actividades', 'date', 'time'));

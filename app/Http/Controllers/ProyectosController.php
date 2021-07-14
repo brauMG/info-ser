@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Actividad;
-use App\Etapas;
-use App\Mail\AdviceActivity;
-use App\Mail\ChangePhase;
-use App\Mail\ChangeStatus;
-use App\RolRASIC;
-use App\Status;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use App\Proyecto;
-use App\Compania;
-use App\User;
-use App\Areas;
-use App\Fase;
-use App\Enfoque;
-use App\Trabajo;
-use App\Indicador;
 use Illuminate\Support\Facades\Mail;
-use PDF;
+//use App\Mail\AdviceActivity;
+//use App\Mail\ChangePhase;
+//use App\Mail\ChangeStatus;
 
+use App\Models\Actividad;
+use App\Models\Etapas;
+use App\Models\RolRASIC;
+use App\Models\Status;
+use App\Models\Proyecto;
+use App\Models\Companias;
+use App\Models\User;
+use App\Models\Areas;
+use App\Models\Fase;
+use App\Models\Enfoques;
+use App\Models\Trabajo;
+use App\Models\Indicador;
 
 class ProyectosController extends Controller
 {
@@ -33,69 +33,68 @@ class ProyectosController extends Controller
         $this->middleware(['auth', 'verified']);
     }
     public function index(){
-        $rol = Auth::user()->Clave_Rol;
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        $rol = Auth::user()->id_rol;
+        $compania = Companias::where('id', Auth::user()->id_compania)->first();
 
 
-        if (Auth::user()->Clave_Rol == 4) {
-            $proyecto = DB::table('Proyectos')
-                ->leftJoin('Companias', 'Proyectos.Clave_Compania', '=', 'Companias.Clave')
-                ->leftJoin('Status', 'Status.Clave', '=', 'Proyectos.Clave_Status')
-                ->leftJoin('Areas', 'Areas.Clave', '=', 'Proyectos.Clave_Area')
-                ->leftJoin('Fases', 'Fases.Clave', '=', 'Proyectos.Clave_Fase')
-                ->leftJoin('Enfoques', 'Enfoques.Clave', '=', 'Proyectos.Clave_Enfoque')
-                ->leftJoin('Trabajos', 'Trabajos.Clave', '=', 'Proyectos.Clave_Trabajo')
-                ->leftJoin('Indicador', 'Indicador.Clave', '=', 'Proyectos.Clave_Indicador')
-                ->select('Proyectos.Clave','Status.Activo as Activo', 'Companias.Descripcion as Compania', 'Proyectos.Descripcion as Descripcion', 'Status.status as Status', 'Areas.Descripcion as Area', 'Fases.Descripcion as Fase', 'Enfoques.Descripcion AS Enfoque', 'Trabajos.Descripcion As Trabajo', 'Indicador.Descripcion As Indicador', 'Objectivo', 'Criterio')
-                ->where('Proyectos.Clave_Compania', '=', Auth::user()->Clave_Compania)
+        if (Auth::user()->id_rol == 4) {
+            $proyecto = DB::table('proyectos')
+                ->leftJoin('companias', 'proyectos.id_compania', '=', 'companias.id')
+                ->leftJoin('estado', 'estado.id', '=', 'proyectos.id_estado')
+                ->leftJoin('areas', 'areas.id', '=', 'proyectos.id_area')
+                ->leftJoin('fases', 'fases.id', '=', 'proyectos.id_fase')
+                ->leftJoin('enfoques', 'enfoques.id', '=', 'proyectos.id_enfoque')
+                ->leftJoin('trabajos', 'trabajos.id', '=', 'proyectos.id_trabajo')
+                ->leftJoin('indicadores', 'indicadores.id', '=', 'proyectos.id_indicador')
+                ->select('proyectos.id','estado.activo as activo', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'estado.estado as estado', 'areas.descripcion as area', 'fases.descripcion as fase', 'enfoques.descripcion as enfoque', 'trabajos.descripcion as trabajo', 'indicadores.descripcion as indicador', 'objetivo', 'criterio')
+                ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
                 ->get();
 
             $url = url()->previous();
             $url = basename($url);
-            if ($url == 'Actividades') {
+            if ($url == 'actividades') {
                 $mensaje = 'Selecciona el proyecto en el cual registraras una actividad';
-                return view('Admin.Proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'mensaje' => $mensaje, 'rol' => $rol]);
+                return view('pages.proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'mensaje' => $mensaje, 'rol' => $rol]);
             } else {
-                return view('Admin.Proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'rol' => $rol]);
+                return view('pages.proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'rol' => $rol]);
             }
         }
 
-        if (Auth::user()->Clave_Rol == 3) {
-            $proyecto = DB::table('RolesProyectos')
-                ->leftJoin('Proyectos', 'RolesProyectos.Clave_Proyecto', '=', 'Proyectos.Clave')
-                ->leftJoin('Companias', 'Proyectos.Clave_Compania', '=', 'Companias.Clave')
-                ->leftJoin('Status', 'Status.Clave', '=', 'Proyectos.Clave_Status')
-                ->leftJoin('Areas', 'Areas.Clave', '=', 'Proyectos.Clave_Area')
-                ->leftJoin('Fases', 'Fases.Clave', '=', 'Proyectos.Clave_Fase')
-                ->leftJoin('Enfoques', 'Enfoques.Clave', '=', 'Proyectos.Clave_Enfoque')
-                ->leftJoin('Trabajos', 'Trabajos.Clave', '=', 'Proyectos.Clave_Trabajo')
-                ->leftJoin('Indicador', 'Indicador.Clave', '=', 'Proyectos.Clave_Indicador')
-                ->select('Proyectos.Clave','Status.Activo as Activo', 'Companias.Descripcion as Compania', 'Proyectos.Descripcion as Descripcion', 'Status.status as Status', 'Areas.Descripcion as Area', 'Fases.Descripcion as Fase', 'Enfoques.Descripcion AS Enfoque', 'Trabajos.Descripcion As Trabajo', 'Indicador.Descripcion As Indicador', 'Objectivo', 'Criterio')
-                ->where('RolesProyectos.Clave_Usuario', '=', Auth::user()->Clave)
+        if (Auth::user()->id_rol == 3) {
+            $proyecto = DB::table('roles_proyectos')
+                ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
+                ->leftJoin('companias', 'proyectos.id_compania', '=', 'companias.id')
+                ->leftJoin('estado', 'estado.id', '=', 'proyectos.id_estado')
+                ->leftJoin('areas', 'areas.id', '=', 'proyectos.id_area')
+                ->leftJoin('fases', 'fases.id', '=', 'proyectos.id_fase')
+                ->leftJoin('enfoques', 'enfoques.id', '=', 'proyectos.id_enfoque')
+                ->leftJoin('trabajos', 'trabajos.id', '=', 'proyectos.id_trabajo')
+                ->leftJoin('indicadores', 'indicadores.id', '=', 'proyectos.id_indicador')
+                ->select('proyectos.id','estado.activo as activo', 'companias.descripcion as Compania', 'proyectos.descripcion as proyecto', 'estado.estado as estado', 'areas.descripcion as area', 'fases.descripcion as fase', 'enfoques.descripcion as enfoque', 'trabajos.descripcion as trabajo', 'indicadores.descripcion as indicador', 'objetivo', 'criterio')
+                ->where('roles_proyectos.id_usuario', '=', Auth::user()->id)
                 ->get();
 
             $url = url()->previous();
             $url = basename($url);
-            if ($url == 'Actividades') {
+            if ($url == 'actividades') {
                 $mensaje = 'Selecciona el proyecto en el cual registraras una actividad';
-                return view('Admin.Proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'mensaje' => $mensaje, 'rol' => $rol]);
+                return view('pages.proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'mensaje' => $mensaje, 'rol' => $rol]);
             } else {
-                return view('Admin.Proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'rol' => $rol]);
+                return view('pages.proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'rol' => $rol]);
             }
         }
     }
 
     public function edit($id){
-
-		if(Auth::user()->Clave_Rol==4){
-			$proyecto=Proyecto::find($id);
-			$compania=Compania::where('Clave','=',Auth::user()->Clave_Compania)->get();
-			$area=Areas::where('Clave_Compania','=',Auth::user()->Clave_Compania)->get();
+		if(Auth::user()->id_rol==4){
+			$proyecto= Proyecto::find($id);
+			$compania=Companias::where('id', '=', Auth::user()->id_compania)->get();
+			$area=Areas::where('id_companias', '=', Auth::user()->id_compania)->get();
 			$fase=Fase::all();
-			$enfoque=Enfoque::all();
+			$enfoque=Enfoques::all();
 			$trabajo=Trabajo::all();
 			$indicador=Indicador::all();
-    		return view('Admin.Proyectos.edit', ['proyecto'=>$proyecto,'companias'=>$compania,'areas'=>$area,'fases'=>$fase,'enfoques'=>$enfoque,'trabajos'=>$trabajo,'indicadores'=>$indicador]);
+    		return view('pages.proyectos.edit', ['proyecto'=>$proyecto,'companias'=>$compania,'areas'=>$area,'fases'=>$fase,'enfoques'=>$enfoque,'trabajos'=>$trabajo,'indicadores'=>$indicador]);
 		}
 		else{
 			return redirect('/');
@@ -103,21 +102,21 @@ class ProyectosController extends Controller
     }
 
     public function new(){
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $company=Compania::where('Clave', Auth::user()->Clave_Compania)->get();
-	    $areas=Areas::where('Clave_Compania','=',Auth::user()->Clave_Compania)->get();
-	    $fases=Fase::where('Clave_Compania','=',Auth::user()->Clave_Compania)->get();
-	    $enfoques=Enfoque::all();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $company=Companias::where('id', Auth::user()->id_compania)->get();
+	    $areas=Areas::where('id_companias','=',Auth::user()->id_compania)->get();
+	    $fases=Fase::where('id_compania','=',Auth::user()->id_compania)->get();
+	    $enfoques=Enfoques::all();
 	    $trabajos=Trabajo::all();
-	    $indicadores=Indicador::where('Clave_Compania','=',Auth::user()->Clave_Compania)->get();
-        $estados=Status::where('Clave_Compania','=',Auth::user()->Clave_Compania)->get();
+	    $indicadores=Indicador::where('id_compania','=',Auth::user()->id_compania)->get();
+        $estados=Status::where('id_compania','=',Auth::user()->id_compania)->get();
         $count = 0;
-        return view('Admin.Proyectos.new',['company'=>$company,'areas'=>$areas,'fases'=>$fases,'enfoques'=>$enfoques,'trabajos'=>$trabajos,'indicadores'=>$indicadores,'estados'=>$estados, 'count'=>$count,'compania'=>$compania]);
+        return view('pages.proyectos.new',['company'=>$company,'areas'=>$areas,'fases'=>$fases,'enfoques'=>$enfoques,'trabajos'=>$trabajos,'indicadores'=>$indicadores,'estados'=>$estados, 'count'=>$count,'compania'=>$compania]);
 	}
 
     public function store(Request $request){
         $user = new User;
-        $company=$user->Clave_Compania=Auth::user()->Clave_Compania;
+        $company = $user->id_compania = Auth::user()->id_compania;
 
         $project = $request->validate([
             'descripcion' => ['required', 'string', 'max:500'],
@@ -132,165 +131,165 @@ class ProyectosController extends Controller
         ]);
 
         Proyecto::create([
-            'Clave_Compania' => $company,
-            'Descripcion' => $project['descripcion'],
-            'Objectivo' => $project['objetivo'],
-            'Criterio' => $project['criterio'],
-            'Clave_Area' => $project['area'],
-            'Clave_Fase' => $project['fase'],
-            'Clave_Enfoque' => $project['enfoque'],
-            'Clave_Trabajo' => $project['trabajo'],
-            'Clave_Indicador' => $project['indicador'],
-            'Clave_Status' => $project['estado'],
-            'Activo' => 1,
-            'FechaCreacion' => Carbon::today()->toDateString()
-
+            'id_compania' => $company,
+            'descripcion' => $project['descripcion'],
+            'objetivo' => $project['objetivo'],
+            'criterio' => $project['criterio'],
+            'id_area' => $project['area'],
+            'id_fase' => $project['fase'],
+            'id_enfoque' => $project['enfoque'],
+            'id_trabajo' => $project['trabajo'],
+            'id_indicador' => $project['indicador'],
+            'id_estado' => $project['estado'],
+            'activo' => 1,
+            'id_gerencia' => 1,
+            'fecha_creacion' => Carbon::today()->toDateString()
         ]);
-        return redirect('/Admin/Proyectos')->with('mensaje', "Nuevo proyecto agregado correctamente");
+        return redirect('/proyectos')->with('mensaje', "Nuevo proyecto agregado correctamente");
     }
     public function delete($id){
     	$proyecto = Proyecto::find($id);
     	$proyecto->delete();
-        return redirect('/Admin/Proyectos')->with('mensajeAlert', "Proyecto eliminado correctamente");
+        return redirect('/proyectos')->with('mensajeAlert', "Proyecto eliminado correctamente");
     }
     public function update(Request $request){
-    	$proyecto = Proyecto::find($request->clave);
-    	$proyecto->Clave_Compania = Auth::user()->Clave_Compania;
-		$proyecto->Descripcion = $request->descripcion;
-		$proyecto->Clave_Area = $request->area;
-		$proyecto->Clave_Fase = $request->fase;
-		$proyecto->Clave_Enfoque = $request->enfoque;
-		$proyecto->Clave_Trabajo = $request->trabajo;
-		$proyecto->Clave_Indicador = $request->indicador;
-		$proyecto->Objectivo = $request->objectivo;
-        $proyecto->Criterio = $request->criterio;
-        $proyecto->Activo=true;
+    	$proyecto = Proyecto::find($request->id);
+    	$proyecto->id_compania = Auth::user()->id_compania;
+		$proyecto->descripcion = $request->descripcion;
+		$proyecto->id_area = $request->area;
+		$proyecto->id_fase = $request->fase;
+		$proyecto->id_enfoque = $request->enfoque;
+		$proyecto->id_trabajo = $request->trabajo;
+		$proyecto->id_indicador = $request->indicador;
+		$proyecto->objetivo = $request->objectivo;
+        $proyecto->criterio = $request->criterio;
+        $proyecto->activo=true;
 		$proyecto->save();
 		return response()->json(['proyecto'=>$proyecto]);
     }
     public function ProyectByCompany($company){
-    	$projects=Proyecto::where('Clave_Compania',$company)
+    	$projects = Proyecto::where('id_compania',$company)
         ->get();
         return response()->json(['proyectos'=>$projects]);
     }
 
     public function editStage($id) {
-        $proyectoFase=Proyecto::where('Clave', $id)->get()->toArray();
+        $proyectoFase = Proyecto::where('id', $id)->get()->toArray();
         $proyectoFase = $proyectoFase[0];
-        $OldFase=Fase::where('Clave', $proyectoFase['Clave_Fase'])->get()->toArray();
-        $OldFase = $OldFase[0]['Clave'];
-        $fases=Fase::where('Clave_Compania','=',Auth::user()->Clave_Compania)->get();
+        $OldFase=Fase::where('id', $proyectoFase['id_fase'])->get()->toArray();
+        $OldFase = $OldFase[0]['id'];
+        $fases=Fase::where('id_compania', '=', Auth::user()->id_compania)->get();
         $count = 0;
-        $actividades = Actividad::where('Clave_Proyecto', $id)->where('Estado', 0)->get();
+        $actividades = Actividad::where('id_proyecto', $id)->where('estado', 0)->get();
         $proyectoID = $id;
-        return view('Admin.Proyectos.editStage', compact('fases', 'count', 'OldFase', 'proyectoFase', 'proyectoID'));
+        return view('pages.proyectos.editStage', compact('fases', 'count', 'OldFase', 'proyectoFase', 'proyectoID'));
     }
 
     public function editStatus($id) {
-        $proyectoEstado=Proyecto::where('Clave', $id)->get()->toArray();
+        $proyectoEstado=Proyecto::where('id', $id)->get()->toArray();
         $proyectoEstado = $proyectoEstado[0];
-        $OldEstado=Status::where('Clave', $proyectoEstado['Clave_Status'])->get()->toArray();
-        $OldEstado = $OldEstado[0]['Clave'];
-        $estados=Status::where('Clave_Compania','=',Auth::user()->Clave_Compania)->get();
+        $OldEstado=Status::where('id', $proyectoEstado['id_estado'])->get()->toArray();
+        $OldEstado = $OldEstado[0]['id'];
+        $estados=Status::where('id_compania','=',Auth::user()->id_compania)->get();
         $count = 0;
-        return view('Admin.Proyectos.editStatus', compact('estados', 'count', 'OldEstado', 'proyectoEstado'));
+        return view('pages.proyectos.editStatus', compact('estados', 'count', 'OldEstado', 'proyectoEstado'));
     }
 
-    public function updateStage(Request $request, $Clave){
+    public function updateStage(Request $request, $id){
 	    $id = $request->input('id');
-        $actividades = Actividad::where('Clave_Proyecto', $id)->where('Estado', 0)->get();
+        $actividades = Actividad::where('id_proyecto', $id)->where('estado', 0)->get();
 
         if (count($actividades) == 0) {
             $fase = $request->validate([
             'fase' => ['required']
             ]);
-            Proyecto::where('Clave', $Clave)->update([
-                'Clave_Fase' => $fase['fase']
+            Proyecto::where('id', $id)->update([
+                'id_fase' => $fase['fase']
             ]);
 
             // DATOS DEL CORREO
-            $user = Auth::user()->Nombres;
-            $project = Proyecto::where('Clave', $Clave)->get();
-            $projectId = $project[0]->Clave;
-            $project = $project[0]->Descripcion;
-            $phase = Fase::where('Clave', $fase['fase'])->get();
-            $phase = $phase[0]->Descripcion;
+//            $user = Auth::user()->nombres;
+//            $project = Proyecto::where('id', $id)->get();
+//            $projectId = $project[0]->id;
+//            $project = $project[0]->descripcion;
+//            $phase = Fase::where('id', $fase['fase'])->get();
+//            $phase = $phase[0]->descripcion;
 
             //A QUIEN DIRIGIR EL CORREO
-            $emailsAdmins = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 2)->where('envio_de_correo', true)->get();
-            $emailsAdmins = $emailsAdmins->pluck('email');
-            $emailsPMOs = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 4)->where('envio_de_correo', true)->get();
-            $emailsPMOs = $emailsPMOs->pluck('email');
-            $emailsUsers = DB::table('Usuarios')
-                ->leftJoin('RolesProyectos', 'Usuarios.Clave', 'RolesProyectos.Clave_Usuario')
-                ->select('Usuarios.email')
-                ->where('RolesProyectos.Clave_Proyecto', $projectId)
-                ->where('Usuarios.envio_de_correo', 1)
-                ->where('Usuarios.Clave_Rol', 3)
-                ->get();
-            $emailsUsers = $emailsUsers->pluck('email');
+//            $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+//            $emailsAdmins = $emailsAdmins->pluck('email');
+//            $emailsPMOs = User::where('id_compania', Auth::user()->Clave_Compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+//            $emailsPMOs = $emailsPMOs->pluck('email');
+//            $emailsUsers = DB::table('usuarios')
+//                ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+//                ->select('usuarios.email')
+//                ->where('roles_proyectos.id_proyecto', $projectId)
+//                ->where('usuarios.envio_de_correo', 1)
+//                ->where('usuarios.id_rol', 3)
+//                ->get();
+//            $emailsUsers = $emailsUsers->pluck('email');
+//
+//            //ENVIO DE CORREOS
+//            foreach ($emailsAdmins as $email){
+//                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
+//            }
+//            foreach ($emailsPMOs as $email){
+//                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
+//            }
+//            foreach ($emailsUsers as $email){
+//                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
+//            }
 
-            //ENVIO DE CORREOS
-            foreach ($emailsAdmins as $email){
-                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
-            }
-            foreach ($emailsPMOs as $email){
-                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
-            }
-            foreach ($emailsUsers as $email){
-                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
-            }
-
-            return redirect('/Admin/Proyectos')->with('mensaje', "La fase del proyecto fue actualizada correctamente");
+            return redirect('/proyectos')->with('mensaje', "La fase del proyecto fue actualizada correctamente");
         }
         else {
-            return redirect('/Admin/Proyectos')->with('mensajeDanger', "Hay actividades pendientes por revisar. No se puede cambiar la fase del proyecto.");
+            return redirect('/proyectos')->with('mensajeDanger', "Hay actividades pendientes por revisar. No se puede cambiar la fase del proyecto.");
         }
     }
 
-    public function updateStatus(Request $request, $Clave){
+    public function updateStatus(Request $request, $id){
         $status = $request->validate([
             'status' => ['required']
         ]);
-        Proyecto::where('Clave', $Clave)->update([
-            'Clave_Status' => $status['status']
+        Proyecto::where('id', $id)->update([
+            'id_estado' => $status['status']
         ]);
 
         // DATOS DEL CORREO
-        $user = Auth::user()->Nombres;
-        $project = Proyecto::where('Clave', $Clave)->get();
-        $projectId = $project[0]->Clave;
-        $project = $project[0]->Descripcion;
-        $status = Status::where('Clave', $status['status'])->get();
-        $lock = $status[0]->Activo;
-        $status = $status[0]->status;
+        $user = Auth::user()->nombres;
+        $project = Proyecto::where('id', $id)->get();
+        $projectId = $project[0]->id;
+        $project = $project[0]->descripcion;
+        $status = Status::where('id', $status['status'])->get();
+        $lock = $status[0]->activo;
+        $status = $status[0]->estado;
 
         //A QUIEN DIRIGIR EL CORREO
-        $emailsAdmins = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 2)->where('envio_de_correo', true)->get();
-        $emailsAdmins = $emailsAdmins->pluck('email');
-        $emailsPMOs = User::where('Clave_Compania', Auth::user()->Clave_Compania)->where('Clave_Rol', 4)->where('envio_de_correo', true)->get();
-        $emailsPMOs = $emailsPMOs->pluck('email');
-        $emailsUsers = DB::table('Usuarios')
-            ->leftJoin('RolesProyectos', 'Usuarios.Clave', 'RolesProyectos.Clave_Usuario')
-            ->select('Usuarios.email')
-            ->where('RolesProyectos.Clave_Proyecto', $projectId)
-            ->where('Usuarios.envio_de_correo', 1)
-            ->where('Usuarios.Clave_Rol', 3)
-            ->get();
-        $emailsUsers = $emailsUsers->pluck('email');
+//        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+//        $emailsAdmins = $emailsAdmins->pluck('email');
+//        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+//        $emailsPMOs = $emailsPMOs->pluck('email');
+//        $emailsUsers = DB::table('usuarios')
+//            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+//            ->select('usuarios.email')
+//            ->where('roles_proyectos.id_proyecto', $projectId)
+//            ->where('usuarios.envio_de_correo', 1)
+//            ->where('usuarios.id_rol', 3)
+//            ->get();
+//        $emailsUsers = $emailsUsers->pluck('email');
 
         //ENVIO DE CORREOS
-        foreach ($emailsAdmins as $email){
-            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
-        }
-        foreach ($emailsPMOs as $email){
-            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
-        }
-        foreach ($emailsUsers as $email){
-            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
-        }
+//        foreach ($emailsAdmins as $email){
+//            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
+//        }
+//        foreach ($emailsPMOs as $email){
+//            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
+//        }
+//        foreach ($emailsUsers as $email){
+//            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
+//        }
 
-        return redirect('/Admin/Proyectos')->with('mensaje', "El estado del proyecto fue actualizado correctamente");
+        return redirect('/proyectos')->with('mensaje', "El estado del proyecto fue actualizado correctamente");
     }
 
     public function getUsers(Request $request)
@@ -299,15 +298,15 @@ class ProyectosController extends Controller
             $role = 3;
             $i = 0;
             $usersArray = array();
-            $UserArea = DB::table('Usuarios')->where('Clave_Area', '=', $request->area)->get();
-            $pluckUserArea = $UserArea->pluck('Clave');
+            $UserArea = DB::table('usuarios')->where('id_area', '=', $request->area)->get();
+            $pluckUserArea = $UserArea->pluck('id');
             foreach ($pluckUserArea as $user){
-                $users = DB::table('Usuarios')
-                    ->where('Clave','=', $pluckUserArea[$i])
-                    ->where('Clave_Rol', '=', $role)
+                $users = DB::table('usuarios')
+                    ->where('id','=', $pluckUserArea[$i])
+                    ->where('id_rol', '=', $role)
                     ->get();
                 foreach ($users as $user){
-                    $usersArray[$user->Clave] = $user->Nombres;
+                    $usersArray[$user->id] = $user->nombres;
                 }
                 $i++;
             }
@@ -316,16 +315,16 @@ class ProyectosController extends Controller
     }
 
     public function preparePdf(Request $request) {
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $areas=Areas::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $enfoques=Enfoque::all();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $areas=Areas::where('id_companias',Auth::user()->id_compania)->get();
+        $enfoques=Enfoques::all();
         $trabajos=Trabajo::all();
-        $indicadores=Indicador::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $estados=Status::where('Clave_Compania',Auth::user()->Clave_Compania)->get();
-        $proyectos = Proyecto::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $fases = Fase::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $indicadores=Indicador::where('id_compania',Auth::user()->id_compania)->get();
+        $estados=Status::where('id_compania',Auth::user()->id_compania)->get();
+        $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+        $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
 
-        return view('Admin.Proyectos.prepare', compact('proyectos', 'fases', 'estados', 'compania', 'areas', 'enfoques', 'trabajos', 'indicadores'));
+        return view('pages.proyectos.prepare', compact('proyectos', 'fases', 'estados', 'compania', 'areas', 'enfoques', 'trabajos', 'indicadores'));
     }
 
     public function exportPdf(Request $request)
@@ -342,49 +341,49 @@ class ProyectosController extends Controller
         $date = $datetime->toDateString();
         $time = $datetime->toTimeString();
 
-        $proyectos = DB::table('Proyectos')
+        $proyectos = DB::table('proyectos')
             ->where(function($query) use ($proyectos2, $request) {
                 if ($proyectos2 != null) {
-                    $query->whereIn('Proyectos.Clave', $proyectos2);
+                    $query->whereIn('proyectos.id', $proyectos2);
                 }
             })
-            ->join('Fases', 'Proyectos.Clave_Fase', '=', 'Fases.Clave')
+            ->join('fases', 'proyectos.id_fase', '=', 'fases.id')
             ->where(function($query) use ($fases, $request) {
                 if ($fases != null) {
-                    $query->whereIn('Proyectos.Clave_Fase', $fases);
+                    $query->whereIn('proyectos.id_fase', $fases);
                 }
             })
-            ->join('Status', 'Proyectos.Clave_Status', '=', 'Status.Clave')
+            ->join('estado', 'proyectos.id_estado', '=', 'estado.id')
             ->where(function($query) use ($estados, $request) {
                 if ($estados != null) {
-                    $query->whereIn('Proyectos.Clave_Status', $estados);
+                    $query->whereIn('proyectos.id_estado', $estados);
                 }
             })
-            ->join('Indicador', 'Proyectos.Clave_Indicador', '=', 'Indicador.Clave')
+            ->join('indicadores', 'proyectos.id_indicador', '=', 'indicadores.id')
             ->where(function($query) use ($indicadores, $request) {
                 if ($indicadores != null) {
-                    $query->whereIn('Proyectos.Clave_Indicador', $indicadores);
+                    $query->whereIn('proyectos.id_indicador', $indicadores);
                 }
             })
-            ->join('Trabajos', 'Proyectos.Clave_Trabajo', '=', 'Trabajos.Clave')
+            ->join('trabajos', 'proyectos.id_trabajo', '=', 'trabajos.id')
             ->where(function($query) use ($trabajos, $request) {
                 if ($trabajos != null) {
-                    $query->whereIn('Proyectos.Clave_Trabajo', $trabajos);
+                    $query->whereIn('proyectos.id_trabajo', $trabajos);
                 }
             })
-            ->join('Enfoques', 'Proyectos.Clave_Enfoque', '=', 'Enfoques.Clave')
+            ->join('enfoques', 'proyectos.id_enfoque', '=', 'enfoques.id')
             ->where(function($query) use ($enfoques, $request) {
                 if ($enfoques != null) {
-                    $query->whereIn('Proyectos.Clave_Enfoque', $enfoques);
+                    $query->whereIn('proyectos.id_enfoque', $enfoques);
                 }
             })
-            ->join('Areas', 'Proyectos.Clave_Area', '=', 'Areas.Clave')
+            ->join('areas', 'proyectos.id_area', '=', 'areas.id')
             ->where(function($query) use ($areas, $request) {
                 if ($areas != null) {
-                    $query->whereIn('Proyectos.Clave_Area', $areas);
+                    $query->whereIn('proyectos.id_area', $areas);
                 }
             })
-            ->select('Proyectos.*', 'Fases.Descripcion as Fase', 'Status.status as Estado', 'Indicador.Descripcion as Indicador', 'Trabajos.Descripcion as Trabajo', 'Enfoques.Descripcion as Enfoque', 'Areas.Descripcion as Area')
+            ->select('proyectos.*', 'fases.descripcion as fase', 'estado.estado as estado', 'indicadores.descripcion as indicador', 'trabajos.descripcion as trabajo', 'enfoques.descripcion as enfoque', 'areas.descripcion as area')
             ->get();
 
         $pdf = PDF::loadView('pdf.projects', compact('proyectos', 'date', 'time'));

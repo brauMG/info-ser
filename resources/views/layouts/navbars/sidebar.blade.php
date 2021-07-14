@@ -1,3 +1,4 @@
+@inject('company', 'App\Services\GetCompany')
 <div class="sidebar" data-color="azure" data-background-color="blue" data-image="{{ asset('material') }}/img/sidebar-4.jpg">
     <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
@@ -5,60 +6,71 @@
         Tip 2: you can also add an image using data-image tag
     -->
     <div class="logo">
-        <a href="https://creative-tim.com/" class="simple-text logo-normal">
-            {{ __('info ser') }}
+        <a href="/" class="simple-text logo-normal">
+            <strong style="font-size: 24px">{{ $company->get() }}</strong>
+            <br>
+            <h6 style="color: gray">
+            @if(Auth::user()->id_rol === 1)
+                Super Administrador
+            @elseif(Auth::user()->id_rol === 2)
+                Administrador
+            @elseif(Auth::user()->id_rol === 3)
+                Usuario
+            @elseif(Auth::user()->id_rol === 4)
+                PMO
+            @elseif(Auth::user()->id_rol === 5)
+                Presidente
+            @elseif(Auth::user()->id_rol === 6)
+                Director
+            @elseif(Auth::user()->id_rol === 7)
+                Gerente
+            @endif
+            <br>
+            {{Auth::user()->nombres}}
+            </h6>
         </a>
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
             {{--Super Admin = 1, Admin = 2, Usuario = 3, PMO = 4, Presidente = 5, Director = 6, Gerente = 7--}}
-            @if(Auth::user()->id_rol == 3 || Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7)
-            <li class="nav-item{{ $activePage == 'dashboard' ? ' active' : '' }}">
-                <a class="nav-link" href="#">
-                    <i class="material-icons text-white">edit_calendar</i>
-                    <p>{{ __('Proyectos') }}</p>
-                </a>
-            </li>
-            @endif
-
             @if(Auth::user()->id_rol == 2 || Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 6 || Auth::user()->id_rol == 7)
-            <li class="nav-item {{ ($activePage == 'profile' || $activePage == 'user-management') ? ' active' : '' }}">
-                <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="true">
-                    <i><img style="width:25px" src="{{ asset('material') }}/img/reportes.svg"></i>
+            <li class="nav-item {{ ($activePage == 'ActividadesPDF' || $activePage == 'EtapasPDF' || $activePage == 'ProyectosPDF' || $activePage == 'UsuariosPDF' || $activePage == 'UsuariosProyectosPDF') ? ' active' : '' }}">
+                <a class="nav-link collapsed" data-toggle="collapse" href="#reportes" aria-expanded="false">
+                    <i><img style="width:25px" src="{{ asset('material') }}/img/reporte.svg"></i>
                     <p>{{ __('Reportes') }}
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse show" id="laravelExample">
+                <div class="collapse" id="reportes">
                     <ul class="nav">
-                        <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
+                        <li class="nav-item{{ $activePage == 'ActividadesPDF' ? ' active' : '' }}">
                             <a class="nav-link" href="#">
-                                <i class="material-icons text-white">insights</i>
+                                <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal">{{ __('Actividades') }} </span>
                             </a>
                         </li>
-                        <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
+                        <li class="nav-item{{ $activePage == 'EtapasPDF' ? ' active' : '' }}">
                             <a class="nav-link" href="#">
-                                <i class="material-icons text-white">insights</i>
+                                <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal"> {{ __('Etapas') }} </span>
                             </a>
                         </li>
-                        <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
+                        <li class="nav-item{{ $activePage == 'ProyectosPDF' ? ' active' : '' }}">
                             <a class="nav-link" href="#">
-                                <i class="material-icons text-white">insights</i>
+                                <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal"> {{ __('Proyectos') }} </span>
                             </a>
                         </li>
-                        <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
+                        <li class="nav-item{{ $activePage == 'UsuariosPDF' ? ' active' : '' }}">
                             <a class="nav-link" href="#">
-                                <i class="material-icons text-white">insights</i>
+                                <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal"> {{ __('Usuarios') }} </span>
                             </a>
                         </li>
-                        <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
+                        <li class="nav-item{{ $activePage == 'UsuariosProyectosPDF' ? ' active' : '' }}">
                             <a class="nav-link" href="#">
-                                <i class="material-icons text-white">insights</i>
-                                <span class="sidebar-normal"> {{ __('Usuarios en Proyectos') }} </span>
+                                <i class="material-icons text-white">stacked_bar_chart</i>
+                                <span class="sidebar-normal"> {{ __('Usuarios en proyectos') }} </span>
                             </a>
                         </li>
                     </ul>
@@ -68,23 +80,23 @@
 
             @if(Auth::user()->id_rol == 2 || Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 6 || Auth::user()->id_rol == 7)
             <li class="nav-item {{ ($activePage == 'profile' || $activePage == 'user-management') ? ' active' : '' }}">
-                <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="true">
+                <a class="nav-link collapsed" data-toggle="collapse" href="#graficas" aria-expanded="false">
                     <i><img style="width:25px" src="{{ asset('material') }}/img/graficas.svg"></i>
                     <p>{{ __('Gráficas') }}
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse show" id="laravelExample">
+                <div class="collapse" id="graficas">
                     <ul class="nav">
-                        <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
+                        <li class="nav-item{{ $activePage == 'ProyectosReporte' ? ' active' : '' }}">
                             <a class="nav-link" href="#">
-                                <i class="material-icons text-white">analytics</i>
+                                <i class="material-icons text-white">pie_chart</i>
                                 <span class="sidebar-normal">{{ __('Proyectos') }} </span>
                             </a>
                         </li>
-                        <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
+                        <li class="nav-item{{ $activePage == 'ActividadesReporte' ? ' active' : '' }}">
                             <a class="nav-link" href="#">
-                                <i class="material-icons text-white">analytics</i>
+                                <i class="material-icons text-white">pie_chart</i>
                                 <span class="sidebar-normal"> {{ __('Actividades') }} </span>
                             </a>
                         </li>
@@ -93,13 +105,40 @@
             </li>
             @endif
 
+            @if(Auth::user()->id_rol == 3 || Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7)
+                <li class="nav-item{{ $activePage == 'Proyectos' ? ' active' : '' }}">
+                    <a class="nav-link" href="{{ url('/proyectos/') }}">
+                        <i class="material-icons text-white">edit_calendar</i>
+                        <p>{{ __('Proyectos') }}</p>
+                    </a>
+                </li>
+            @endif
+
             @if(Auth::user()->id_rol == 1)
-            <li class="nav-item{{ $activePage == 'Compañias' ? ' active' : '' }}">
-                <a class="nav-link" href="{{ url('/companias/') }}">
-                    <i class="material-icons text-white">business</i>
-                    <p>{{ __('Compañias') }}</p>
-                </a>
-            </li>
+                <li class="nav-item {{ ($activePage == 'Compañias') ? ' active' : '' }}">
+                    <a class="nav-link collapsed" data-toggle="collapse" href="#companias" aria-expanded="false">
+                        <i><img style="width:25px" src="{{ asset('material') }}/img/robot.svg"></i>
+                        <p>{{ __('Compañias') }}
+                            <b class="caret"></b>
+                        </p>
+                    </a>
+                    <div class="collapse" id="companias">
+                        <ul class="nav">
+                            <li class="nav-item{{ $activePage == 'Compañias' ? ' active' : '' }}">
+                                <a class="nav-link" href="{{ url('/companias/') }}">
+                                    <i class="material-icons text-white">business</i>
+                                    <p>{{ __('Lista de Compañias') }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" onclick="ChangeCompany();" style="cursor:pointer;">
+                                    <i class="material-icons text-white">sync</i>
+                                    <p>{{ __('Cambiar Compañia') }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             @endif
 
             @if(Auth::user()->id_rol == 1)
@@ -157,8 +196,8 @@
             @endif
 
             @if(Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7)
-            <li class="nav-item{{ $activePage == 'language' ? ' active' : '' }}">
-                <a class="nav-link text-white bg-secondary" href="#">
+            <li class="nav-item{{ $activePage == 'Etapas' ? ' active' : '' }}">
+                <a class="nav-link" href="{{ url('/etapas/') }}">
                     <i class="material-icons text-white">approval</i>
                     <p>{{ __('Etapas') }}</p>
                 </a>
@@ -166,8 +205,8 @@
             @endif
 
             @if(Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7)
-            <li class="nav-item{{ $activePage == 'language' ? ' active' : '' }}">
-                <a class="nav-link text-white bg-secondary" href="#">
+            <li class="nav-item{{ $activePage == 'Roles en Proyectos' ? ' active' : '' }}">
+                <a class="nav-link" href="{{ url('/roles-proyectos/') }}">
                     <i class="material-icons text-white">badge</i>
                     <p>{{ __('Roles en Proyectos') }}</p>
                 </a>
@@ -220,8 +259,8 @@
             @endif
 
             @if(Auth::user()->id_rol == 3 || Auth::user()->id_rol == 4)
-            <li class="nav-item{{ $activePage == 'language' ? ' active' : '' }}">
-                <a class="nav-link text-white bg-secondary" href="#">
+            <li class="nav-item{{ $activePage == 'Actividades' ? ' active' : '' }}">
+                <a class="nav-link" href="{{ url('/actividades/') }}">
                     <i class="material-icons text-white">add_task</i>
                     <p>{{ __('Actividades') }}</p>
                 </a>
@@ -261,3 +300,12 @@
         </ul>
     </div>
 </div>
+<script type="text/javascript">
+    function ChangeCompany() {
+        $('#myModal').load( '{{ url('/companias/selectCompany') }}',function(response, status, xhr)
+        {
+            if (status == "success")
+                $('#myModal').modal('show');
+        });
+    }
+</script>

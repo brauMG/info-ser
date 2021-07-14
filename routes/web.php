@@ -25,11 +25,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/','App\Http\Controllers\HomeController@index');
 
     // Compañia
-    Route::get('/companias/selectCompany','App\Http\Controllers\HomeController@selectCompany');
+    Route::get('/companias/selectCompany','App\Http\Controllers\CompaniaController@selectCompany');
     Route::get('/companias', 'App\Http\Controllers\CompaniaController@index');
     Route::get('/companias/new', 'App\Http\Controllers\CompaniaController@new');
     Route::get('/companias/edit/{id}', 'App\Http\Controllers\CompaniaController@edit');
     Route::get('/companias/delete/{id}', 'App\Http\Controllers\CompaniaController@prepare');
+    Route::get('/companias/change-company/{id}', 'App\Http\Controllers\CompaniaController@changeCompany');
     Route::post('/companias/create', 'App\Http\Controllers\CompaniaController@store')->name('CreateCompany');
     Route::put('/companias/update/{id}', 'App\Http\Controllers\CompaniaController@update')->name('UpdateCompany');
     Route::post('/companias/delete/{id}', 'App\Http\Controllers\CompaniaController@delete')->name('DeleteCompany');
@@ -90,9 +91,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/usuarios/create', 'App\Http\Controllers\UsuariosController@store')->name('CreateUser');
     Route::put('/usuarios/update/{id}', 'App\Http\Controllers\UsuariosController@update')->name('UpdateUser');
     Route::post('/usuarios/delete/{id}', 'App\Http\Controllers\UsuariosController@delete')->name('DeleteUser');
-    Route::get('/usuarios/change-company/{id}', 'App\Http\Controllers\UsuariosController@changeCompany');
     Route::get('/usuarios/ChangeSend/{id}','App\Http\Controllers\UsuariosController@editSend');
     Route::put('/usuarios/UpdateSend/{id}','App\Http\Controllers\UsuariosController@updateSend')->name('UpdateSend');
+    //PDF
+    Route::get('/usuarios/prepare','UsuariosController@preparePdf')->name('FiltersUsers');
+    Route::post('/usuarios/PDF','UsuariosController@exportPdf')->name('UsersPDF');
 
     //Patrocinadores
     Route::get('/patrocinadores', 'App\Http\Controllers\SponsorsController@index');
@@ -120,6 +123,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/etapas/create', 'App\Http\Controllers\EtapasController@store')->name('CreateEtapa');
     Route::put('/etapas/update/{id}', 'App\Http\Controllers\EtapasController@update')->name('UpdateEtapa');
     Route::post('/etapas/delete/{id}', 'App\Http\Controllers\EtapasController@delete')->name('DeleteEtapa');
+    //PDF
     Route::get('/etapas/Prepare','App\Http\Controllers\EtapasController@preparePdf')->name('FiltersStages');
     Route::post('/etapas/PDF','App\Http\Controllers\EtapasController@exportPdf')->name('StagesPDF');
 
@@ -140,9 +144,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/proyectos/UpdateStage/{id}','App\Http\Controllers\ProyectosController@updateStage')->name('UpdateStage');
     Route::put('/proyectos/UpdateStatus/{id}','App\Http\Controllers\ProyectosController@updateStatus')->name('UpdateStatus');
     Route::get('/proyectos/area-users', 'App\Http\Controllers\ProyectosController@getUsers');
+    //PDF
     Route::get('/proyectos/prepare','App\Http\Controllers\ProyectosController@preparePdf')->name('FiltersProjects');
     Route::post('/proyectos/PDF','App\Http\Controllers\ProyectosController@exportPdf')->name('ProjectsPDF');
-    Route::get('/mis-proyectos', 'App\Http\Controllers\ProyectosController@index');
 
 
     //Actividades
@@ -155,16 +159,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/actividades/delete/{id}', 'App\Http\Controllers\ActividadesController@delete');
     Route::get('/actividades/ChangeStatus/{id}','App\Http\Controllers\ActividadesController@editStatus');
     Route::put('/actividades/UpdateStatus/{id}','App\Http\Controllers\ActividadesController@updateStatus')->name('UpdateStatusActivity');
+    //PDF
     Route::get('/actividades/prepare','App\Http\Controllers\ActividadesController@preparePdf')->name('FiltersActivities');
     Route::post('/actividades/PDF','App\Http\Controllers\ActividadesController@exportPdf')->name('ActivitiesPDF');
 
     //roles en Proyectos
     Route::get('/roles-proyectos', 'App\Http\Controllers\RolesProyectosController@index');
     Route::get('/roles-proyectos/new', 'App\Http\Controllers\RolesProyectosController@new')->name('NewProjectUser');
-    Route::get('/roles-proyectos/Select', 'App\Http\Controllers\RolesProyectosController@select')->name('Select');
+    Route::get('/roles-proyectos/select', 'App\Http\Controllers\RolesProyectosController@select')->name('select');
     Route::post('/roles-proyectos/create', 'App\Http\Controllers\RolesProyectosController@store')->name('CreateProjectUser');
     Route::get('/roles-proyectos/ChangeStatus/{id}','App\Http\Controllers\RolesProyectosController@editStatus');
     Route::put('/roles-proyectos/UpdateStatus/{id}','App\Http\Controllers\RolesProyectosController@updateStatus')->name('UpdateStatusProjectUser');
+    //PDF
     Route::get('/roles-proyectos/prepare','App\Http\Controllers\RolesProyectosController@preparePdf')->name('FiltersUsersProjects');
     Route::post('/roles-proyectos/PDF','App\Http\Controllers\RolesProyectosController@exportPdf')->name('UsersProjectsPDF');
 

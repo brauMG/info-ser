@@ -1,168 +1,205 @@
-@extends('layouts.app')
-@if($compania!=null)
-    @section('company',$compania->Descripcion)
-@endif
+@extends('layouts.app', ['activePage' => 'Actividades', 'titlePage' => __('Actividades')])
+
 @section('content')
-    @include('layouts.top-nav')
-    <div class="container container-rapi2">
-        <main role="main" class="ml-sm-auto">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2 h2-less">Actividades</h1>
-                @if($rol == 4 || $rol == 3)
-                    <div class="btn-group mr-2">
-                        <a type="button" class="btn-less btn btn-info" id="new" href="{{url('/Admin/Proyectos')}}"><i class="fas fa-plus"></i> Agregar Actividad</a>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @if ( session('mensaje') )
+                        <div class="alert alert-success" role="alert" id="message">
+                            {{ session('mensaje') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeAlert') )
+                        <div class="alert alert-warning" role="alert" id="message">
+                            {{ session('mensajeAlert') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeDanger') )
+                        <div class="alert alert-danger" role="alert" id="message">
+                            {{ session('mensajeDanger') }}
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger" role="alert" id="message">
+                            Se encontraron los siguientes errores: <br>
+                            @foreach($errors->all() as $error)
+                                <br>
+                                {{'• '.$error }}
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title ">Actividades</h4>
+                            <p class="card-category">Esta es la lista de actividades registradas en el sistema</p>
+                            @if($rol == 4 || $rol == 3)
+                            <a href="{{url('/proyectos')}}" class="btn btn-info" id="new">Agregar Actividad <i class="material-icons">add_circle_outline</i></a>
+                            @endif
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered data-table">
+                                    <thead class="text-primary thead-color">
+                                    <th>ID<i class="material-icons sort">sort</i></th>
+                                    <th>Proyecto<i class="material-icons sort">sort</i></th>
+                                    <th>Fase<i class="material-icons sort">sort</i></th>
+                                    <th>Etapa<i class="material-icons sort">sort</i></th>
+                                    <th>Usuario<i class="material-icons sort">sort</i></th>
+                                    <th>Descripción<i class="material-icons sort">sort</i></th>
+                                    <th>Decisión<i class="material-icons sort">sort</i></th>
+                                    <th>Fecha de Creación<i class="material-icons sort">sort</i></th>
+                                    <th>Estado de Revisión<i class="material-icons sort">sort</i></th>
+                                    <th>Fecha de Revisión<i class="material-icons sort">sort</i></th>
+                                    <th>Hora de Revisión<i class="material-icons sort">sort</i></th>
+                                    <th>Fecha de Vencimiento<i class="material-icons sort">sort</i></th>
+                                    <th>Hora de Vencimiento<i class="material-icons sort">sort</i></th>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($actividad as $item)
+                                        <tr>
+                                        <td>{{$item->id}}</td>
+                                        <td>{{$item->proyecto}}</td>
+                                        <td>{{$item->fase}}</td>
+                                        <td>{{$item->etapa}}</td>
+                                        <td>{{$item->usuario}}</td>
+                                        <td>{{$item->descripcion}}</td>
+                                        <td>{{$item->decision}}
+                                        <td style="text-align: center">
+                                            <a class="btn btn-sm btn-dark text-white"><i class="material-icons">event_available</i>{{$item->fecha_creacion}}</a>
+                                        </td>
+                                        @if($item->estado == 0)
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-warning text-white" @if($rol == 4) clave="{{$item->id}}" onclick="changeEstado(this);" @endif><i class="material-icons">help</i> Pendiente</a>
+                                            </td>
+                                        @elseif($item->estado == 1)
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-success text-white" data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="material-icons">check_circle</i> Aprobada</a>
+                                            </td>
+                                        @elseif($item->estado == 2)
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-danger text-white" data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="material-icons">dangerous</i> Desaprobada</a>
+                                            </td>
+                                        @endif
+                                        @if($item->fecha_revision == null)
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-warning text-white"><i class="material-icons">help</i> Pendiente</a>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-warning text-white"><i class="material-icons">help</i> Pendiente</a>
+                                            </td>
+                                        @elseif($item->fecha_revision > $item->fecha_vencimiento)
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-danger text-white"><i class="material-icons">event_available</i> Se reviso tarde el: {{$item->fecha_revision}}</a>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-danger text-white"><i class="material-icons">timer</i> Se reviso a las: {{$item->hora_revision}}</a>
+                                            </td>
+                                        @elseif($item->fecha_revision <= $item->fecha_vencimiento)
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-success text-white"><i class="material-icons">event_available</i> Se reviso a tiempo el: {{$item->fecha_revision}}</a>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-success text-white"><i class="material-icons">timer</i> Se reviso a las: {{$item->hora_revision}}</a>
+                                            </td>
+                                        @endif
+                                        @if($date == $item->fecha_vencimiento)
+                                            @if($time > $item->hora_vencimiento)
+                                                <td style="text-align: center">
+                                                    <a class="btn btn-sm btn-danger text-white"><i class="material-icons">event_busy</i> Vencio hoy: {{$item->fecha_vencimiento}}</a>
+                                                </td>
+                                                <td style="text-align: center">
+                                                    <a class="btn btn-sm btn-danger text-white"><i class="material-icons">hourglass_bottom</i> Vencio hoy a las: {{$item->hora_vencimiento}}</a>
+                                                </td>
+                                            @else
+                                                <td style="text-align: center">
+                                                    <a class="btn btn-sm btn-warning text-white"><i class="material-icons">event</i> Vence hoy: {{$item->fecha_vencimiento}}</a>
+                                                </td>
+                                                <td style="text-align: center">
+                                                    <a class="btn btn-sm btn-warning text-white"><i class="material-icons">hourglass_top</i> Vence hoy a las: {{$item->hora_vencimiento}}</a>
+                                                </td>
+                                            @endif
+                                        @elseif($date < $item->fecha_vencimiento)
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-success text-white"><i class="material-icons">event</i> Vence el: {{$item->fecha_vencimiento}}</a>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-success text-white"><i class="material-icons">hourglass_top</i> Vence a las: {{$item->hora_vencimiento}}</a>
+                                            </td>
+                                        @else
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-danger text-white"><i class="material-icons">event_available</i> Vencio el: {{$item->fecha_vencimiento}}</a>
+                                            </td>
+                                            <td style="text-align: center">
+                                                <a class="btn btn-sm btn-danger text-white"><i class="material-icons">hourglass_bottom</i> Vencio a las: {{$item->hora_vencimiento}}</a>
+                                            </td>
+                                        @endif
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                @endif
-            </div>
-        </main>
-        <div id="Alert"></div>
-    </div>
-    @if ( session('mensaje') )
-        <div class="container-edits" style="margin-top: 2%">
-            <div class="alert alert-success" class='message' id='message'>{{ session('mensaje') }}</div>
-        </div>
-    @endif
-    @if ( session('mensajeDanger') )
-        <div class="container-edits" style="margin-top: 2%">
-            <div class="alert alert-danger" class='message' id='message'>{{ session('mensajeDanger') }}</div>
-        </div>
-    @endif
-    @if($errors->any())
-        <div class="container-edits" style="margin-top: 1%">
-            <div class="alert alert-danger" class='message' id='message'>
-                Se encontraron los siguientes errores: <br>
-                @foreach($errors->all() as $error)
-                    <br>
-                    {{'• '.$error }}
-                @endforeach
-            </div>
-        </div>
-    @endif
-    <div class="container">
-        <div data-simplebar class="table-responsive table-height">
-            <div class="col text-center">
-                <table class="table table-striped table-bordered mydatatable">
-                    <thead class="table-header">
-                    <tr>
-                        <th scope="col" style="text-transform: uppercase">Identificador</th>
-                        <th scope="col" style="text-transform: uppercase">Proyecto</th>
-                        <th scope="col" style="text-transform: uppercase">Fase</th>
-                        <th scope="col" style="text-transform: uppercase">Etapa</th>
-                        <th scope="col" style="text-transform: uppercase">Usuario</th>
-                        <th scope="col" style="text-transform: uppercase">Descripción</th>
-                        <th scope="col" style="text-transform: uppercase">Decisión</th>
-                        <th scope="col" style="text-transform: uppercase">Fecha de Creación</th>
-                        <th scope="col" style="text-transform: uppercase" >Estado de Revisión</th>
-                        <th scope="col" style="text-transform: uppercase">Fecha de Revisión</th>
-                        <th scope="col" style="text-transform: uppercase">Hora de Revisión</th>
-                        <th scope="col" style="text-transform: uppercase">Fecha de Vencimiento</th>
-                        <th scope="col" style="text-transform: uppercase">Hora de Vencimiento</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($actividad as $item)
-                            <tr id="{{$item->Clave}}">
-                                <td class="td td-center">{{$item->Clave}}</td>
-                                <td class="td td-center">{{$item->Proyecto}}</td>
-                                <td class="td td-center">{{$item->Fase}}</td>
-                                <td class="td td-center">{{$item->Etapa}}</td>
-                                <td class="td td-center">{{$item->Usuario}}</td>
-                                <td class="td td-center">{{$item->Descripcion}}</td>
-                                <td class="td td-center">{{$item->Decision}}
-                                <td class="td td-center">
-                                    <a class="btn btn-dark no-href"><i class="fas fa-calendar-plus"></i> {{$item->FechaCreacion}}</a>
-                                </td>
-                                @if($item->Estado == 0)
-                                    <td class="td td-center">
-                                        <a class="btn btn-warning no-href" @if($rol == 4) clave="{{$item->Clave}}" onclick="changeEstado(this);" @endif><i class="fas fa-question-circle"></i> Pendiente</a>
-                                    </td>
-                                @elseif($item->Estado == 1)
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-success no-href" data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="fas fa-check-circle"></i> Aprobada</a>
-                                    </td>
-                                @elseif($item->Estado == 2)
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-danger no-href" data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="fas fa-times-circle"></i> Desaprobada</a>
-                                    </td>
-                                @endif
-                                @if($item->Fecha_Revision == null)
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-warning no-href"><i class="fas fa-question-circle"></i> Pendiente</a>
-                                    </td>
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-warning no-href"><i class="fas fa-question-circle"></i> Pendiente</a>
-                                    </td>
-                                @elseif($item->Fecha_Revision > $item->Fecha_Vencimiento)
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-danger no-href"><i class="fas fa-calendar-times"></i> Se reviso tarde el: {{$item->Fecha_Revision}}</a>
-                                    </td>
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-danger no-href"><i class="fas fa-clock"></i> Se reviso a las: {{$item->Hora_Revision}}</a>
-                                    </td>
-                                @elseif($item->Fecha_Revision <= $item->Fecha_Vencimiento)
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-success no-href"><i class="fas fa-calendar-check"></i> Se reviso a tiempo el: {{$item->Fecha_Revision}}</a>
-                                    </td>
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-success no-href"><i class="fas fa-clock"></i> Se reviso a las: {{$item->Hora_Revision}}</a>
-                                    </td>
-                                @endif
-                                @if($date == $item->Fecha_Vencimiento)
-                                    @if($time > $item->Hora_Vencimiento)
-                                        <td class="td td-center">
-                                            <a class="btn btn btn-danger no-href"><i class="fas fa-calendar-times"></i> Vencio hoy: {{$item->Fecha_Vencimiento}}</a>
-                                        </td>
-                                        <td class="td td-center">
-                                            <a class="btn btn btn-danger no-href"><i class="fas fa-hourglass-end"></i> Vencio hoy a las: {{$item->Hora_Vencimiento}}</a>
-                                        </td>
-                                    @else
-                                        <td class="td td-center">
-                                            <a class="btn btn btn-warning no-href"><i class="fas fa-calendar"></i> Vence hoy: {{$item->Fecha_Vencimiento}}</a>
-                                        </td>
-                                        <td class="td td-center">
-                                            <a class="btn btn btn-warning no-href"><i class="fas fa-hourglass-half"></i> Vence hoy a las: {{$item->Hora_Vencimiento}}</a>
-                                        </td>
-                                    @endif
-                                @elseif($date < $item->Fecha_Vencimiento)
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-success no-href"><i class="fas fa-calendar"></i> Vence el: {{$item->Fecha_Vencimiento}}</a>
-                                    </td>
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-success no-href"><i class="fas fa-hourglass-start"></i> Vence a las: {{$item->Hora_Vencimiento}}</a>
-                                    </td>
-                                @else
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-danger no-href"><i class="fas fa-calendar-times"></i> Vencio el: {{$item->Fecha_Vencimiento}}</a>
-                                    </td>
-                                    <td class="td td-center">
-                                        <a class="btn btn btn-danger no-href"><i class="fas fa-hourglass-end"></i> Vencio a las: {{$item->Hora_Vencimiento}}</a>
-                                    </td>
-                                @endif
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="table-footer">
-                    <tr>
-                        <th scope="col" style="text-transform: uppercase">Identificador</th>
-                        <th scope="col" style="text-transform: uppercase">Proyecto</th>
-                        <th scope="col" style="text-transform: uppercase">Fase</th>
-                        <th scope="col" style="text-transform: uppercase">Etapa</th>
-                        <th scope="col" style="text-transform: uppercase">Usuario</th>
-                        <th scope="col" style="text-transform: uppercase">Descripción</th>
-                        <th scope="col" style="text-transform: uppercase">Decisión</th>
-                        <th scope="col" style="text-transform: uppercase">Estado</th>
-                        <th scope="col" style="text-transform: uppercase">Fecha de Creación</th>
-                        <th scope="col" style="text-transform: uppercase">Fecha de Revisión</th>
-                        <th scope="col" style="text-transform: uppercase">Hora de Revisión</th>
-                        <th scope="col" style="text-transform: uppercase">Fecha de Vencimiento</th>
-                        <th scope="col" style="text-transform: uppercase">Hora de Vencimiento</th>
-                    </tr>
-                    </tfoot>
-                </table>
+                </div>
             </div>
         </div>
     </div>
+
     <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        $('.data-table').DataTable({
+                responsive: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    ['10 Filas', '25 Filas', '50 Filas', 'Mostrar todo']
+                ],
+                dom: 'Blfrtip',
+                buttons: [
+                    { extend: 'pdf', text: 'Exportar a PDF',charset: 'UTF-8' },
+                    { extend: 'csv', text: 'Exportar a EXCEL',charset: 'UTF-8'  }
+                ],
+                language: {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "buttons": {
+                        "copy": "Copiar",
+                        "colvis": "Visibilidad",
+                        "print": "Imprimir",
+                        "csv": "Excel"
+                    }
+                },
+
+            }
+        );
+
+        $('.mydatatable').DataTable();
+
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
@@ -170,7 +207,7 @@
 
         function changeEstado(button){
             var clave = $(button).attr('clave');
-            $('#myModal').load( '{{ url('/Admin/Actividades/ChangeStatus') }}/'+clave,function(response, status, xhr){
+            $('#myModal').load( '{{ url('/actividades/ChangeStatus') }}/'+clave,function(response, status, xhr){
                 if ( status == "success" ) {
                     $('#myModal').modal('show');
                 }

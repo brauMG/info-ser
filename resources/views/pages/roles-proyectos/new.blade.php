@@ -1,75 +1,95 @@
-@extends('layouts.app')
-@if($compania!=null)
-    @section('company',$compania->Descripcion)
-@endif
+@extends('layouts.app', ['activePage' => 'Roles en Proyectos', 'titlePage' => __('Roles en Proyectos')])
+
 @section('content')
-    @include('layouts.top-nav')
-    <div class="container container-rapi2">
-        <main role="main" class="ml-sm-auto">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2 h2-less">Proyectos en @yield('company','Sin Compañia')</h1>
-            </div>
-        </main>
-        <div id="Alert"></div>
-    </div>
-    <div class="container">
-        <div data-simplebar class="card-height-add-user-to-company" style="height: 700px !important;; padding-top: 0% !important;">
-            <div class="col text-center">
-                <div class="justify-content-center">
-                    <div class="card card-add-company">
-
-                        <div class="card-header card-header-cute" style="background-color: #055e76 !important;">
-                            <h4 class="no-bottom" style="text-transform: uppercase">Agregar Usuario a Proyecto</h4>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @if ( session('mensaje') )
+                        <div class="alert alert-success" role="alert" id="message">
+                            {{ session('mensaje') }}
                         </div>
-
+                    @endif
+                    @if ( session('mensajeAlert') )
+                        <div class="alert alert-warning" role="alert" id="message">
+                            {{ session('mensajeAlert') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeDanger') )
+                        <div class="alert alert-danger" role="alert" id="message">
+                            {{ session('mensajeDanger') }}
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger" role="alert" id="message">
+                            Se encontraron los siguientes errores: <br>
+                            @foreach($errors->all() as $error)
+                                <br>
+                                {{'• '.$error }}
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title ">Roles en Proyectos</h4>
+                        </div>
                         <div class="card-body">
                             <form method="POST" action="{{route('CreateProjectUser')}}">
                                 @csrf
-                                <input type="hidden" name="proyectoId" value="{{$proyectoId}}">
-                                <input type="hidden" name="faseId" value="{{$faseId}}">
+                                <div class="row">
+                                    <input type="hidden" name="proyectoId" value="{{$proyectoId}}">
+                                    <input type="hidden" name="faseId" value="{{$faseId}}">
 
-                                <table class="table-responsive table-card-inline" id="tAdmin">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Descripcion</label>
+                                            <input name="descripcion" type="text"
+                                                   class="form-control  @error('descripcion') is-invalid @enderror"
+                                                   placeholder="Ingresa la descripcion" aria-label="descripcion"
+                                                   aria-describedby="basic-addon1" required autocomplete="descripcion" autofocus
+                                                   value={{Request::old('descripcion')}}>
+                                        </div>
+                                    </div>
 
-                                    <tr>
-                                        <th for="inputGroupSelect01" class="th-card">
-                                            <i class="fas fa-address-card"></i> Usuario
-                                        </th>
-                                        <td class="td-card"> <select name="usuario" type="text" class="custom-select  @error('usuario') is-invalid @enderror" required>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Usuario</label>
+                                            <select name="usuario" type="text" class="custom-select  @error('usuario') is-invalid @enderror" required>
                                                 <option disabled selected>Seleccionar...</option>
                                                 @php($count=0)
                                                 @foreach($usuarios as $item)
-                                                    <option value="{{ $item->Clave }}">{{ $item->Nombres }}</option>
+                                                    <option value="{{ $item->id }}">{{ $item->nombres }}</option>
                                                     @php($count++)
                                                 @endforeach
                                                 @if($count ==0)
                                                     <option disabled selected>No hay usuarios</option>
                                                 @endif
                                             </select>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
 
-                                    <tr>
-                                        <th for="inputGroupSelect01" class="th-card">
-                                            <i class="fas fa-address-card"></i> Rol RASIC dentro del proyecto
-                                        </th>
-                                        <td class="td-card"> <select name="rol" type="text" class="custom-select  @error('rol') is-invalid @enderror" required>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Rol RASIC</label>
+                                            <select name="rol" type="text" class="custom-select  @error('rol') is-invalid @enderror" required>
                                                 <option disabled selected>Seleccionar...</option>
                                                 @php($count=0)
                                                 @foreach($roles as $item)
-                                                    <option value="{{ $item->Clave }}">{{ $item->RolRASIC }}</option>
+                                                    <option value="{{ $item->id }}">{{ $item->rol_rasic }}</option>
                                                     @php($count++)
                                                 @endforeach
                                                 @if($count ==0)
                                                     <option disabled selected>No hay roles rasic</option>
                                                 @endif
                                             </select>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                </table>
-
-                                <div class="container">
-                                    <button type="submit" class="button-size-08 btn btn-add btn-primary">Guardar Datos</button>
+                                <div class="container" style="text-align: center">
+                                    <button type="submit" class="btn btn-primary"><i class="material-icons">check</i>Guardar</button>
                                 </div>
                             </form>
                         </div>

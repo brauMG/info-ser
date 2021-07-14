@@ -16,7 +16,7 @@ class SponsorsController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->id_rol == 1) {
-            $compania=Companias::where('id',Auth::user()->id_compania)->first();
+            $compania= Companias::where('id',Auth::user()->id_compania)->first();
             $sponsors = Sponsors::all();
             return view('pages.patrocinadores.index', compact('sponsors', 'compania'));
         }

@@ -10,6 +10,6 @@ class RolProyecto extends Model
     protected $fillable = ['id_proyecto','id_fase','id_rol_rasic','id_usuario','fecha_creacion','activo'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'RolesProyectos';
+    protected $table = 'roles_proyectos';
     public $timestamps = false;
 }

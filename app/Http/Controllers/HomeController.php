@@ -48,11 +48,4 @@ class HomeController extends Controller
             return redirect('/proyectos');
         }
     }
-
-    public function selectCompany(Request $request)
-    {
-        $companias = Companias::all();
-        $userCompany = Auth::user()->id;
-        return view('Shared.SelectCompany', compact('companias', 'userCompany'));
-    }
 }

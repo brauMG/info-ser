@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proyecto extends Model
 {
-    protected $fillable = ['id_compania','descripcion','criterio','id_estado','id_area','id_fase','id_enfoque','id_trabajo','id_indicador','objetivo','fecha_creacion','activo'];
+    protected $fillable = ['id_compania','descripcion','id_gerencia','criterio','id_estado','id_area','id_fase','id_enfoque','id_trabajo','id_indicador','objetivo','fecha_creacion','activo'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
-    protected $table = 'Proyectos';
+    protected $table = 'proyectos';
     public $timestamps = false;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,5 +79,20 @@ class CompaniaController extends Controller
             'fecha_creacion' => Carbon::today()->toDateString()
         ]);
         return redirect('/companias')->with('mensaje', "Compañia editada correctamente");
+    }
+
+    public function selectCompany(Request $request)
+    {
+        $companias = Companias::all();
+        $userCompany = Auth::user()->id;
+        return view('pages.compania.select', compact('companias', 'userCompany'));
+    }
+
+    public function changeCompany($id){
+        $user = User::find(Auth::user()->id);
+        $user->id_compania = $id;
+        $user->save();
+        Auth::user()->fresh();
+        return back();
     }
 }

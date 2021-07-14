@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Actividad extends Model
 {
-    protected $fillable = ['id_compania','id_proyecto','descricion','id_usuario','id_fase','id_etapa', 'fecha_vencimiento', 'hora_vencimiento', 'estado', 'fecha_revision', 'hora_revision'];
+    protected $fillable = ['id_compania','id_proyecto','decision','descricion','id_usuario','id_fase','id_etapa', 'fecha_vencimiento', 'hora_vencimiento', 'estado', 'fecha_revision', 'hora_revision', 'fecha_creacion'];
     protected $guarded = ['id'];
     protected $primaryKey = 'id';
     protected $table = 'actividades';
