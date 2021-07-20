@@ -64,10 +64,10 @@ class LoginController extends Controller
             return redirect('/proyectos');
         }
         elseif ($user->id_rol == 5) {
-            return redirect('/proyectos');
+            return redirect('/graficas/proyectos');
         }
         elseif ($user->id_rol == 6) {
-            return redirect('/proyectos');
+            return redirect('/graficas/proyectos');
         }
         elseif ($user->id_rol == 7) {
             return redirect('/proyectos');

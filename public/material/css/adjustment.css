@@ -95,4 +95,33 @@
         width: unset;
         max-height: -webkit-fill-available;
     }
+    .charts-list-scroll {
+        margin-bottom: 15px;
+    }
+}
+
+.icons-charts-list {
+    vertical-align: sub;
+    font-size: 20px !important;
+}
+
+.charts-list-scroll {
+    overflow: auto;
+    max-height: 35vh;
+}
+
+.charts-table {
+    table-layout: auto;
+    width: inherit;
+}
+
+.form-check .form-check-input {
+    opacity: 1 !important;
+    height: 10px !important;
+    width: 10px !important;
+    overflow: hidden !important;
+    position: inherit !important;
+    pointer-events: fill !important;
+    left: 20px !important;
+    z-index: unset !important;
 }

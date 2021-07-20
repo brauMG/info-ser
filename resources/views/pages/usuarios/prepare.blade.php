@@ -1,4 +1,4 @@
-@extends('layouts.app', ['activePage' => 'UsuariosProyectosPDF', 'titlePage' => __('Usuarios Por Proyectos Reporte')])
+@extends('layouts.app', ['activePage' => 'UsuariosPDF', 'titlePage' => __('Usuarios Reporte')])
 
 @section('content')
     <div class="content">
@@ -33,27 +33,27 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title">Filtros - Reporte de Usuarios Por Proyectos</h4>
+                            <h4 class="card-title">Filtros - Reporte de Usuarios</h4>
                         </div>
                     </div>
                 </div>
-                <form class="form-control" method="POST" action="{{route('UsersProjectsPDF')}}">
+                <form class="form-control" method="POST" action="{{route('UsersPDF')}}">
                     @csrf
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header card-header-info">
-                                        <h4 class="card-title"><i class="material-icons icons-charts-list">spatter_dots</i> Proyectos</h4>
+                                        <h4 class="card-title"><i class="material-icons icons-charts-list">engineering</i> Puestos</h4>
                                     </div>
                                     <div class="card-body" style="height: 250px; overflow: auto">
-                                        @if(count($proyectos) == 0)
-                                            <a style="color: #c42623; font-size: 1.2em"><strong>No hay proyectos</strong></a>
+                                        @if(count($puestos) == 0)
+                                            <a style="color: #c42623; font-size: 1.2em"><strong>No hay puestos</strong></a>
                                         @else
-                                            @foreach($proyectos as $proyecto)
+                                            @foreach($puestos as $puesto)
                                                 <div class="form-check filters-projects-list">
-                                                    <input type="checkbox" class="form-check-input box-mod" id="proyecto{{$proyecto->id}}" name="proyectos[]" value="{{$proyecto->id}}">
-                                                    <label class="form-check-label" for="proyecto{{$proyecto->id}}">{{$proyecto->descripcion}}</label>
+                                                    <input type="checkbox" class="form-check-input box-mod" id="puesto{{$puesto->id}}" name="puestos[]" value="{{$puesto->id}}">
+                                                    <label class="form-check-label" for="puesto{{$puesto->id}}">{{$puesto->descripcion}}</label>
                                                 </div>
                                             @endforeach
                                         @endif
@@ -64,16 +64,16 @@
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header card-header-info">
-                                        <h4 class="card-title"><i class="material-icons icons-charts-list">area_chart</i> Fases</h4>
+                                        <h4 class="card-title"><i class="material-icons icons-charts-list">area_chart</i> Áreas</h4>
                                     </div>
                                     <div class="card-body" style="height: 250px; overflow: auto">
-                                        @if(count($fases) == 0)
-                                            <a style="color: #c42623; font-size: 1.2em"><strong>No hay fases</strong></a>
+                                        @if(count($areas) == 0)
+                                            <a style="color: #c42623; font-size: 1.2em"><strong>No hay areas</strong></a>
                                         @else
-                                            @foreach($fases as $fase)
+                                            @foreach($areas as $area)
                                                 <div class="form-check filters-projects-list">
-                                                    <input type="checkbox" class="form-check-input box-mod" id="fase{{$fase->id}}" name="fases[]" value="{{$fase->id}}">
-                                                    <label class="form-check-label" for="fase{{$fase->id}}">{{$fase->descripcion}}</label>
+                                                    <input type="checkbox" class="form-check-input box-mod" id="area{{$area->id}}" name="areas[]" value="{{$area->id}}">
+                                                    <label class="form-check-label" for="area{{$area->id}}">{{$area->descripcion}}</label>
                                                 </div>
                                             @endforeach
                                         @endif
@@ -84,35 +84,19 @@
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header card-header-info">
-                                        <h4 class="card-title"><i class="material-icons icons-charts-list">engineering</i> Usuarios</h4>
+                                        <h4 class="card-title"><i class="material-icons icons-charts-list">vpn_key</i> Roles</h4>
                                     </div>
                                     <div class="card-body" style="height: 250px; overflow: auto">
-                                        @if(count($usuarios) == 0)
+                                        @if(count($roles) == 0)
                                             <a style="color: #c42623; font-size: 1.2em"><strong>No hay roles</strong></a>
                                         @else
-                                            @foreach($usuarios as $usuario)
+                                            @foreach($roles as $rol)
                                                 <div class="form-check filters-stages-list">
-                                                    <input type="checkbox" class="form-check-input box-mod" id="usuario{{$usuario->id}}" name="usuarios[]" value="{{$usuario->id}}">
-                                                    <label class="form-check-label" for="usuario{{$usuario->id}}">{{$usuario->nombres}}</label>
+                                                    <input type="checkbox" class="form-check-input box-mod" id="rol{{$rol->id}}" name="roles[]" value="{{$rol->id}}">
+                                                    <label class="form-check-label" for="rol{{$rol->id}}">{{$rol->rol}}</label>
                                                 </div>
                                             @endforeach
                                         @endif
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header card-header-info">
-                                        <h4 class="card-title"><i class="material-icons icons-charts-list">vpn_key</i> Roles RASIC</h4>
-                                    </div>
-                                    <div class="card-body" style="height: 250px; overflow: auto">
-                                            @foreach($rasics as $rasic)
-                                                <div class="form-check filters-stages-list">
-                                                    <input type="checkbox" class="form-check-input box-mod" id="rasic{{$rasic->id}}" name="rasics[]" value="{{$rasic->id}}">
-                                                    <label class="form-check-label" for="rasic{{$rasic->id}}">{{$rasic->rol_rasic}}</label>
-                                                </div>
-                                            @endforeach
                                     </div>
                                 </div>
                             </div>

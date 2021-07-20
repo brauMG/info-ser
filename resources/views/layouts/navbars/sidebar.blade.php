@@ -44,31 +44,31 @@
                 <div class="collapse" id="reportes">
                     <ul class="nav">
                         <li class="nav-item{{ $activePage == 'ActividadesPDF' ? ' active' : '' }}">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{url('actividades/prepare')}}">
                                 <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal">{{ __('Actividades') }} </span>
                             </a>
                         </li>
                         <li class="nav-item{{ $activePage == 'EtapasPDF' ? ' active' : '' }}">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/etapas/prepare') }}">
                                 <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal"> {{ __('Etapas') }} </span>
                             </a>
                         </li>
                         <li class="nav-item{{ $activePage == 'ProyectosPDF' ? ' active' : '' }}">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/proyectos/prepare') }}">
                                 <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal"> {{ __('Proyectos') }} </span>
                             </a>
                         </li>
                         <li class="nav-item{{ $activePage == 'UsuariosPDF' ? ' active' : '' }}">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/usuarios/prepare') }}">
                                 <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal"> {{ __('Usuarios') }} </span>
                             </a>
                         </li>
                         <li class="nav-item{{ $activePage == 'UsuariosProyectosPDF' ? ' active' : '' }}">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ url('/roles-proyectos/prepare') }}">
                                 <i class="material-icons text-white">stacked_bar_chart</i>
                                 <span class="sidebar-normal"> {{ __('Usuarios en proyectos') }} </span>
                             </a>
@@ -88,14 +88,14 @@
                 </a>
                 <div class="collapse" id="graficas">
                     <ul class="nav">
-                        <li class="nav-item{{ $activePage == 'ProyectosReporte' ? ' active' : '' }}">
-                            <a class="nav-link" href="#">
+                        <li class="nav-item{{ $activePage == 'ProyectosCharts' ? ' active' : '' }}">
+                            <a class="nav-link" href="{{ url('/graficas/proyectos') }}">
                                 <i class="material-icons text-white">pie_chart</i>
                                 <span class="sidebar-normal">{{ __('Proyectos') }} </span>
                             </a>
                         </li>
-                        <li class="nav-item{{ $activePage == 'ActividadesReporte' ? ' active' : '' }}">
-                            <a class="nav-link" href="#">
+                        <li class="nav-item{{ $activePage == 'ActividadesCharts' ? ' active' : '' }}">
+                            <a class="nav-link" href="{{ url('/graficas/actividades') }}">
                                 <i class="material-icons text-white">pie_chart</i>
                                 <span class="sidebar-normal"> {{ __('Actividades') }} </span>
                             </a>
@@ -110,6 +110,24 @@
                     <a class="nav-link" href="{{ url('/proyectos/') }}">
                         <i class="material-icons text-white">edit_calendar</i>
                         <p>{{ __('Proyectos') }}</p>
+                    </a>
+                </li>
+            @endif
+
+            @if(Auth::user()->id_rol == 2)
+                <li class="nav-item{{ $activePage == 'Direcciones' ? ' active' : '' }}">
+                    <a class="nav-link" href="{{ url('/direcciones/') }}">
+                        <i class="material-icons text-white">admin_panel_settings</i>
+                        <p>{{ __('Direcciones') }}</p>
+                    </a>
+                </li>
+            @endif
+
+            @if(Auth::user()->id_rol == 2)
+                <li class="nav-item{{ $activePage == 'Gerencias' ? ' active' : '' }}">
+                    <a class="nav-link" href="{{ url('/gerencias/') }}">
+                        <i class="material-icons text-white">settings_applications</i>
+                        <p>{{ __('Gerencias') }}</p>
                     </a>
                 </li>
             @endif

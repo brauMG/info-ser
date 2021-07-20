@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Excel;
-use PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 
 use App\Models\Enfoques;
 use App\Models\Fase;
@@ -191,27 +191,28 @@ class UsuariosController extends Controller
         $date = $datetime->toDateString();
         $time = $datetime->toTimeString();
 
-        $usuarios = DB::table('Usuarios')
-            ->join('Areas', 'Usuarios.Clave_Area', '=', 'Areas.Clave')
+        $usuarios = DB::table('usuarios')
+            ->join('areas', 'usuarios.id_area', '=', 'areas.id')
             ->where(function($query) use ($areas, $request) {
                 if ($areas != null) {
-                    $query->whereIn('Usuarios.Clave_Area', $areas);
+                    $query->whereIn('usuarios.id_area', $areas);
                 }
             })
-            ->join('Puestos', 'Usuarios.Clave_Puesto', '=', 'Puestos.Clave')
+            ->join('puestos', 'usuarios.id_puesto', '=', 'puestos.id')
             ->where(function($query) use ($puestos, $request) {
                 if ($puestos != null) {
-                    $query->whereIn('Usuarios.Clave_Puesto', $puestos);
+                    $query->whereIn('usuarios.id_puesto', $puestos);
                 }
             })
-            ->join('Roles', 'Usuarios.Clave_Rol', '=', 'Roles.Clave')
+            ->join('roles', 'usuarios.id_rol', '=', 'roles.id')
             ->where(function($query) use ($roles, $request) {
                 if ($roles != null) {
-                    $query->whereIn('Usuarios.Clave_Rol', $roles);
+                    $query->whereIn('usuarios.id_rol', $roles);
                 }
             })
-            ->select('Usuarios.*', 'Areas.Descripcion as Area', 'Roles.Rol as Rol', 'Puestos.Puesto as Puesto')
+            ->select('usuarios.*', 'areas.descripcion as area', 'roles.rol as rol', 'puestos.descripcion as puesto')
             ->get();
+
 
         $pdf = PDF::loadView('pdf.users', compact('usuarios', 'date', 'time'));
 

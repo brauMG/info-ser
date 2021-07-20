@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -37,7 +37,7 @@ class ProyectosController extends Controller
         $compania = Companias::where('id', Auth::user()->id_compania)->first();
 
 
-        if (Auth::user()->id_rol == 4) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7) {
             $proyecto = DB::table('proyectos')
                 ->leftJoin('companias', 'proyectos.id_compania', '=', 'companias.id')
                 ->leftJoin('estado', 'estado.id', '=', 'proyectos.id_estado')

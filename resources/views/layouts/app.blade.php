@@ -59,6 +59,9 @@
 {{--        <script src="{{ asset('material') }}/js/settings.js"></script>--}}
         <link rel="stylesheet" href="{{ asset('material') }}/css/bootstrap-multiselect.css" type="text/css">
         <script type="text/javascript" src="{{ asset('material') }}/js/bootstrap-multiselect.js"></script>
+        <!--Required for Charts-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0-rc.1/dist/chartjs-plugin-datalabels.min.js"></script>
         @stack('js')
     </head>
     <body class="{{ $class ?? '' }}">

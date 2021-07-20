@@ -1,206 +1,265 @@
-@extends('layouts.app')
-@if($compania!=null)
-    @section('company',$compania->Descripcion)
-@endif
+@extends('layouts.app', ['activePage' => 'ActividadesCharts', 'titlePage' => __('Actividades Reporte')])
+
 @section('content')
-    @include('layouts.top-nav')
-    <div class="container adjust">
-        <div data-simplebar class="card-height-add-test" style="height: 980px !important;">
-            <div class="col text-center">
-                <div class="justify-content-center">
-
-                    <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                        <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                            <h4 class="no-bottom" style="text-transform: uppercase">Actividades Por Proyecto</h4>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @if ( session('mensaje') )
+                        <div class="alert alert-success" role="alert" id="message">
+                            {{ session('mensaje') }}
                         </div>
-                        <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                            <div class="container" style="text-align: right">
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Actividades:</strong> {{count($ActividadesProyecto)}}
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($proyectos)}}
-                            </div>
-                            <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                    <div class="row row2 scroll-container">
-                                        <table class="table-responsive table-card-inline custom-table">
-                                            <thead class="thead"  style="text-align: left">
-                                            <tr class="tr-card-complete">
-                                                <th scope="col" class="th-card"><i class="far fa-check-square"></i> Actividad</th>
-                                                <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Proyecto</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody class="fonts" style="text-align: left">
-                                            @foreach($ActividadesProyecto as $AP)
-                                                <tr class="tr-card-complete">
-                                                    <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$AP->Actividad}}</td>
-                                                    <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$AP->Proyecto}}</td>
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row2 col-xl-8 max my-auto ">
-                                    <div class="card bg-transparent" style="border: none; ">
-                                        <div class="card-body">
-                                            <div class="chart">
-                                                <canvas id="ActivitiesProject"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    @endif
+                    @if ( session('mensajeAlert') )
+                        <div class="alert alert-warning" role="alert" id="message">
+                            {{ session('mensajeAlert') }}
                         </div>
-                    </div>
-
-                    <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                        <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                            <h4 class="no-bottom" style="text-transform: uppercase">Actividades Por Estado</h4>
+                    @endif
+                    @if ( session('mensajeDanger') )
+                        <div class="alert alert-danger" role="alert" id="message">
+                            {{ session('mensajeDanger') }}
                         </div>
-                        <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                            <div class="container" style="text-align: right">
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Actividades:</strong> {{count($ActividadesProyecto)}}
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Estados:</strong> 3
-                            </div>
-                            <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                    <div class="row row2 scroll-container">
-                                        <table class="table-responsive table-card-inline custom-table">
-                                            <thead class="thead"  style="text-align: left">
-                                            <tr class="tr-card-complete">
-                                                <th scope="col" class="th-card"><i class="far fa-check-square"></i> Actividad</th>
-                                                <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Estado</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody class="fonts" style="text-align: left">
-                                            @foreach($ActividadesEstado as $AE)
-                                                <tr class="tr-card-complete">
-                                                    <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$AE->Actividad}}</td>
-                                                    @if($AE->Activo == 0)
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-question-circle"></i> Pendiente</td>
-                                                    @elseif($AE->Activo == 1)
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> Aprobada</td>
-                                                    @else
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-times-circle"></i> Desaprobada</td>
-                                                    @endif
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row2 col-xl-8 max my-auto ">
-                                    <div class="card bg-transparent" style="border: none; ">
-                                        <div class="card-body">
-                                            <div class="chart">
-                                                <canvas id="ActivitiesStatus"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger" role="alert" id="message">
+                            Se encontraron los siguientes errores: <br>
+                            @foreach($errors->all() as $error)
+                                <br>
+                                {{'• '.$error }}
+                            @endforeach
                         </div>
-                    </div>
-
-                    <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                        <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                            <h4 class="no-bottom" style="text-transform: uppercase">Actividades Por Usuario</h4>
-                        </div>
-                        <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                            <div class="container" style="text-align: right">
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Actividades:</strong> {{count($ActividadesProyecto)}}
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Usuarios:</strong> {{count($usuarios)}}
-                            </div>
-                            <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                    <div class="row row2 scroll-container">
-                                        <table class="table-responsive table-card-inline custom-table">
-                                            <thead class="thead"  style="text-align: left">
-                                            <tr class="tr-card-complete">
-                                                <th scope="col" class="th-card"><i class="far fa-check-square"></i> Actividad</th>
-                                                <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Usuario</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody class="fonts" style="text-align: left">
-                                            @foreach($ActividadesUsuarios as $AU)
-                                                <tr class="tr-card-complete">
-                                                    <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$AU->Actividad}}</td>
-                                                    <td class="td" style="padding-top: 1%"><i class="fas fa-question-circle"></i> {{$AU->Usuario}}</td>
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row2 col-xl-8 max my-auto ">
-                                    <div class="card bg-transparent" style="border: none; ">
-                                        <div class="card-body">
-                                            <div class="chart">
-                                                <canvas id="ActivitiesUser"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                        <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                            <h4 class="no-bottom" style="text-transform: uppercase">Actividades Por Etapa</h4>
-                        </div>
-                        <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                            <div class="container" style="text-align: right">
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Actividades:</strong> {{count($ActividadesProyecto)}}
-                                <i class="fas fa-project-diagram"></i> <strong>Total de Etapas:</strong> {{count($etapas)}}
-                            </div>
-                            <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                    <div class="row row2 scroll-container">
-                                        <table class="table-responsive table-card-inline custom-table">
-                                            <thead class="thead"  style="text-align: left">
-                                            <tr class="tr-card-complete">
-                                                <th scope="col" class="th-card"><i class="far fa-check-square"></i> Actividad</th>
-                                                <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Etapa</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody class="fonts" style="text-align: left">
-                                            @foreach($ActividadesEtapas as $AE)
-                                                <tr class="tr-card-complete">
-                                                    <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$AE->Actividad}}</td>
-                                                    <td class="td" style="padding-top: 1%"><i class="fas fa-question-circle"></i> {{$AE->Etapa}}</td>
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row2 col-xl-8 max my-auto ">
-                                    <div class="card bg-transparent" style="border: none; ">
-                                        <div class="card-body">
-                                            <div class="chart">
-                                                <canvas id="ActivitiesUStage"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    @endif
                 </div>
-            </div>
-        </div>
-    </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-info">
+                            <h4 class="card-title">Actividades por proyecto</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Actividades:</strong> {{count($Actividadesproyecto)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectos)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                    <div class="col-md-6 charts-list-scroll">
+                                        <table class="table-bordered table-striped charts-table">
+                                            <thead>
+                                            <tr>
+                                                <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                                <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($Actividadesproyecto as $AP)
+                                                <tr>
+                                                    <td><i class="material-icons icons-charts-list">fact_check</i> {{$AP->actividad}}</td>
+                                                    <td><i class="material-icons icons-charts-list">flag</i> {{$AP->proyecto}}</td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ActivitiesProject"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-info">
+                            <h4 class="card-title">Actividades por estado</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Actividades:</strong> {{count($Actividadesproyecto)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Estados:</strong> 3</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                            <th><i class="material-icons icons-charts-list">theater_comedy</i> Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($ActividadesEstado as $AE)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$AE->actividad}}</td>
+                                                @if($AE->activo == 0)
+                                                    <td><i class="material-icons icons-charts-list text-warning">contact_support</i> Pendiente</td>
+                                                @elseif($AE->activo == 1)
+                                                    <td><i class="material-icons icons-charts-list text-success">fact_check</i> Aprobada</td>
+                                                @else
+                                                    <td><i class="material-icons icons-charts-list text-danger">dangerous</i>  Desaprobada</td>
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ActivitiesStatus"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-info">
+                            <h4 class="card-title">Actividades por usuario</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Actividades:</strong> {{count($Actividadesproyecto)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Usuarios:</strong> {{count($usuarios)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                            <th><i class="material-icons icons-charts-list">person_pin</i> Usuario</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($ActividadesUsuarios as $AU)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$AU->actividad}}</td>
+                                                <td><i class="material-icons icons-charts-list">verified_user</i> {{$AU->usuario}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ActivitiesUser"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-info">
+                            <h4 class="card-title">Actividades por etapa</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Actividades:</strong> {{count($Actividadesproyecto)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Etapas:</strong> {{count($etapas)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                            <th><i class="material-icons icons-charts-list">push_pin</i> Etapa</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($ActividadesEtapas as $AE)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$AE->actividad}}</td>
+                                                <td><i class="material-icons icons-charts-list">edit_attributes</i> {{$AE->etapa}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ActivitiesStage"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
     <script>
+        //Para Charts 1
+        var coloR1 = [];
+
+        var dynamicColors1 = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            if(r < 100) {
+                r = r + 100;
+            }
+            if(g < 100) {
+                g = g + 100;
+            }
+            if(b < 100) {
+                b = b + 100;
+            }
+            return "rgb(" + r + "," + g + "," + b + ")";
+        };
+
+            @foreach($conteoproyecto as $conteo)
+                coloR1.push(dynamicColors1());
+            @endforeach
+
+        //Para Charts 3
+        var coloR3 = [];
+
+        var dynamicColors3 = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            if(r < 100) {
+                r = r + 100;
+            }
+            if(g < 100) {
+                g = g + 100;
+            }
+            if(b < 100) {
+                b = b + 100;
+            }
+            return "rgb(" + r + "," + g + "," + b + ")";
+        };
+
+            @foreach($conteoUsuarios as $conteo)
+                coloR3.push(dynamicColors3());
+            @endforeach
+
+        //Para Charts Etapas
+        var coloR4 = [];
+
+        var dynamicColors4 = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            if(r < 100) {
+                r = r + 50;
+            }
+            if(g < 100) {
+                g = g + 50;
+            }
+            if(b < 100) {
+                b = b + 50;
+            }
+            return "rgb(" + r + "," + g + "," + b + ")";
+        };
+
+            @foreach($conteoEtapas as $conteo)
+                coloR4.push(dynamicColors4());
+            @endforeach
+
         var ctx = document.getElementById("ActivitiesProject");
         var ctx1 = document.getElementById("ActivitiesStatus");
         var ctx2 = document.getElementById("ActivitiesUser");
-        var ctx3 = document.getElementById("ActivitiesUStage");
+        var ctx3 = document.getElementById("ActivitiesStage");
         var total = @json($total);
 
         var lineChart = new Chart(ctx, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @foreach($proyectos as $proyecto)
@@ -210,40 +269,48 @@
                 datasets: [{
                     data:
                         [
-                            @foreach($conteoProyectos as $conteo)
+                            @foreach($conteoproyecto as $conteo)
                                 "{{$conteo}}",
                             @endforeach
                         ],
+                    backgroundColor: coloR1,
                 }]
             },
             options: {
                 responsive: true,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
-                            let percentage = (value*100 / total).toFixed(2)+"%";
+                            let percentage = (value*100 / total).toFixed(0)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
                     }
                 }
             }
         });
 
         var lineChart1 = new Chart(ctx1, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @if ($aePendiente > 0)
@@ -269,36 +336,44 @@
                             {{$aeDesaprobada}},
                             @endif
                         ],
+                    backgroundColor: ['#e9c542', '#00bb26', '#ff2321'],
                 }]
             },
             options: {
                 responsive: true,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx1) => {
                             let sum = 0;
                             let dataArr = ctx1.chart.data.datasets[0].data;
-                            let percentage = (value*100 / total).toFixed(2)+"%";
+                            let percentage = (value * 100 / total).toFixed(2) + "%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
                     }
                 }
             }
         });
 
         var lineChart2 = new Chart(ctx2, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @foreach($usuarios as $usuario)
@@ -312,36 +387,44 @@
                                 "{{$conteo}}",
                             @endforeach
                         ],
+                    backgroundColor: coloR3,
                 }]
             },
             options: {
                 responsive: true,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
-                            let percentage = (value*100 / total).toFixed(2)+"%";
+                            let percentage = (value*100 / total).toFixed(0)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
                     }
                 }
             }
         });
 
         var lineChart3 = new Chart(ctx3, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @foreach($etapas as $etapa)
@@ -355,29 +438,36 @@
                                 "{{$conteo}}",
                             @endforeach
                         ],
+                    backgroundColor: coloR4,
                 }]
             },
             options: {
                 responsive: true,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
-                            let percentage = (value*100 / total).toFixed(2)+"%";
+                            let percentage = (value*100 / total).toFixed(0)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
                     }
                 }
             }

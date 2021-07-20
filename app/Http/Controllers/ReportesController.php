@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Compania;
-use App\Proyecto;
-use App\Enfoque;
-use App\Trabajo;
+use App\Models\Companias;
+use App\Models\Proyecto;
+use App\Models\Enfoques;
+use App\Models\Trabajo;
+
 class ReportesController extends Controller
 {
    //
@@ -17,8 +18,8 @@ class ReportesController extends Controller
     }
 
     public function ActividadesEmpresaPorEnfoque(Request $request){
-        $company=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-        $enfoques=Enfoque::all();
+        $company=Companias::where('Clave',Auth::user()->Clave_Compania)->first();
+        $enfoques=Enfoques::all();
         $trabajos=Trabajo::all();
     	$reporteEnfoques =DB::select('CALL Get_ReportActividadesEmpresaPorEnfoque(?)',array($company->Clave));
     	$reporteTrabajos=DB::select('CALL Get_ReportActividadesEmpresaPorTrabajo (?)',array($company->Clave));
@@ -28,7 +29,7 @@ class ReportesController extends Controller
     public function proyectos(Request $request){
 
 
-            $company=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+            $company=Companias::where('Clave',Auth::user()->Clave_Compania)->first();
             $proyectos=Proyecto::where('Clave_Compania',$company->Clave)->get();
             $Proyecto=Proyecto::where('Clave',$request->Proyecto)->first();
             $Clave_Proyecto="";
@@ -47,7 +48,7 @@ class ReportesController extends Controller
     }
     public function recursosPorRoles(Request $request){
 
-        $company=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        $company=Companias::where('Clave',Auth::user()->Clave_Compania)->first();
 		$occupation=DB::select('CALL Get_ReportOccupationResources (?)',array($company->Clave));
     	$rol=DB::select('CALL Get_ReportResourceByRol (?)',array($company->Clave));
     	return view('Admin.Reportes.ReporteRecursos',['occupation'=>$occupation,'rol'=>$rol,'company'=>$company,'Clave_Compania'=>$company->Clave,'compania'=>$company,'compania'=>$company]);

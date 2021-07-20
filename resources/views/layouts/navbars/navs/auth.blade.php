@@ -34,7 +34,7 @@
 {{--          </div>--}}
 {{--        </li>--}}
         <li class="nav-item dropdown">
-          <a class="nav-link" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">
             <i class="material-icons">settings</i>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">

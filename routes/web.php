@@ -44,6 +44,24 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/areas/update/{id}', 'App\Http\Controllers\AreaController@update')->name('UpdateArea');
     Route::post('/areas/delete/{id}', 'App\Http\Controllers\AreaController@delete')->name('DeleteArea');
 
+    // Direcciones
+    Route::get('/direcciones','App\Http\Controllers\DireccionesController@index');
+    Route::get('/direcciones/new', 'App\Http\Controllers\DireccionesController@new');
+    Route::get('/direcciones/edit/{id}', 'App\Http\Controllers\DireccionesController@edit');
+    Route::get('/direcciones/delete/{id}', 'App\Http\Controllers\DireccionesController@prepare');
+    Route::post('/direcciones/create', 'App\Http\Controllers\DireccionesController@store')->name('CreateDirectory');
+    Route::put('/direcciones/update/{id}', 'App\Http\Controllers\DireccionesController@update')->name('UpdateDirectory');
+    Route::post('/direcciones/delete/{id}', 'App\Http\Controllers\DireccionesController@delete')->name('DeleteDirectory');
+
+    // Gerencias
+    Route::get('/gerencias','App\Http\Controllers\GerenciasController@index');
+    Route::get('/gerencias/new', 'App\Http\Controllers\GerenciasController@new');
+    Route::get('/gerencias/edit/{id}', 'App\Http\Controllers\GerenciasController@edit');
+    Route::get('/gerencias/delete/{id}', 'App\Http\Controllers\GerenciasController@prepare');
+    Route::post('/gerencias/create', 'App\Http\Controllers\GerenciasController@store')->name('CreateGerencia');
+    Route::put('/gerencias/update/{id}', 'App\Http\Controllers\GerenciasController@update')->name('UpdateGerencia');
+    Route::post('/gerencias/delete/{id}', 'App\Http\Controllers\GerenciasController@delete')->name('DeleteGerencia');
+
     //Puestos
     Route::get('/puesto', 'App\Http\Controllers\PuestosController@index');
     Route::get('/puesto/new', 'App\Http\Controllers\PuestosController@new');
@@ -94,8 +112,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/usuarios/ChangeSend/{id}','App\Http\Controllers\UsuariosController@editSend');
     Route::put('/usuarios/UpdateSend/{id}','App\Http\Controllers\UsuariosController@updateSend')->name('UpdateSend');
     //PDF
-    Route::get('/usuarios/prepare','UsuariosController@preparePdf')->name('FiltersUsers');
-    Route::post('/usuarios/PDF','UsuariosController@exportPdf')->name('UsersPDF');
+    Route::get('/usuarios/prepare','App\Http\Controllers\UsuariosController@preparePdf')->name('FiltersUsers');
+    Route::post('/usuarios/PDF','App\Http\Controllers\UsuariosController@exportPdf')->name('UsersPDF');
 
     //Patrocinadores
     Route::get('/patrocinadores', 'App\Http\Controllers\SponsorsController@index');
@@ -124,7 +142,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/etapas/update/{id}', 'App\Http\Controllers\EtapasController@update')->name('UpdateEtapa');
     Route::post('/etapas/delete/{id}', 'App\Http\Controllers\EtapasController@delete')->name('DeleteEtapa');
     //PDF
-    Route::get('/etapas/Prepare','App\Http\Controllers\EtapasController@preparePdf')->name('FiltersStages');
+    Route::get('/etapas/prepare','App\Http\Controllers\EtapasController@preparePdf')->name('FiltersStages');
     Route::post('/etapas/PDF','App\Http\Controllers\EtapasController@exportPdf')->name('StagesPDF');
 
     //Roles
@@ -195,10 +213,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/roles-fases/delete/{id}', 'App\Http\Controllers\RolesFaseController@delete');
 
     //Reportes
-    Route::get('/reportes/actividades-empresa-por-enfoque', 'App\Http\Controllers\ReportesController@ActividadesEmpresaPorEnfoque');
+    Route::get('/reportes/actividades-enfoque', 'App\Http\Controllers\ReportesController@ActividadesEmpresaPorEnfoque');
     Route::get('/reportes/proyectos', 'App\Http\Controllers\ReportesController@proyectos');
     Route::get('/reportes/recursos', 'App\Http\Controllers\ReportesController@recursosPorRoles');
-    Route::get('/reportes/actividades-empresa-por-estado', 'App\Http\Controllers\ReportesController@ActividadesEmpresaPorStatus');
+    Route::get('/reportes/actividades-estado', 'App\Http\Controllers\ReportesController@ActividadesEmpresaPorStatus');
 
     //Envio de Correos
     Route::get('/email/usuarios','App\Http\Controllers\EmailController@index');

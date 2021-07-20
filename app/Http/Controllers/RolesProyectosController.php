@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 //use App\Mail\AdviceUserProject;
 use Illuminate\Support\Facades\Mail;
 
-use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -169,7 +169,7 @@ class RolesProyectosController extends Controller
         $fases=Fase::where('id_compania',Auth::user()->id_compania)->get();
         $rasics=RolRASIC::all();
         $usuarios=User::where('id_compania',Auth::user()->id_compania)->get();
-        $compania=Compania::where('id',Auth::user()->id_compania)->first();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
 
 
         return view('pages.roles-proyectos.prepare', compact('proyectos', 'fases', 'rasics', 'usuarios', 'compania'));
@@ -187,13 +187,13 @@ class RolesProyectosController extends Controller
         $time = $datetime->toTimeString();
 
         $rolesUser = DB::table('roles_proyectos')
-            ->join('proyectos', 'roles_proyectos.id_proyectos', '=', 'proyectos.id')
+            ->join('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
             ->where(function($query) use ($proyectos, $request) {
                 if ($proyectos != null) {
                     $query->whereIn('roles_proyectos.id_proyecto', $proyectos);
                 }
             })
-            ->join('Fases', 'roles_proyectos.id_fase', '=', 'fases.id')
+            ->join('fases', 'roles_proyectos.id_fase', '=', 'fases.id')
             ->where(function($query) use ($fases, $request) {
                 if ($fases != null) {
                     $query->whereIn('roles_proyectos.id_fase', $fases);

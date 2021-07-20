@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 //use App\Mail\AdviceStage;
 
 use Carbon\Carbon;
-use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -266,7 +266,7 @@ class EtapasController extends Controller
                 }
             })
             ->join('companias', 'etapas.id_compania', '=', 'companias.id')
-            ->where('etapas.id_companias', '=', Auth::user()->id_compania)
+            ->where('etapas.id_compania', '=', Auth::user()->id_compania)
             ->join('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
             ->where(function($query) use ($proyectos, $request) {
                 if ($proyectos != null) {

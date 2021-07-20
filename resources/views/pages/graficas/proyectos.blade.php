@@ -1,334 +1,380 @@
-@extends('layouts.app')
-@if($compania!=null)
-    @section('company',$compania->Descripcion)
-@endif
+@extends('layouts.app', ['activePage' => 'ProyectosCharts', 'titlePage' => __('Proyectos Reporte')])
+
 @section('content')
-    @include('layouts.top-nav')
-        <div class="container adjust">
-            <div data-simplebar class="card-height-add-test" style="height: 980px !important;">
-                <div class="col text-center">
-                    <div class="justify-content-center">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    @if ( session('mensaje') )
+                        <div class="alert alert-success" role="alert" id="message">
+                            {{ session('mensaje') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeAlert') )
+                        <div class="alert alert-warning" role="alert" id="message">
+                            {{ session('mensajeAlert') }}
+                        </div>
+                    @endif
+                    @if ( session('mensajeDanger') )
+                        <div class="alert alert-danger" role="alert" id="message">
+                            {{ session('mensajeDanger') }}
+                        </div>
+                    @endif
+                    @if($errors->any())
+                        <div class="alert alert-danger" role="alert" id="message">
+                            Se encontraron los siguientes errores: <br>
+                            @foreach($errors->all() as $error)
+                                <br>
+                                {{'• '.$error }}
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
 
-                        <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                            <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                                <h4 class="no-bottom" style="text-transform: uppercase">actividades de trabajo Por Enfoque y tipo de Trabajo</h4>
-                            </div>
-                            <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                                <div class="container" style="text-align: right">
-                                    <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($ProyectosEnfoque)}}
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title">Actividades de trabajo por enfoque y tipo de trabajo</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th><i class="material-icons icons-charts-list">work</i> Trabajo</th>
+                                            <th><i class="material-icons icons-charts-list">loupe</i> Enfoque</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($proyectotrabajoenfoque as $PTE)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$PTE->proyecto}}</td>
+                                                <td><i class="material-icons icons-charts-list">engineering</i> {{$PTE->trabajo}}</td>
+                                                <td><i class="material-icons icons-charts-list">share</i> {{$PTE->enfoque}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                    <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                        <div class="row row2 scroll-container">
-                                            <table class="table-responsive table-card-inline custom-table-3">
-                                                <thead class="thead"  style="text-align: left">
-                                                <tr class="tr-card-complete">
-                                                    <th scope="col" class="th-card"><i class="far fa-check-square"></i> Proyecto</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Trabajo</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Enfoque</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="fonts" style="text-align: left">
-                                                @foreach($ProyectosTrabajoEnfoque as $PTE)
-                                                    <tr class="tr-card-complete">
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$PTE->Proyecto}}</td>
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PTE->Trabajo}}</td>
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PTE->Enfoque}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row2 col-xl-8 max my-auto ">
-                                        <div class="card bg-transparent" style="border: none; ">
-                                            <div class="card-body">
-                                                <div class="chart">
-                                                    <canvas id="ChartFocusJob"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ChartFocusJob"></canvas>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                            <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                                <h4 class="no-bottom" style="text-transform: uppercase">actividades de trabajo Por Enfoque</h4>
-                            </div>
-                            <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                                <div class="container" style="text-align: right">
-                                    <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($ProyectosEnfoque)}}
-                                    <br>
-                                    <i class="fas fa-tasks"></i> <strong>Total de Enfoques:</strong> 5
-                                    <br>
-                                </div>
-                                <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                    <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                        <div class="row row2 scroll-container">
-                                            <table class="table-responsive table-card-inline custom-table">
-                                                <thead class="thead"  style="text-align: left">
-                                                <tr class="tr-card-complete">
-                                                    <th scope="col" class="th-card"><i class="far fa-check-square"></i> Proyecto</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Enfoque</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="fonts" style="text-align: left">
-                                                @foreach($ProyectosEnfoque as $PE)
-                                                        <tr class="tr-card-complete">
-                                                            <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$PE->Proyecto}}</td>
-                                                            <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PE->Enfoque}}</td>
-                                                        </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row2 col-xl-8 max my-auto ">
-                                        <div class="card bg-transparent" style="border: none; ">
-                                            <div class="card-body">
-                                                <div class="chart">
-                                                    <canvas id="ChartFocus"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                            <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                                <h4 class="no-bottom" style="text-transform: uppercase">actividades de trabajo Por tipo de Trabajo</h4>
-                            </div>
-                            <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                                <div class="container" style="text-align: right">
-                                    <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($ProyectosEnfoque)}}
-                                    <br>
-                                    <i class="fas fa-tasks"></i> <strong>Total de Trabajos:</strong> 4
-                                    <br>
-                                </div>
-                                <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                    <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                        <div class="row row2 scroll-container">
-                                            <table class="table-responsive table-card-inline custom-table">
-                                                <thead class="thead"  style="text-align: left">
-                                                <tr class="tr-card-complete">
-                                                    <th scope="col" class="th-card"><i class="far fa-check-square"></i> Proyecto</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Trabajo</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="fonts" style="text-align: left">
-                                                @foreach($ProyectosTrabajo as $PT)
-                                                    <tr class="tr-card-complete">
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$PT->Proyecto}}</td>
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PT->Trabajo}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row2 col-xl-8 max my-auto ">
-                                        <div class="card bg-transparent" style="border: none; ">
-                                            <div class="card-body">
-                                                <div class="chart">
-                                                    <canvas id="ChartJob"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                            <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                                <h4 class="no-bottom" style="text-transform: uppercase">actividades de trabajo Por Fase</h4>
-                            </div>
-                            <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                                <div class="container" style="text-align: right">
-                                    <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($ProyectosEnfoque)}}
-                                    <br>
-                                    <i class="fas fa-tasks"></i> <strong>Total de Fases:</strong> {{count($fases)}}
-                                    <br>
-                                </div>
-                                <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                    <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                        <div class="row row2 scroll-container">
-                                            <table class="table-responsive table-card-inline custom-table">
-                                                <thead class="thead"  style="text-align: left">
-                                                <tr class="tr-card-complete">
-                                                    <th scope="col" class="th-card"><i class="far fa-check-square"></i> Proyecto</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Fase</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="fonts" style="text-align: left">
-                                                @foreach($ProyectosFase as $PF)
-                                                    <tr class="tr-card-complete">
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$PF->Proyecto}}</td>
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PF->Fase}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row2 col-xl-8 max my-auto ">
-                                        <div class="card bg-transparent" style="border: none; ">
-                                            <div class="card-body">
-                                                <div class="chart">
-                                                    <canvas id="ChartStage"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                            <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                                <h4 class="no-bottom" style="text-transform: uppercase">actividades de trabajo Por Indicador</h4>
-                            </div>
-                            <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                                <div class="container" style="text-align: right">
-                                    <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($ProyectosEnfoque)}}
-                                    <br>
-                                    <i class="fas fa-tasks"></i> <strong>Total de Indicadores:</strong> {{count($indicadores)}}
-                                    <br>
-                                </div>
-                                <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                    <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                        <div class="row row2 scroll-container">
-                                            <table class="table-responsive table-card-inline custom-table">
-                                                <thead class="thead"  style="text-align: left">
-                                                <tr class="tr-card-complete">
-                                                    <th scope="col" class="th-card"><i class="far fa-check-square"></i> Proyecto</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Indicador</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="fonts" style="text-align: left">
-                                                @foreach($ProyectosIndicador as $PI)
-                                                    <tr class="tr-card-complete">
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$PI->Proyecto}}</td>
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PI->Indicador}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row2 col-xl-8 max my-auto ">
-                                        <div class="card bg-transparent" style="border: none; ">
-                                            <div class="card-body">
-                                                <div class="chart">
-                                                    <canvas id="ChartIndicator"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                            <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                                <h4 class="no-bottom" style="text-transform: uppercase">actividades de trabajo Por Área</h4>
-                            </div>
-                            <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                                <div class="container" style="text-align: right">
-                                    <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($ProyectosEnfoque)}}
-                                    <br>
-                                    <i class="fas fa-tasks"></i> <strong>Total de Áreas:</strong> {{count($areas)}}
-                                    <br>
-                                </div>
-                                <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                    <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                        <div class="row row2 scroll-container">
-                                            <table class="table-responsive table-card-inline custom-table">
-                                                <thead class="thead"  style="text-align: left">
-                                                <tr class="tr-card-complete">
-                                                    <th scope="col" class="th-card"><i class="far fa-check-square"></i> Proyecto</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Área</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="fonts" style="text-align: left">
-                                                @foreach($ProyectosArea as $PA)
-                                                    <tr class="tr-card-complete">
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$PA->Proyecto}}</td>
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PA->Area}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row2 col-xl-8 max my-auto ">
-                                        <div class="card bg-transparent" style="border: none; ">
-                                            <div class="card-body">
-                                                <div class="chart">
-                                                    <canvas id="ChartArea"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card card-see-results" style="border: solid; margin-bottom: 3% !important;">
-                            <div class="card-header card-header-cute" style="background-color: #055e76 !important">
-                                <h4 class="no-bottom" style="text-transform: uppercase">actividades de trabajo Por Estado</h4>
-                            </div>
-                            <div class="card-body" style="background-color: rgba(176, 249, 255, 0.39) !important;">
-                                <div class="container" style="text-align: right">
-                                    <i class="fas fa-project-diagram"></i> <strong>Total de Proyectos:</strong> {{count($ProyectosEnfoque)}}
-                                    <br>
-                                    <i class="fas fa-tasks"></i> <strong>Total de Estados:</strong> {{count($estados)}}
-                                    <br>
-                                </div>
-                                <div class="row bg-transparent rounded mb-0 column" style="background-color: white !important;">
-                                    <div class="col-xl-4 max" style="padding-top: 5%; padding-left: 2%">
-                                        <div class="row row2 scroll-container">
-                                            <table class="table-responsive table-card-inline custom-table">
-                                                <thead class="thead"  style="text-align: left">
-                                                <tr class="tr-card-complete">
-                                                    <th scope="col" class="th-card"><i class="far fa-check-square"></i> Proyecto</th>
-                                                    <th scope="col" class="th-card"><i class="far fa-check-circle"></i> Estado</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="fonts" style="text-align: left">
-                                                @foreach($ProyectosEstado as $PE)
-                                                    <tr class="tr-card-complete">
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-square"></i> {{$PE->Proyecto}}</td>
-                                                        <td class="td" style="padding-top: 1%"><i class="fas fa-check-circle"></i> {{$PE->Estado}}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row2 col-xl-8 max my-auto ">
-                                        <div class="card bg-transparent" style="border: none; ">
-                                            <div class="card-body">
-                                                <div class="chart">
-                                                    <canvas id="ChartStatus"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-info">
+                            <h4 class="card-title">Actividades de trabajo por enfoque</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th><i class="material-icons icons-charts-list">loupe</i> Enfoque</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($proyectoenfoque as $PE)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$PE->proyecto}}</td>
+                                                <td><i class="material-icons icons-charts-list">share</i> {{$PE->enfoque}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ChartFocus"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-info">
+                            <h4 class="card-title">Actividades de trabajo por tipo de trabajo</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th><i class="material-icons icons-charts-list">work</i> Trabajo</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($proyectoTrabajo as $PT)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$PT->proyecto}}</td>
+                                                <td><i class="material-icons icons-charts-list">engineering</i> {{$PT->trabajo}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ChartJob"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-rose">
+                            <h4 class="card-title">Actividades de trabajo por fase</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Fases:</strong> {{count($fases)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th><i class="material-icons icons-charts-list">push_pin</i> Fases</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($proyectoFase as $PF)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$PF->proyecto}}</td>
+                                                <td><i class="material-icons icons-charts-list">edit_attributes</i> {{$PF->fase}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ChartStage"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-rose">
+                            <h4 class="card-title">Actividades de trabajo por indicador</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Indicadores:</strong> {{count($indicadores)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th><i class="material-icons icons-charts-list">plagiarism</i> Indicadores</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($proyectoIndicador as $PI)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$PI->proyecto}}</td>
+                                                <td><i class="material-icons icons-charts-list">send</i> {{$PI->indicador}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ChartIndicator"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-success">
+                            <h4 class="card-title">Actividades de trabajo por área</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Áreas:</strong> {{count($areas)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th><i class="material-icons icons-charts-list">account_tree</i> Áreas</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($proyectoArea as $PA)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$PA->proyecto}}</td>
+                                                <td><i class="material-icons icons-charts-list">area_chart</i> {{$PA->area}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ChartArea"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-success">
+                            <h4 class="card-title">Actividades de trabajo por estado</h4>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
+                            <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Estados:</strong> {{count($estados)}}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 charts-list-scroll">
+                                    <table class="table-bordered table-striped charts-table">
+                                        <thead>
+                                        <tr>
+                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th><i class="material-icons icons-charts-list">theater_comedy</i> Estados</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($proyectoEstado as $PE)
+                                            <tr>
+                                                <td><i class="material-icons icons-charts-list">fact_check</i> {{$PE->proyecto}}</td>
+                                                <td><i class="material-icons icons-charts-list">preview</i> {{$PE->estado}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6" style="height: 35vh">
+                                    <canvas id="ChartStatus"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
     <script>
+        //Para ctx3
+        var coloR3 = [];
+
+        var dynamicColors3 = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            if(r < 100) {
+                r = r + 100;
+            }
+            if(g < 100) {
+                g = g + 100;
+            }
+            if(b < 100) {
+                b = b + 100;
+            }
+            return "rgb(" + r + "," + g + "," + b + ")";
+        };
+
+            @foreach($conteofases as $conteo)
+                coloR3.push(dynamicColors3());
+            @endforeach
+
+        //Para ctx4
+        var coloR4 = [];
+
+        var dynamicColors4 = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            if(r < 100) {
+                r = r + 100;
+            }
+            if(g < 100) {
+                g = g + 100;
+            }
+            if(b < 100) {
+                b = b + 100;
+            }
+            return "rgb(" + r + "," + g + "," + b + ")";
+        };
+
+        @foreach($conteoIndicadores as $conteo)
+        coloR4.push(dynamicColors4());
+            @endforeach
+
+        //Para ctx5
+        var coloR5 = [];
+
+        var dynamicColors5 = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            if(r < 100) {
+                r = r + 100;
+            }
+            if(g < 100) {
+                g = g + 100;
+            }
+            if(b < 100) {
+                b = b + 100;
+            }
+            return "rgb(" + r + "," + g + "," + b + ")";
+        };
+
+        @foreach($conteoAreas as $conteo)
+        coloR5.push(dynamicColors5());
+            @endforeach
+
+        //Para ctx6
+        var coloR6 = [];
+
+        var dynamicColors6 = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            if(r < 100) {
+                r = r + 100;
+            }
+            if(g < 100) {
+                g = g + 100;
+            }
+            if(b < 100) {
+                b = b + 100;
+            }
+            return "rgb(" + r + "," + g + "," + b + ")";
+        };
+
+        @foreach($conteoEstados as $conteo)
+        coloR6.push(dynamicColors6());
+            @endforeach
+
         var ctx = document.getElementById("ChartFocusJob");
         var ctx1 = document.getElementById("ChartFocus");
         var ctx2 = document.getElementById("ChartJob");
@@ -336,6 +382,7 @@
         var ctx4 = document.getElementById("ChartIndicator");
         var ctx5 = document.getElementById("ChartArea");
         var ctx6 = document.getElementById("ChartStatus");
+
         var total = @json($total);
         var Operaciones = @json($dataOperaciones);
         var Administrativo = @json($dataAdministrativo);
@@ -346,7 +393,7 @@
         };
 
         var lineChart = new Chart(ctx, {
-            type: 'horizontalBar',
+            type: 'bar',
             data: {
                 labels: [
                     'Calidad',
@@ -359,31 +406,33 @@
                     {
                         label: 'Operaciones',
                         data: Operaciones,
+                        backgroundColor: '#9be2ff',
                     },
                     {
                         label: 'Administrativo',
                         data: Administrativo,
+                        backgroundColor: '#9cffa4',
                     },
                     {
                         label: 'Proyectos',
                         data: Proyectos,
+                        backgroundColor: '#f2ffa4',
                     },
                     {
                         label: 'Iniciativas',
                         data: Iniciativas,
+                        backgroundColor: '#ff9094',
                     }
                 ]
             },
             options: {
+                indexAxis: 'y',
                 responsive: true,
-                aspectRatio: false,
+                maintainAspectRatio: false,
                 legend: {
                     position: 'right'
                 },
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
                         color: '#3e3e3e',
                         font: {
@@ -401,22 +450,19 @@
                     duration: 10,
                 },
                 scales: {
-                    xAxes: [{
+                    x: {
                         stacked: true,
-                        gridLines: { display: false },
-                    }],
-                    yAxes: [{
-                        stacked: true,
-                        ticks: {
-                            callback: function(value) { return numberWithCommas(value); },
-                        },
-                    }],
+                    },
+                    y: {
+                        stacked: true
+                    }
                 }
             }
         });
 
         var lineChart1 = new Chart(ctx1, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @if ($peCalidad > 0)
@@ -454,37 +500,44 @@
                             {{$peServicio}}
                             @endif
                         ],
+                    backgroundColor: ['#33d0e9', '#71bb58', '#ff98f4', '#ff695d', '#a183ff'],
                 }]
             },
             options: {
                 responsive: true,
-                aspectRatio: false,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx1) => {
                             let sum = 0;
                             let dataArr = ctx1.chart.data.datasets[0].data;
                             let percentage = (value*100 / total).toFixed(2)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
                     }
                 }
             }
         });
 
         var lineChart2 = new Chart(ctx2, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @if ($ptOperaciones > 0)
@@ -516,18 +569,15 @@
                             {{$ptIniciativas}}
                             @endif
                         ],
+                    backgroundColor: ['#33d0e9', '#71bb58', '#ff98f4', '#ff695d'],
                 }]
             },
             options: {
                 responsive: true,
-                aspectRatio: false,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
+                    anchor: 'center',
+                    align: 'center',
                     datalabels: {
                         formatter: (value, ctx2) => {
                             let sum = 0;
@@ -535,18 +585,28 @@
                             let percentage = (value*100 / total).toFixed(2)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
                     }
                 }
             }
         });
 
         var lineChart3 = new Chart(ctx3, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @foreach($fases as $fase)
@@ -556,41 +616,48 @@
                 datasets: [{
                     data:
                         [
-                            @foreach($conteoFases as $conteo)
+                            @foreach($conteofases as $conteo)
                                 "{{$conteo}}",
                             @endforeach
                         ],
+                    backgroundColor: coloR3,
                 }]
             },
             options: {
                 responsive: true,
-                aspectRatio: false,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx3) => {
                             let sum = 0;
                             let dataArr = ctx3.chart.data.datasets[0].data;
                             let percentage = (value*100 / total).toFixed(2)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
                     }
                 }
             }
         });
 
         var lineChart4 = new Chart(ctx4, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @foreach($indicadores as $indicador)
@@ -604,37 +671,44 @@
                                 "{{$conteo}}",
                             @endforeach
                         ],
+                    backgroundColor: coloR4,
                 }]
             },
             options: {
                 responsive: true,
-                aspectRatio: false,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx4) => {
                             let sum = 0;
                             let dataArr = ctx4.chart.data.datasets[0].data;
                             let percentage = (value*100 / total).toFixed(2)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
-                    }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
+                    },
                 }
             }
         });
 
         var lineChart5 = new Chart(ctx5, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @foreach($areas as $area)
@@ -648,37 +722,44 @@
                                 "{{$conteo}}",
                             @endforeach
                         ],
+                    backgroundColor: coloR5,
                 }]
             },
             options: {
                 responsive: true,
-                aspectRatio: false,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx5) => {
                             let sum = 0;
                             let dataArr = ctx5.chart.data.datasets[0].data;
                             let percentage = (value*100 / total).toFixed(2)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
-                    }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
+                    },
                 }
             }
         });
 
         var lineChart6 = new Chart(ctx6, {
-            type: 'pie',
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
             data: {
                 labels: [
                     @foreach($estados as $estado)
@@ -692,31 +773,37 @@
                                 "{{$conteo}}",
                             @endforeach
                         ],
+                    backgroundColor: coloR6,
                 }]
             },
             options: {
                 responsive: true,
-                aspectRatio: false,
-                legend: {
-                    position: 'right'
-                },
+                maintainAspectRatio: false,
                 plugins: {
-                    colorschemes: {
-                        scheme: 'office.BlueGreen6'
-                    },
                     datalabels: {
+                        anchor: 'center',
+                        align: 'center',
                         formatter: (value, ctx6) => {
                             let sum = 0;
                             let dataArr = ctx6.chart.data.datasets[0].data;
                             let percentage = (value*100 / total).toFixed(2)+"%";
                             return percentage;
                         },
-                        color: '#3e3e3e',
+                        color: '#333333',
                         font: {
                             weight: 'bold',
-                            size: '14',
+                            size: '13',
                         },
-                    }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        display: true,
+                    },
+                    tooltip: {
+                        backgroundColor: '#0087bd',
+                        bodyColor: '#f8fff9',
+                    },
                 }
             }
         });

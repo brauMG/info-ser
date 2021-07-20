@@ -4,18 +4,17 @@
 namespace App\Http\Controllers;
 
 
-use App\Actividad;
-use App\Areas;
-use App\Charts\ProjectFocusChart;
-use App\Compania;
-use App\Enfoque;
-use App\Etapas;
-use App\Fase;
-use App\Indicador;
-use App\Proyecto;
-use App\Status;
-use App\Trabajo;
-use App\User;
+use App\Models\Actividad;
+use App\Models\Areas;
+use App\Models\Companias;
+use App\Models\Enfoques;
+use App\Models\Etapas;
+use App\Models\Fase;
+use App\Models\Indicador;
+use App\Models\Proyecto;
+use App\Models\Status;
+use App\Models\trabajo;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -28,34 +27,34 @@ class GraficasController extends Controller
     public function toProjects() {
 
         //PROYECTOS POR ENFOQUE
-        $ProyectosEnfoque = DB::table('Proyectos')
-            ->leftJoin('Enfoques', 'Proyectos.Clave_Enfoque', 'Enfoques.Clave')
-            ->select('Proyectos.Descripcion as Proyecto', 'Enfoques.Descripcion as Enfoque')
+        $proyectoenfoque = DB::table('proyectos')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto', 'enfoques.descripcion as enfoque')
             ->get();
-        $peCalidad = DB::table('Proyectos')
-            ->leftJoin('Enfoques', 'Proyectos.Clave_Enfoque', 'Enfoques.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Enfoques.Clave', 1)
+        $peCalidad = DB::table('proyectos')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 1)
             ->get();
-        $peGente = DB::table('Proyectos')
-            ->leftJoin('Enfoques', 'Proyectos.Clave_Enfoque', 'Enfoques.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Enfoques.Clave', 2)
+        $peGente = DB::table('proyectos')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 2)
             ->get();
-        $peCosto = DB::table('Proyectos')
-            ->leftJoin('Enfoques', 'Proyectos.Clave_Enfoque', 'Enfoques.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Enfoques.Clave', 3)
+        $peCosto = DB::table('proyectos')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 3)
             ->get();
-        $peServicio = DB::table('Proyectos')
-            ->leftJoin('Enfoques', 'Proyectos.Clave_Enfoque', 'Enfoques.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Enfoques.Clave', 4)
+        $peServicio = DB::table('proyectos')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 4)
             ->get();
-        $peCrecimiento = DB::table('Proyectos')
-            ->leftJoin('Enfoques', 'Proyectos.Clave_Enfoque', 'Enfoques.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Enfoques.Clave', 5)
+        $peCrecimiento = DB::table('proyectos')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 5)
             ->get();
 
         $peCalidad = count($peCalidad);
@@ -65,76 +64,76 @@ class GraficasController extends Controller
         $peCrecimiento = count($peCrecimiento);
 
         //PROYECTOS POR TRABAJO
-        $ProyectosTrabajo = DB::table('Proyectos')
-            ->leftJoin('Trabajos', 'Proyectos.Clave_Trabajo', 'Trabajos.Clave')
-            ->select('Proyectos.Descripcion as Proyecto', 'Trabajos.Descripcion as Trabajo')
+        $proyectoTrabajo = DB::table('proyectos')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo')
             ->get();
-        $ptOperaciones = DB::table('Proyectos')
-            ->leftJoin('Trabajos', 'Proyectos.Clave_Trabajo', 'Trabajos.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Trabajos.Clave', 1)
+        $ptOperaciones = DB::table('proyectos')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 1)
             ->get();
-        $ptAdministrativo = DB::table('Proyectos')
-            ->leftJoin('Trabajos', 'Proyectos.Clave_Trabajo', 'Trabajos.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Trabajos.Clave', 2)
+        $ptAdministrativo = DB::table('proyectos')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 2)
             ->get();
-        $ptProyectos = DB::table('Proyectos')
-            ->leftJoin('Trabajos', 'Proyectos.Clave_Trabajo', 'Trabajos.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Trabajos.Clave', 3)
+        $ptProyecto = DB::table('proyectos')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 3)
             ->get();
-        $ptIniciativas = DB::table('Proyectos')
-            ->leftJoin('Trabajos', 'Proyectos.Clave_Trabajo', 'Trabajos.Clave')
-            ->select('Proyectos.Descripcion as Proyecto')
-            ->where('Trabajos.Clave', 4)
+        $ptIniciativas = DB::table('proyectos')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 4)
             ->get();
 
         $ptOperaciones = count($ptOperaciones);
         $ptAdministrativo = count($ptAdministrativo);
-        $ptProyectos = count($ptProyectos);
+        $ptProyectos = count($ptProyecto);
         $ptIniciativas = count($ptIniciativas);
 
         //PROYECTOS POR FASE
-        $ProyectosFase = DB::table('Proyectos')
-            ->leftJoin('Fases', 'Proyectos.Clave_Fase', 'Fases.Clave')
-            ->select('Proyectos.Descripcion as Proyecto', 'Fases.Descripcion as Fase', 'Proyectos.Clave_Fase')
+        $proyectoFase = DB::table('proyectos')
+            ->leftJoin('fases', 'proyectos.id_fase', 'fases.id')
+            ->select('proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'proyectos.id_fase')
             ->get();
 
 
-        $fases = Fase::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $fases = $fases->unique('Descripcion');
-        $dataFases = [];
+        $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+        $fases = $fases->unique('descripcion');
+        $datafases = [];
 
         $i = 1;
         foreach ($fases as $fase) {
-            foreach ($ProyectosFase as $proyecto) {
-                if ($proyecto->Clave_Fase == $fase->Clave) {
-                    $dataFases [$fase->Descripcion] = $i;
+            foreach ($proyectoFase as $proyecto) {
+                if ($proyecto->id_fase == $fase->id) {
+                    $datafases [$fase->descripcion] = $i;
                     $i++;
                 }
             }
             $i = 1;
         }
 
-        $fases = array_keys($dataFases);
-        $conteoFases = array_values($dataFases);
+        $fases = array_keys($datafases);
+        $conteofases = array_values($datafases);
 
         //PROYECTOS POR INDICADOR
-        $ProyectosIndicador = DB::table('Proyectos')
-            ->leftJoin('Indicador', 'Proyectos.Clave_Indicador', 'Indicador.Clave')
-            ->select('Proyectos.Descripcion as Proyecto', 'Indicador.Descripcion as Indicador', 'Proyectos.Clave_Indicador')
+        $proyectoIndicador = DB::table('proyectos')
+            ->leftJoin('indicadores', 'proyectos.id_indicador', 'indicadores.id')
+            ->select('proyectos.descripcion as proyecto', 'indicadores.descripcion as indicador', 'proyectos.id_indicador')
             ->get();
 
-        $indicadores = Indicador::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $indicadores = $indicadores->unique('Descripcion');
+        $indicadores = Indicador::where('id_compania', Auth::user()->id_compania)->get();
+        $indicadores = $indicadores->unique('descripcion');
         $dataIndicadores = [];
 
         $i = 1;
         foreach ($indicadores as $indicador) {
-            foreach ($ProyectosIndicador as $proyecto) {
-                if ($proyecto->Clave_Indicador == $indicador->Clave) {
-                    $dataIndicadores [$indicador->Descripcion] = $i;
+            foreach ($proyectoIndicador as $proyecto) {
+                if ($proyecto->id_indicador == $indicador->id) {
+                    $dataIndicadores [$indicador->descripcion] = $i;
                     $i++;
                 }
             }
@@ -145,20 +144,20 @@ class GraficasController extends Controller
         $conteoIndicadores = array_values($dataIndicadores);
 
         //PROYECTOS POR AREA
-        $ProyectosArea = DB::table('Proyectos')
-            ->leftJoin('Areas', 'Proyectos.Clave_Area', 'Areas.Clave')
-            ->select('Proyectos.Descripcion as Proyecto', 'Areas.Descripcion as Area', 'Proyectos.Clave_Area')
+        $proyectoArea = DB::table('proyectos')
+            ->leftJoin('areas', 'proyectos.id_area', 'areas.id')
+            ->select('proyectos.descripcion as proyecto', 'areas.descripcion as area', 'proyectos.id_area')
             ->get();
 
-        $areas = Areas::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $areas = $areas->unique('Descripcion');
+        $areas = Areas::where('id_companias', Auth::user()->id_compania)->get();
+        $areas = $areas->unique('descripcion');
         $dataAreas = [];
 
         $i = 1;
         foreach ($areas as $area) {
-            foreach ($ProyectosArea as $proyecto) {
-                if ($proyecto->Clave_Area == $area->Clave) {
-                    $dataAreas [$area->Descripcion] = $i;
+            foreach ($proyectoArea as $proyecto) {
+                if ($proyecto->id_area == $area->id) {
+                    $dataAreas [$area->descripcion] = $i;
                     $i++;
                 }
             }
@@ -169,20 +168,20 @@ class GraficasController extends Controller
         $conteoAreas = array_values($dataAreas);
 
         //PROYECTOS POR ESTADO
-        $ProyectosEstado = DB::table('Proyectos')
-            ->leftJoin('Status', 'Proyectos.Clave_Status', 'Status.Clave')
-            ->select('Proyectos.Descripcion as Proyecto', 'Status.status as Estado', 'Proyectos.Clave_Status')
+        $proyectoEstado = DB::table('proyectos')
+            ->leftJoin('estado', 'proyectos.id_estado', 'estado.id')
+            ->select('proyectos.descripcion as proyecto', 'estado.estado as estado', 'proyectos.id_estado')
             ->get();
 
-        $estados = Status::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $estados = Status::where('id_compania', Auth::user()->id_compania)->get();
         $estados = $estados->unique('status');
         $dataEstados = [];
 
         $i = 1;
         foreach ($estados as $estado) {
-            foreach ($ProyectosEstado as $proyecto) {
-                if ($proyecto->Clave_Status == $estado->Clave) {
-                    $dataEstados [$estado->status] = $i;
+            foreach ($proyectoEstado as $proyecto) {
+                if ($proyecto->id_estado == $estado->id) {
+                    $dataEstados [$estado->estado] = $i;
                     $i++;
                 }
             }
@@ -193,58 +192,58 @@ class GraficasController extends Controller
         $conteoEstados = array_values($dataEstados);
 
         //PROYECTOS POR TRABAJOS POR ENFOQUE
-        $ProyectosTrabajoEnfoque = DB::table('Proyectos')
-            ->leftJoin('Trabajos', 'Proyectos.Clave_Trabajo', 'Trabajos.Clave')
-            ->leftJoin('Enfoques', 'Proyectos.Clave_Enfoque', 'Enfoques.Clave')
-            ->select('Proyectos.Descripcion as Proyecto', 'Trabajos.Descripcion as Trabajo','Enfoques.Descripcion as Enfoque', 'Proyectos.Clave_Enfoque', 'Proyectos.Clave_Trabajo')
+        $proyectotrabajoenfoque = DB::table('proyectos')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo','enfoques.descripcion as enfoque', 'proyectos.id_enfoque', 'proyectos.id_trabajo')
             ->get();
 
         // Operaciones
-        $ptfCalidadOperaciones = Proyecto::where('Clave_Enfoque', 1)->where('Clave_Trabajo', 1)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCalidadOperaciones = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCalidadOperaciones = count($ptfCalidadOperaciones);
-        $ptfGenteOperaciones = Proyecto::where('Clave_Enfoque', 2)->where('Clave_Trabajo', 1)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfGenteOperaciones = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfGenteOperaciones = count($ptfGenteOperaciones);
-        $ptfCostoOperaciones = Proyecto::where('Clave_Enfoque', 3)->where('Clave_Trabajo', 1)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCostoOperaciones = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCostoOperaciones = count($ptfCostoOperaciones);
-        $ptfServicioOperaciones = Proyecto::where('Clave_Enfoque', 4)->where('Clave_Trabajo', 1)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfServicioOperaciones = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfServicioOperaciones = count($ptfServicioOperaciones);
-        $ptfCrecimientoOperaciones = Proyecto::where('Clave_Enfoque', 5)->where('Clave_Trabajo', 1)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCrecimientoOperaciones = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCrecimientoOperaciones = count($ptfCrecimientoOperaciones);
 
         // Administrativo
-        $ptfCalidadAdministrativo = Proyecto::where('Clave_Enfoque', 1)->where('Clave_Trabajo', 2)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCalidadAdministrativo = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCalidadAdministrativo = count($ptfCalidadAdministrativo);
-        $ptfGenteAdministrativo = Proyecto::where('Clave_Enfoque', 2)->where('Clave_Trabajo', 2)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfGenteAdministrativo = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfGenteAdministrativo = count($ptfGenteAdministrativo);
-        $ptfCostoAdministrativo = Proyecto::where('Clave_Enfoque', 3)->where('Clave_Trabajo', 2)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCostoAdministrativo = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCostoAdministrativo = count($ptfCostoAdministrativo);
-        $ptfServicioAdministrativo = Proyecto::where('Clave_Enfoque', 4)->where('Clave_Trabajo', 2)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfServicioAdministrativo = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfServicioAdministrativo = count($ptfServicioAdministrativo);
-        $ptfCrecimientoAdministrativo = Proyecto::where('Clave_Enfoque', 5)->where('Clave_Trabajo', 2)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCrecimientoAdministrativo = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCrecimientoAdministrativo = count($ptfCrecimientoAdministrativo);
 
-        // Proyectos
-        $ptfCalidadProyectos = Proyecto::where('Clave_Enfoque', 1)->where('Clave_Trabajo', 3)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $ptfCalidadProyectos = count($ptfCalidadProyectos);
-        $ptfGenteProyectos = Proyecto::where('Clave_Enfoque', 2)->where('Clave_Trabajo', 3)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $ptfGenteProyectos = count($ptfGenteProyectos);
-        $ptfCostoProyectos = Proyecto::where('Clave_Enfoque', 3)->where('Clave_Trabajo', 3)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $ptfCostoProyectos = count($ptfCostoProyectos);
-        $ptfServicioProyectos = Proyecto::where('Clave_Enfoque', 4)->where('Clave_Trabajo', 3)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $ptfServicioProyectos = count($ptfServicioProyectos);
-        $ptfCrecimientoProyectos = Proyecto::where('Clave_Enfoque', 5)->where('Clave_Trabajo', 3)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $ptfCrecimientoProyectos = count($ptfCrecimientoProyectos);
+        // proyecto
+        $ptfCalidadproyecto = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCalidadproyecto = count($ptfCalidadproyecto);
+        $ptfGenteproyecto = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfGenteproyecto = count($ptfGenteproyecto);
+        $ptfCostoproyecto = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCostoproyecto = count($ptfCostoproyecto);
+        $ptfServicioproyecto = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfServicioproyecto = count($ptfServicioproyecto);
+        $ptfCrecimientoproyecto = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCrecimientoproyecto = count($ptfCrecimientoproyecto);
 
         // Iniciativas
-        $ptfCalidadIniciativas = Proyecto::where('Clave_Enfoque', 1)->where('Clave_Trabajo', 4)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCalidadIniciativas = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCalidadIniciativas = count($ptfCalidadIniciativas);
-        $ptfGenteIniciativas = Proyecto::where('Clave_Enfoque', 2)->where('Clave_Trabajo', 4)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfGenteIniciativas = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfGenteIniciativas = count($ptfGenteIniciativas);
-        $ptfCostoIniciativas = Proyecto::where('Clave_Enfoque', 3)->where('Clave_Trabajo', 4)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCostoIniciativas = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCostoIniciativas = count($ptfCostoIniciativas);
-        $ptfServicioIniciativas = Proyecto::where('Clave_Enfoque', 4)->where('Clave_Trabajo', 4)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfServicioIniciativas = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfServicioIniciativas = count($ptfServicioIniciativas);
-        $ptfCrecimientoIniciativas = Proyecto::where('Clave_Enfoque', 5)->where('Clave_Trabajo', 4)->where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $ptfCrecimientoIniciativas = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
         $ptfCrecimientoIniciativas = count($ptfCrecimientoIniciativas);
 
 //        0 calidad
@@ -255,24 +254,23 @@ class GraficasController extends Controller
 
         $dataOperaciones = [0 => $ptfCalidadOperaciones, 1 => $ptfCostoOperaciones, 2 => $ptfCrecimientoOperaciones, 3 => $ptfGenteOperaciones, 4 => $ptfServicioOperaciones];
         $dataAdministrativo = [0 => $ptfCalidadAdministrativo, 1 => $ptfCostoAdministrativo, 2 => $ptfCrecimientoAdministrativo, 3 => $ptfGenteAdministrativo, 4 => $ptfServicioAdministrativo];
-        $dataProyectos = [0 => $ptfCalidadProyectos, 1 => $ptfCostoProyectos, 2 => $ptfCrecimientoProyectos, 3 => $ptfGenteProyectos, 4 => $ptfServicioProyectos];
+        $dataProyectos = [0 => $ptfCalidadproyecto, 1 => $ptfCostoproyecto, 2 => $ptfCrecimientoproyecto, 3 => $ptfGenteproyecto, 4 => $ptfServicioproyecto];
         $dataIniciativas = [0 => $ptfCalidadIniciativas, 1 => $ptfCostoIniciativas, 2 => $ptfCrecimientoIniciativas, 3 => $ptfGenteIniciativas, 4 => $ptfServicioIniciativas];
 
-        $total = Proyecto::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $total = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
         $total = count($total);
 
-//        dd($dataOperaciones, $dataAdministrativo, $dataProyectos, $dataIniciativas);
+//        dd($dataOperaciones, $dataAdministrativo, $dataproyecto, $dataIniciativas);
 
         $estados = array_keys($dataEstados);
         $conteoEstados = array_values($dataEstados);
 
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
-
-        return view('Admin.Graficas.proyectos', compact(
-            'ProyectosEnfoque', 'ProyectosTrabajo', 'ProyectosFase','ProyectosIndicador','ProyectosArea','ProyectosTrabajoEnfoque','ProyectosEstado', 'compania','total',
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        return view('pages.graficas.proyectos', compact(
+            'proyectoenfoque', 'proyectoTrabajo', 'proyectoFase','proyectoIndicador','proyectoArea','proyectotrabajoenfoque','proyectoEstado', 'compania','total',
                     'peCrecimiento', 'peCalidad', 'peGente', 'peServicio', 'peCosto',
                     'ptOperaciones', 'ptAdministrativo', 'ptProyectos', 'ptIniciativas',
-                    'fases', 'conteoFases',
+                    'fases', 'conteofases',
                     'indicadores', 'conteoIndicadores',
                     'areas', 'conteoAreas',
                     'estados', 'conteoEstados',
@@ -282,48 +280,48 @@ class GraficasController extends Controller
     public function toActivities()
     {
         //ACTIVIDADES POR PROYECTO
-        $ActividadesProyecto = DB::table('Actividades')
-            ->leftJoin('Proyectos', 'Actividades.Clave_Proyecto', 'Proyectos.Clave')
-            ->select('Actividades.Descripcion as Actividad', 'Proyectos.Descripcion as Proyecto', 'Actividades.Clave_Proyecto')
+        $Actividadesproyecto = DB::table('actividades')
+            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+            ->select('actividades.descricion as actividad', 'proyectos.descripcion as proyecto', 'actividades.id_proyecto')
             ->get();
 
-        $proyectos = Proyecto::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $proyectos = $proyectos->unique('Descripcion');
-        $dataProyectos = [];
+        $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+        $proyectos = $proyectos->unique('descripcion');
+        $dataproyecto = [];
 
         $i = 1;
         foreach ($proyectos as $proyecto) {
-            foreach ($ActividadesProyecto as $actividad) {
-                if ($actividad->Clave_Proyecto == $proyecto->Clave) {
-                    $dataProyectos [$proyecto->Descripcion] = $i;
+            foreach ($Actividadesproyecto as $actividad) {
+                if ($actividad->id_proyecto == $proyecto->id) {
+                    $dataproyecto [$proyecto->descripcion] = $i;
                     $i++;
                 }
             }
             $i = 1;
         }
 
-        $proyectos = array_keys($dataProyectos);
-        $conteoProyectos = array_values($dataProyectos);
+        $proyectos = array_keys($dataproyecto);
+        $conteoproyecto = array_values($dataproyecto);
 
-        $total = Actividad::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
+        $total = Actividad::where('id_compania', Auth::user()->id_compania)->get();
         $total = count($total);
 
         //ACTIVIDADES POR ESTADO
-        $ActividadesEstado = DB::table('Actividades')
-            ->select('Actividades.Descripcion as Actividad','Actividades.Estado as Activo')
+        $ActividadesEstado = DB::table('actividades')
+            ->select('actividades.descricion as actividad','actividades.estado as activo')
             ->get();
 
-        $aePendiente = DB::table('Actividades')
-            ->select('Actividades.Descripcion as Actividad')
-            ->where('Actividades.Estado', 0)
+        $aePendiente = DB::table('actividades')
+            ->select('actividades.descricion as actividad')
+            ->where('actividades.estado', 0)
             ->get();
-        $aeAprobada = DB::table('Actividades')
-            ->select('Actividades.Descripcion as Actividad')
-            ->where('Actividades.Estado', 1)
+        $aeAprobada = DB::table('actividades')
+            ->select('actividades.descricion as actividad')
+            ->where('actividades.estado', 1)
             ->get();
-        $aeDesaprobada = DB::table('Actividades')
-            ->select('Actividades.Descripcion as Actividad')
-            ->where('Actividades.Estado', 2)
+        $aeDesaprobada = DB::table('actividades')
+            ->select('actividades.descricion as actividad')
+            ->where('actividades.estado', 2)
             ->get();
 
         $aePendiente = count($aePendiente);
@@ -331,20 +329,20 @@ class GraficasController extends Controller
         $aeDesaprobada = count($aeDesaprobada);
 
         //ACTIVIDADES POR USUARIO
-        $ActividadesUsuarios = DB::table('Actividades')
-            ->leftJoin('Usuarios', 'Actividades.Clave_Usuario', 'Usuarios.Clave')
-            ->select('Actividades.Descripcion as Actividad', 'Usuarios.Nombres as Usuario', 'Actividades.Clave_Usuario')
+        $ActividadesUsuarios = DB::table('actividades')
+            ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
+            ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
             ->get();
 
-        $usuarios = User::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $usuarios = $usuarios->unique('Nombres');
+        $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
+        $usuarios = $usuarios->unique('nombres');
         $dataUsuarios = [];
 
         $i = 1;
         foreach ($usuarios as $usuario) {
             foreach ($ActividadesUsuarios as $actividad) {
-                if ($actividad->Clave_Usuario == $usuario->Clave) {
-                    $dataUsuarios [$usuario->Nombres] = $i;
+                if ($actividad->id_usuario == $usuario->id) {
+                    $dataUsuarios [$usuario->nombres] = $i;
                     $i++;
                 }
             }
@@ -355,20 +353,20 @@ class GraficasController extends Controller
         $conteoUsuarios = array_values($dataUsuarios);
 
         //ACTIVIDADES POR ETAPA
-        $ActividadesEtapas = DB::table('Actividades')
-            ->leftJoin('Etapas', 'Actividades.Clave_Etapa', 'Etapas.Clave')
-            ->select('Actividades.Descripcion as Actividad', 'Etapas.Descripcion as Etapa', 'Actividades.Clave_Etapa')
+        $ActividadesEtapas = DB::table('actividades')
+            ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
+            ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
             ->get();
 
-        $etapas = Etapas::where('Clave_Compania', Auth::user()->Clave_Compania)->get();
-        $etapas = $etapas->unique('Descripcion');
+        $etapas = Etapas::where('id_compania', Auth::user()->id_compania)->get();
+        $etapas = $etapas->unique('descripcion');
         $dataEtapas = [];
 
         $i = 1;
         foreach ($etapas as $etapa) {
             foreach ($ActividadesEtapas as $actividad) {
-                if ($actividad->Clave_Etapa == $etapa->Clave) {
-                    $dataEtapas [$etapa->Descripcion] = $i;
+                if ($actividad->id_etapa == $etapa->id) {
+                    $dataEtapas [$etapa->descripcion] = $i;
                     $i++;
                 }
             }
@@ -379,9 +377,9 @@ class GraficasController extends Controller
         $conteoEtapas = array_values($dataEtapas);
 
 
-        $compania=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
 
-        return view('Admin.Graficas.actividades', compact('usuarios', 'conteoUsuarios','ActividadesUsuarios','ActividadesEtapas','etapas','conteoEtapas',
-            'total','compania','ActividadesProyecto','proyectos', 'conteoProyectos','ActividadesEstado','aePendiente','aeAprobada', 'aeDesaprobada'));
+        return view('pages.graficas.actividades', compact('usuarios', 'conteoUsuarios','ActividadesUsuarios','ActividadesEtapas','etapas','conteoEtapas',
+            'total','compania','Actividadesproyecto','proyectos', 'conteoproyecto','ActividadesEstado','aePendiente','aeAprobada', 'aeDesaprobada'));
     }
 }

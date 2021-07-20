@@ -39,10 +39,10 @@ class HomeController extends Controller
             return redirect('/proyectos');
         }
         if ($rol == 5) {
-            return redirect('/actividades/prepare');
+            return redirect('/graficas/proyectos');
         }
         if ($rol == 6) {
-            return redirect('/actividades/prepare');
+            return redirect('/graficas/proyectos');
         }
         if ($rol == 7) {
             return redirect('/proyectos');
