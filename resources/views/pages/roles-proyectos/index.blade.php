@@ -33,9 +33,26 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Roles en Proyectos</h4>
-                            <p class="card-category">Esta lista muestra a que proyecto pertenece cada usuario</p>
-                            <a href="{{route('select')}}" class="btn btn-info" id="new">Agregar Usuario a Proyecto <i class="material-icons">add_circle_outline</i></a>
+                            <div style="display: flex; flex-wrap: wrap">
+                                <div class="col-md-8">
+                                    <h4 class="card-title ">Roles en Proyectos</h4>
+                                    <p class="card-category">Esta lista muestra a que proyecto pertenece cada usuario</p>
+                                    <a href="{{route('select')}}" class="btn btn-info" id="new">Agregar Usuario a Proyecto <i class="material-icons">add_circle_outline</i></a>
+                                </div>
+                                @if($rol == 4 || $rol == 7)
+                                    <div class="col-md-4">
+                                        <div class="form-group" style="float: right">
+                                            <label class="text-white">Filtrar Gerencia</label>
+                                            <select id="gerencia-filter" class="custom-select">
+                                                <option value="">Todas</option>
+                                                @foreach($gerencias as $gerencia)
+                                                    <option>{{$gerencia->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -43,6 +60,9 @@
                                     <thead class="text-primary thead-color">
                                     <th>Usuario<i class="material-icons sort">sort</i></th>
                                     <th>Puesto<i class="material-icons sort">sort</i></th>
+                                    @if($rol == 4 || $rol == 7)
+                                        <th>Gerencia<i class="material-icons sort">sort</i></th>
+                                    @endif
                                     <th>Proyecto<i class="material-icons sort">sort</i></th>
                                     <th>Fase actual del proyecto<i class="material-icons sort">sort</i></th>
                                     <th>Rol RASIC<i class="material-icons sort">sort</i></th>
@@ -54,6 +74,9 @@
                                         <tr>
                                         <td>{{$item->usuario}}</td>
                                         <td>{{$item->puesto}}</td>
+                                            @if($rol == 4 || $rol == 7)
+                                                <td>{{$item->gerencia}}</td>
+                                            @endif
                                         <td>{{$item->proyecto}}</td>
                                         <td>{{$item->fase}}</td>
                                         <td>{{$item->rol_rasic}}</td>
@@ -86,7 +109,7 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
 
-        $('.data-table').DataTable({
+        var table = $('.data-table').DataTable({
                 responsive: true,
                 lengthMenu: [
                     [10, 25, 50, -1],
@@ -130,6 +153,10 @@
 
             }
         );
+
+        $('#gerencia-filter').on('change', function(){
+            table.search(this.value).draw();
+        });
 
         $('.mydatatable').DataTable();
 

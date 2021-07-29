@@ -34,6 +34,61 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
+                            <div style="display: flex; flex-wrap: wrap">
+                                <div class="col-md-4">
+                                    <form action="{{route('ChartsProjectsDir')}}" method="POST">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label class="text-white">Dirección</label>
+                                            <select class="custom-select" name="direccion" style="width: 250px">
+                                                    <option value="0">Todas</option>
+                                                @foreach($direcciones as $direccion)
+                                                    @if($dir != null)
+                                                        @if($dir->id == $direccion->id)
+                                                            <option value="{{$direccion->id}}" selected>{{$direccion->nombre}}</option>
+                                                        @else
+                                                            <option value="{{$direccion->id}}">{{$direccion->nombre}}</option>
+                                                        @endif
+                                                    @else
+                                                        <option value="{{$direccion->id}}">{{$direccion->nombre}}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="btn btn-info"><i class="material-icons">sort</i>Filtrar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4">
+                                    <form action="{{route('ChartsProjectsGer')}}" method="POST">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label class="text-white">Gerencia</label>
+                                            <select class="custom-select" name="gerencia" style="width: 250px">
+                                                @foreach($gerencias as $gerencia)
+                                                    <option value="{{$gerencia->id}}">{{$gerencia->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="btn btn-info"><i class="material-icons">sort</i>Filtrar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                @if($dir != null)
+                                    <div class="col-md-4">
+                                        <label class="text-white" style="float: right">Viendo resultados de la dirección: <strong>{{$dir->nombre}}</strong></label>
+                                    </div>
+                                @else
+                                    <div class="col-md-4">
+                                        <label class="text-white" style="float: right">Viendo resultados de todas las direcciones</label>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
                             <h4 class="card-title">Actividades de trabajo por enfoque y tipo de trabajo</h4>
                             <p class="card-category"><i class="material-icons">scatter_plot</i> <strong>Total de Proyectos:</strong> {{count($proyectoenfoque)}}</p>
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gerencia;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
@@ -35,34 +36,58 @@ class ProyectosController extends Controller
     public function index(){
         $rol = Auth::user()->id_rol;
         $compania = Companias::where('id', Auth::user()->id_compania)->first();
-
+        if (Auth::user()->id_rol == 4) {
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if (Auth::user()->id_rol == 7) {
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+        }
 
         if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7) {
-            $proyecto = DB::table('proyectos')
-                ->leftJoin('companias', 'proyectos.id_compania', '=', 'companias.id')
-                ->leftJoin('estado', 'estado.id', '=', 'proyectos.id_estado')
-                ->leftJoin('areas', 'areas.id', '=', 'proyectos.id_area')
-                ->leftJoin('fases', 'fases.id', '=', 'proyectos.id_fase')
-                ->leftJoin('enfoques', 'enfoques.id', '=', 'proyectos.id_enfoque')
-                ->leftJoin('trabajos', 'trabajos.id', '=', 'proyectos.id_trabajo')
-                ->leftJoin('indicadores', 'indicadores.id', '=', 'proyectos.id_indicador')
-                ->select('proyectos.id','estado.activo as activo', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'estado.estado as estado', 'areas.descripcion as area', 'fases.descripcion as fase', 'enfoques.descripcion as enfoque', 'trabajos.descripcion as trabajo', 'indicadores.descripcion as indicador', 'objetivo', 'criterio')
-                ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
-                ->get();
+            if (Auth::user()->id_rol == 4) {
+                $proyecto = DB::table('proyectos')
+                    ->leftJoin('companias', 'proyectos.id_compania', '=', 'companias.id')
+                    ->leftJoin('gerencias', 'proyectos.id_gerencia', '=', 'gerencias.id')
+                    ->leftJoin('estado', 'estado.id', '=', 'proyectos.id_estado')
+                    ->leftJoin('areas', 'areas.id', '=', 'proyectos.id_area')
+                    ->leftJoin('fases', 'fases.id', '=', 'proyectos.id_fase')
+                    ->leftJoin('enfoques', 'enfoques.id', '=', 'proyectos.id_enfoque')
+                    ->leftJoin('trabajos', 'trabajos.id', '=', 'proyectos.id_trabajo')
+                    ->leftJoin('indicadores', 'indicadores.id', '=', 'proyectos.id_indicador')
+                    ->select('proyectos.id', 'estado.activo as activo', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'estado.estado as estado', 'areas.descripcion as area', 'fases.descripcion as fase', 'enfoques.descripcion as enfoque', 'trabajos.descripcion as trabajo', 'indicadores.descripcion as indicador', 'objetivo', 'criterio', 'gerencias.nombre as gerencia')
+                    ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
+                    ->get();
+            }
+            else {
+                $proyecto = DB::table('proyectos')
+                    ->leftJoin('companias', 'proyectos.id_compania', '=', 'companias.id')
+                    ->leftJoin('gerencias', 'proyectos.id_gerencia', '=', 'gerencias.id')
+                    ->leftJoin('estado', 'estado.id', '=', 'proyectos.id_estado')
+                    ->leftJoin('areas', 'areas.id', '=', 'proyectos.id_area')
+                    ->leftJoin('fases', 'fases.id', '=', 'proyectos.id_fase')
+                    ->leftJoin('enfoques', 'enfoques.id', '=', 'proyectos.id_enfoque')
+                    ->leftJoin('trabajos', 'trabajos.id', '=', 'proyectos.id_trabajo')
+                    ->leftJoin('indicadores', 'indicadores.id', '=', 'proyectos.id_indicador')
+                    ->select('proyectos.id', 'estado.activo as activo', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'estado.estado as estado', 'areas.descripcion as area', 'fases.descripcion as fase', 'enfoques.descripcion as enfoque', 'trabajos.descripcion as trabajo', 'indicadores.descripcion as indicador', 'objetivo', 'criterio', 'gerencias.nombre as gerencia')
+                    ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
+                    ->where('gerencias.id_gerente', Auth::user()->id)
+                    ->get();
+            }
 
             $url = url()->previous();
             $url = basename($url);
             if ($url == 'actividades') {
                 $mensaje = 'Selecciona el proyecto en el cual registraras una actividad';
-                return view('pages.proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'mensaje' => $mensaje, 'rol' => $rol]);
+                return view('pages.proyectos.index', ['gerencias'=> $gerencias, 'proyecto' => $proyecto, 'compania' => $compania, 'mensaje' => $mensaje, 'rol' => $rol]);
             } else {
-                return view('pages.proyectos.index', ['proyecto' => $proyecto, 'compania' => $compania, 'rol' => $rol]);
+                return view('pages.proyectos.index', ['gerencias'=> $gerencias, 'proyecto' => $proyecto, 'compania' => $compania, 'rol' => $rol]);
             }
         }
 
         if (Auth::user()->id_rol == 3) {
             $proyecto = DB::table('roles_proyectos')
                 ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
+                ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
                 ->leftJoin('companias', 'proyectos.id_compania', '=', 'companias.id')
                 ->leftJoin('estado', 'estado.id', '=', 'proyectos.id_estado')
                 ->leftJoin('areas', 'areas.id', '=', 'proyectos.id_area')
@@ -70,7 +95,7 @@ class ProyectosController extends Controller
                 ->leftJoin('enfoques', 'enfoques.id', '=', 'proyectos.id_enfoque')
                 ->leftJoin('trabajos', 'trabajos.id', '=', 'proyectos.id_trabajo')
                 ->leftJoin('indicadores', 'indicadores.id', '=', 'proyectos.id_indicador')
-                ->select('proyectos.id','estado.activo as activo', 'companias.descripcion as Compania', 'proyectos.descripcion as proyecto', 'estado.estado as estado', 'areas.descripcion as area', 'fases.descripcion as fase', 'enfoques.descripcion as enfoque', 'trabajos.descripcion as trabajo', 'indicadores.descripcion as indicador', 'objetivo', 'criterio')
+                ->select('gerencias.nombre as gerencia','proyectos.id','estado.activo as activo', 'companias.descripcion as Compania', 'proyectos.descripcion as proyecto', 'estado.estado as estado', 'areas.descripcion as area', 'fases.descripcion as fase', 'enfoques.descripcion as enfoque', 'trabajos.descripcion as trabajo', 'indicadores.descripcion as indicador', 'objetivo', 'criterio', 'gerencias.nombre as gerencia')
                 ->where('roles_proyectos.id_usuario', '=', Auth::user()->id)
                 ->get();
 
@@ -110,8 +135,14 @@ class ProyectosController extends Controller
 	    $trabajos=Trabajo::all();
 	    $indicadores=Indicador::where('id_compania','=',Auth::user()->id_compania)->get();
         $estados=Status::where('id_compania','=',Auth::user()->id_compania)->get();
+        if (Auth::user()->id_rol == 4) {
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if (Auth::user()->id_rol == 7) {
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+        }
         $count = 0;
-        return view('pages.proyectos.new',['company'=>$company,'areas'=>$areas,'fases'=>$fases,'enfoques'=>$enfoques,'trabajos'=>$trabajos,'indicadores'=>$indicadores,'estados'=>$estados, 'count'=>$count,'compania'=>$compania]);
+        return view('pages.proyectos.new',['gerencias' => $gerencias,'company'=>$company,'areas'=>$areas,'fases'=>$fases,'enfoques'=>$enfoques,'trabajos'=>$trabajos,'indicadores'=>$indicadores,'estados'=>$estados, 'count'=>$count,'compania'=>$compania]);
 	}
 
     public function store(Request $request){
@@ -121,6 +152,7 @@ class ProyectosController extends Controller
         $project = $request->validate([
             'descripcion' => ['required', 'string', 'max:500'],
             'objetivo' => ['required', 'string', 'max:500'],
+            'gerencia' => ['required'],
             'criterio' => ['required', 'string', 'max:500'],
             'area' => ['required'],
             'fase' => ['required'],
@@ -142,7 +174,7 @@ class ProyectosController extends Controller
             'id_indicador' => $project['indicador'],
             'id_estado' => $project['estado'],
             'activo' => 1,
-            'id_gerencia' => 1,
+            'id_gerencia' => $project['gerencia'],
             'fecha_creacion' => Carbon::today()->toDateString()
         ]);
         return redirect('/proyectos')->with('mensaje', "Nuevo proyecto agregado correctamente");

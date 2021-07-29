@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 //use App\Mail\AdviceActivity;
 //use App\Mail\AdviceUserProject;
+use App\Models\Gerencia;
 use Illuminate\Support\Facades\Mail;
 
 use Barryvdh\DomPDF\Facade as PDF;
@@ -31,17 +32,42 @@ class RolesProyectosController extends Controller
     }
 
      public function index(){
+         $rol = Auth::user()->id_rol;
+         if (Auth::user()->id_rol == 4) {
+             $gerencias = Gerencia::all();
+         }
+         if (Auth::user()->id_rol == 7) {
+             $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+         }
+
             $compania=Companias::where('id',Auth::user()->id_compania)->first();
-            $rolPROYECTO=DB::table('roles_proyectos')
-                ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
-                ->leftJoin('roles_rasic', 'roles_proyectos.id_rol_rasic', '=', 'roles_rasic.id')
-                ->leftJoin('usuarios', 'roles_proyectos.id_usuario', '=', 'usuarios.id')
-                ->leftJoin('puestos', 'usuarios.id_puesto', '=', 'puestos.id')
-                ->leftJoin('fases', 'proyectos.id_fase', '=', 'fases.id')
-                ->select('roles_proyectos.id as id','proyectos.descripcion as proyecto','usuarios.nombres as usuario','puestos.descripcion as puesto','roles_rasic.rol_rasic as rol_rasic', 'fases.descripcion as fase', 'roles_proyectos.activo', 'roles_proyectos.fecha_creacion')
-                ->where('proyectos.id_compania','=',Auth::user()->id_compania)
-                ->get();
-            return view('pages.roles-proyectos.index',['rolPROYECTO' => $rolPROYECTO,'compania' => $compania]);
+
+         if (Auth::user()->id_rol == 4) {
+             $rolPROYECTO = DB::table('roles_proyectos')
+                 ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
+                 ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                 ->leftJoin('roles_rasic', 'roles_proyectos.id_rol_rasic', '=', 'roles_rasic.id')
+                 ->leftJoin('usuarios', 'roles_proyectos.id_usuario', '=', 'usuarios.id')
+                 ->leftJoin('puestos', 'usuarios.id_puesto', '=', 'puestos.id')
+                 ->leftJoin('fases', 'proyectos.id_fase', '=', 'fases.id')
+                 ->select('gerencias.nombre as gerencia', 'roles_proyectos.id as id', 'proyectos.descripcion as proyecto', 'usuarios.nombres as usuario', 'puestos.descripcion as puesto', 'roles_rasic.rol_rasic as rol_rasic', 'fases.descripcion as fase', 'roles_proyectos.activo', 'roles_proyectos.fecha_creacion')
+                 ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
+                 ->get();
+         }
+         else {
+             $rolPROYECTO = DB::table('roles_proyectos')
+                 ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
+                 ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                 ->leftJoin('roles_rasic', 'roles_proyectos.id_rol_rasic', '=', 'roles_rasic.id')
+                 ->leftJoin('usuarios', 'roles_proyectos.id_usuario', '=', 'usuarios.id')
+                 ->leftJoin('puestos', 'usuarios.id_puesto', '=', 'puestos.id')
+                 ->leftJoin('fases', 'proyectos.id_fase', '=', 'fases.id')
+                 ->select('gerencias.nombre as gerencia', 'roles_proyectos.id as id', 'proyectos.descripcion as proyecto', 'usuarios.nombres as usuario', 'puestos.descripcion as puesto', 'roles_rasic.rol_rasic as rol_rasic', 'fases.descripcion as fase', 'roles_proyectos.activo', 'roles_proyectos.fecha_creacion')
+                 ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
+                 ->where('gerencias.id_gerente', Auth::user()->id)
+                 ->get();
+         }
+            return view('pages.roles-proyectos.index',['gerencias' => $gerencias,'rol' => $rol,'rolPROYECTO' => $rolPROYECTO,'compania' => $compania]);
     }
 
     public function editStatus($id) {
@@ -57,7 +83,16 @@ class RolesProyectosController extends Controller
     public function select(){
         $compania=Companias::where('id',Auth::user()->id_compania)->first();
         $companyId =Auth::user()->id_compania;
-        $proyectos =  Proyecto::where('id_compania', $companyId)->get();
+        if (Auth::user()->id_rol == 4) {
+            $proyectos= Proyecto::where('id_compania',Auth::user()->id_compania)->get();
+        }
+        if (Auth::user()->id_rol == 7) {
+            $proyectos= DB::table('proyectos')
+                ->leftJoin('gerencias','gerencias.id','proyectos.id_gerencia')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->select('proyectos.*')
+                ->get();
+        }
         return view('pages.roles-proyectos.select',compact('companyId', 'proyectos', 'compania'));
     }
 

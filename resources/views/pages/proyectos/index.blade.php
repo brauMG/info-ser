@@ -33,18 +33,38 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Lista de Proyectos</h4>
-                            <p class="card-category">Estos son los proyectos registrados en el sistema</p>
-                            @if($rol == 4)
-                            <button type="button" class="btn btn-info" id="new" onclick="AddProyecto();">Agregar Proyecto <i class="material-icons">add_circle_outline</i></button>
-                            @endif
+                            <div style="display: flex; flex-wrap: wrap">
+                                <div class="col-md-8">
+                                    <h4 class="card-title ">Lista de Proyectos</h4>
+                                    <p class="card-category">Estos son los proyectos registrados en el sistema</p>
+                                    @if($rol == 4 || $rol == 7)
+                                    <button type="button" class="btn btn-info" id="new" onclick="AddProyecto();">Agregar Proyecto <i class="material-icons">add_circle_outline</i></button>
+                                    @endif
+                                </div>
+                                @if($rol == 4 || $rol == 7)
+                                <div class="col-md-4">
+                                    <div class="form-group" style="float: right">
+                                        <label class="text-white">Filtrar Gerencia</label>
+                                        <select id="gerencia-filter" class="custom-select">
+                                            <option value="">Todas</option>
+                                            @foreach($gerencias as $gerencia)
+                                                <option>{{$gerencia->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
                                     <th>ID<i class="material-icons sort">sort</i></th>
-                                    <th>Descripción<i class="material-icons sort">sort</i></th>
+                                    @if($rol == 4 || $rol == 3 || $rol == 7)
+                                        <th>Gerencia<i class="material-icons sort">sort</i></th>
+                                    @endif
+                                    <th>Nombre<i class="material-icons sort">sort</i></th>
                                     <th>Objetivo<i class="material-icons sort">sort</i></th>
                                     <th>Criterio de Exito<i class="material-icons sort">sort</i></th>
                                     <th>Área<i class="material-icons sort">sort</i></th>
@@ -59,25 +79,31 @@
                                     @foreach ($proyecto as $item)
                                         <tr>
                                         @if($item->activo == 1)
-                                            <td>{{$item->id}}</td>
-                                            <td>{{$item->proyecto}}</td>
-                                            <td>{{$item->objetivo}}</td>
-                                            <td>{{$item->criterio}}</td>
-                                            <td>{{$item->area}}</td>
-                                            <td style="text-align: center">
-                                                <button type="button" class="btn btn-sm btn-success" @if($rol == 4) clave="{{$item->id}}" onclick="changeFase(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->fase}}</button>
-                                            </td>
-                                            <td>{{$item->enfoque}}</td>
-                                            <td>{{$item->trabajo}}</td>
-                                            <td>{{$item->indicador}}</td>
-                                            <td style="text-align: center">
-                                                <button type="button" class="btn btn-sm btn-warning" @if($rol == 4) clave="{{$item->id}}" onclick="changeEstado(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->estado}}</button>
-                                            </td>
-                                            <td style="text-align: center">
-                                                <a class="btn btn-sm btn-secondary" href="{{route('TypeActivity', $item->id)}}"><i class="material-icons">edit</i> Registrar Actividad</a>
-                                            </td>
+                                                <td>{{$item->id}}<i class="material-icons plus">add_circle</i></td>
+                                                @if($rol == 4 || $rol == 3 || $rol == 7)
+                                                        <td>{{$item->gerencia}}</td>
+                                                    @endif
+                                                <td>{{$item->proyecto}}</td>
+                                                <td>{{$item->objetivo}}</td>
+                                                <td>{{$item->criterio}}</td>
+                                                <td>{{$item->area}}</td>
+                                                <td style="text-align: center">
+                                                    <button type="button" class="btn btn-sm btn-success" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeFase(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->fase}}</button>
+                                                </td>
+                                                <td>{{$item->enfoque}}</td>
+                                                <td>{{$item->trabajo}}</td>
+                                                <td>{{$item->indicador}}</td>
+                                                <td style="text-align: center">
+                                                    <button type="button" class="btn btn-sm btn-warning" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeEstado(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->estado}}</button>
+                                                </td>
+                                                <td style="text-align: center">
+                                                    <a class="btn btn-sm btn-secondary" href="{{route('TypeActivity', $item->id)}}"><i class="material-icons">edit</i> Registrar Actividad</a>
+                                                </td>
                                         @elseif($item->activo == 0)
-                                            <td>{{$item->id}}</td>
+                                            <td>{{$item->id}}<i class="material-icons plus">add_circle</i></td>
+                                                @if($rol == 4 || $rol == 3 || $rol == 7)
+                                                    <td>{{$item->gerencia}}</td>
+                                                @endif
                                             <td>{{$item->proyecto}}</td>
                                             <td>{{$item->objetivo}}</td>
                                             <td>{{$item->criterio}}</td>
@@ -90,11 +116,11 @@
                                             <td>{{$item->indicador}}</td>
                                             @if($item->estado == 'Completado' || $item->estado == 'Terminado' || $item->estado == 'Finalizado' || $item->estado == 'Acabado' || $item->estado == 'Hecho')
                                                 <td style="text-align: center">
-                                                    <button type="button" class="btn btn-sm btn-success" @if($rol == 4) clave="{{$item->id}}" onclick="changeEstado(this);" @endif data-toggle="tooltip" data-placement="top" title="Este estado bloquea el proyecto"><i class="material-icons">edit</i> {{$item->estado}}</button>
+                                                    <button type="button" class="btn btn-sm btn-success" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeEstado(this);" @endif data-toggle="tooltip" data-placement="top" title="Este estado bloquea el proyecto"><i class="material-icons">edit</i> {{$item->estado}}</button>
                                                 </td>
                                             @else
                                                 <td style="text-align: center">
-                                                    <button type="button" class="btn btn-sm btn-warning" @if($rol == 4) clave="{{$item->id}}" onclick="changeEstado(this);" @endif data-toggle="tooltip" data-placement="top" title="Este estado bloquea el proyecto"><i class="material-icons">edit</i> {{$item->estado}}</button>
+                                                    <button type="button" class="btn btn-sm btn-warning" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeEstado(this);" @endif data-toggle="tooltip" data-placement="top" title="Este estado bloquea el proyecto"><i class="material-icons">edit</i> {{$item->estado}}</button>
                                                 </td>
                                             @endif
                                             <td style="text-align: center">
@@ -116,9 +142,9 @@
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
-        })
+        });
 
-        $('.data-table').DataTable({
+        var table = $('.data-table').DataTable({
                 responsive: true,
                 lengthMenu: [
                     [10, 25, 50, -1],
@@ -159,9 +185,12 @@
                         "csv": "Excel"
                     }
                 },
-
             }
         );
+
+        $('#gerencia-filter').on('change', function(){
+            table.search(this.value).draw();
+        });
 
         function AddProyecto() {
             $('#myModal').load('{{ url('/proyectos/new') }}', function (response, status, xhr) {

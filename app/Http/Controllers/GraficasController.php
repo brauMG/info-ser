@@ -7,9 +7,11 @@ namespace App\Http\Controllers;
 use App\Models\Actividad;
 use App\Models\Areas;
 use App\Models\Companias;
+use App\Models\Direccion;
 use App\Models\Enfoques;
 use App\Models\Etapas;
 use App\Models\Fase;
+use App\Models\Gerencia;
 use App\Models\Indicador;
 use App\Models\Proyecto;
 use App\Models\Status;
@@ -17,6 +19,8 @@ use App\Models\trabajo;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\DocBlock\Tags\Author;
+use Illuminate\Http\Request;
 
 class GraficasController extends Controller
 {
@@ -25,8 +29,23 @@ class GraficasController extends Controller
     }
 
     public function toProjects() {
+        $dir = null;
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5) {
+            $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if (Auth::user()->id_rol == 6) {
+            $direcciones = null;
+            $gerencias = DB::table('gerencias')
+                ->leftJoin('direcciones', 'direcciones.id', 'gerencias_id_direccion')
+                ->where('direcciones.id_gerente', Auth::user()->id);
+        }
+        if (Auth::user()->id_rol == 7) {
+            $direcciones = null;
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id);
+        }
 
-        //PROYECTOS POR ENFOQUE
+            //PROYECTOS POR ENFOQUE
         $proyectoenfoque = DB::table('proyectos')
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto', 'enfoques.descripcion as enfoque')
@@ -274,7 +293,468 @@ class GraficasController extends Controller
                     'indicadores', 'conteoIndicadores',
                     'areas', 'conteoAreas',
                     'estados', 'conteoEstados',
-                    'dataOperaciones', 'dataAdministrativo', 'dataProyectos', 'dataIniciativas'));
+                    'dataOperaciones', 'dataAdministrativo', 'dataProyectos', 'dataIniciativas', 'direcciones', 'gerencias', 'dir'));
+    }
+
+    public function toProjectsDir(Request $request) {
+        $id_direccion = $request->input('direccion');
+        if ($id_direccion == 0) {
+            return redirect('/graficas/proyectos');
+        }
+        $dir = Direccion::find($id_direccion);
+
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5) {
+            $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if (Auth::user()->id_rol == 6) {
+            $direcciones = null;
+            $gerencias = DB::table('gerencias')
+                ->leftJoin('direcciones', 'direcciones.id', 'gerencias_id_direccion')
+                ->where('direcciones.id_gerente', Auth::user()->id);
+        }
+        if (Auth::user()->id_rol == 7) {
+            $direcciones = null;
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id);
+        }
+
+        //PROYECTOS POR ENFOQUE
+        $proyectoenfoque = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto', 'enfoques.descripcion as enfoque')
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $peCalidad = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 1)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $peGente = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 2)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $peCosto = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 3)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $peServicio = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 4)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $peCrecimiento = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('enfoques.id', 5)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+
+        $peCalidad = count($peCalidad);
+        $peGente = count($peGente);
+        $peCosto = count($peCosto);
+        $peServicio = count($peServicio);
+        $peCrecimiento = count($peCrecimiento);
+
+        //PROYECTOS POR TRABAJO
+        $proyectoTrabajo = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo')
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptOperaciones = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 1)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptAdministrativo = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 2)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptProyecto = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 3)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptIniciativas = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->select('proyectos.descripcion as proyecto')
+            ->where('trabajos.id', 4)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+
+        $ptOperaciones = count($ptOperaciones);
+        $ptAdministrativo = count($ptAdministrativo);
+        $ptProyectos = count($ptProyecto);
+        $ptIniciativas = count($ptIniciativas);
+
+        //PROYECTOS POR FASE
+        $proyectoFase = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('fases', 'proyectos.id_fase', 'fases.id')
+            ->select('proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'proyectos.id_fase')
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+
+
+        $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+        $fases = $fases->unique('descripcion');
+        $datafases = [];
+
+        $i = 1;
+        foreach ($fases as $fase) {
+            foreach ($proyectoFase as $proyecto) {
+                if ($proyecto->id_fase == $fase->id) {
+                    $datafases [$fase->descripcion] = $i;
+                    $i++;
+                }
+            }
+            $i = 1;
+        }
+
+        $fases = array_keys($datafases);
+        $conteofases = array_values($datafases);
+
+        //PROYECTOS POR INDICADOR
+        $proyectoIndicador = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('indicadores', 'proyectos.id_indicador', 'indicadores.id')
+            ->select('proyectos.descripcion as proyecto', 'indicadores.descripcion as indicador', 'proyectos.id_indicador')
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+
+        $indicadores = Indicador::where('id_compania', Auth::user()->id_compania)->get();
+        $indicadores = $indicadores->unique('descripcion');
+        $dataIndicadores = [];
+
+        $i = 1;
+        foreach ($indicadores as $indicador) {
+            foreach ($proyectoIndicador as $proyecto) {
+                if ($proyecto->id_indicador == $indicador->id) {
+                    $dataIndicadores [$indicador->descripcion] = $i;
+                    $i++;
+                }
+            }
+            $i = 1;
+        }
+
+        $indicadores = array_keys($dataIndicadores);
+        $conteoIndicadores = array_values($dataIndicadores);
+
+        //PROYECTOS POR AREA
+        $proyectoArea = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('areas', 'proyectos.id_area', 'areas.id')
+            ->select('proyectos.descripcion as proyecto', 'areas.descripcion as area', 'proyectos.id_area')
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+
+        $areas = Areas::where('id_companias', Auth::user()->id_compania)->get();
+        $areas = $areas->unique('descripcion');
+        $dataAreas = [];
+
+        $i = 1;
+        foreach ($areas as $area) {
+            foreach ($proyectoArea as $proyecto) {
+                if ($proyecto->id_area == $area->id) {
+                    $dataAreas [$area->descripcion] = $i;
+                    $i++;
+                }
+            }
+            $i = 1;
+        }
+
+        $areas = array_keys($dataAreas);
+        $conteoAreas = array_values($dataAreas);
+
+        //PROYECTOS POR ESTADO
+        $proyectoEstado = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('estado', 'proyectos.id_estado', 'estado.id')
+            ->select('proyectos.descripcion as proyecto', 'estado.estado as estado', 'proyectos.id_estado')
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+
+        $estados = Status::where('id_compania', Auth::user()->id_compania)->get();
+        $estados = $estados->unique('status');
+        $dataEstados = [];
+
+        $i = 1;
+        foreach ($estados as $estado) {
+            foreach ($proyectoEstado as $proyecto) {
+                if ($proyecto->id_estado == $estado->id) {
+                    $dataEstados [$estado->estado] = $i;
+                    $i++;
+                }
+            }
+            $i = 1;
+        }
+
+        $estados = array_keys($dataEstados);
+        $conteoEstados = array_values($dataEstados);
+
+        //PROYECTOS POR TRABAJOS POR ENFOQUE
+        $proyectotrabajoenfoque = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
+            ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
+            ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo','enfoques.descripcion as enfoque', 'proyectos.id_enfoque', 'proyectos.id_trabajo')
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+
+        // Operaciones
+        $ptfCalidadOperaciones = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 1)
+            ->where('proyectos.id_trabajo', 1)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCalidadOperaciones = count($ptfCalidadOperaciones);
+        $ptfGenteOperaciones = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 2)
+            ->where('proyectos.id_trabajo', 1)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfGenteOperaciones = count($ptfGenteOperaciones);
+        $ptfCostoOperaciones = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 3)
+            ->where('proyectos.id_trabajo', 1)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCostoOperaciones = count($ptfCostoOperaciones);
+        $ptfServicioOperaciones = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 4)
+            ->where('proyectos.id_trabajo', 1)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfServicioOperaciones = count($ptfServicioOperaciones);
+        $ptfCrecimientoOperaciones = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 5)
+            ->where('proyectos.id_trabajo', 1)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCrecimientoOperaciones = count($ptfCrecimientoOperaciones);
+
+        // Administrativo
+        $ptfCalidadAdministrativo = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 1)
+            ->where('proyectos.id_trabajo', 2)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCalidadAdministrativo = count($ptfCalidadAdministrativo);
+        $ptfGenteAdministrativo = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 2)
+            ->where('proyectos.id_trabajo', 2)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfGenteAdministrativo = count($ptfGenteAdministrativo);
+        $ptfCostoAdministrativo = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 3)
+            ->where('proyectos.id_trabajo', 2)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCostoAdministrativo = count($ptfCostoAdministrativo);
+        $ptfServicioAdministrativo = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 4)
+            ->where('proyectos.id_trabajo', 2)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfServicioAdministrativo = count($ptfServicioAdministrativo);
+        $ptfCrecimientoAdministrativo = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 5)
+            ->where('proyectos.id_trabajo', 2)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCrecimientoAdministrativo = count($ptfCrecimientoAdministrativo);
+
+        // proyecto
+        $ptfCalidadproyecto = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 1)
+            ->where('proyectos.id_trabajo', 3)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCalidadproyecto = count($ptfCalidadproyecto);
+        $ptfGenteproyecto = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 2)
+            ->where('proyectos.id_trabajo', 3)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfGenteproyecto = count($ptfGenteproyecto);
+        $ptfCostoproyecto = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 3)
+            ->where('proyectos.id_trabajo', 3)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCostoproyecto = count($ptfCostoproyecto);
+        $ptfServicioproyecto = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 4)
+            ->where('proyectos.id_trabajo', 3)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfServicioproyecto = count($ptfServicioproyecto);
+        $ptfCrecimientoproyecto = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 5)
+            ->where('proyectos.id_trabajo', 3)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCrecimientoproyecto = count($ptfCrecimientoproyecto);
+
+        // Iniciativas
+        $ptfCalidadIniciativas = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 1)
+            ->where('proyectos.id_trabajo', 4)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCalidadIniciativas = count($ptfCalidadIniciativas);
+        $ptfGenteIniciativas = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 2)
+            ->where('proyectos.id_trabajo', 4)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfGenteIniciativas = count($ptfGenteIniciativas);
+        $ptfCostoIniciativas = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 3)
+            ->where('proyectos.id_trabajo', 4)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCostoIniciativas = count($ptfCostoIniciativas);
+        $ptfServicioIniciativas = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 4)
+            ->where('proyectos.id_trabajo', 4)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfServicioIniciativas = count($ptfServicioIniciativas);
+        $ptfCrecimientoIniciativas = DB::table('proyectos')
+            ->leftJoin('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+            ->leftJoin('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            ->where('proyectos.id_enfoque', 5)
+            ->where('proyectos.id_trabajo', 4)
+            ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where('direcciones.id', $id_direccion)
+            ->get();
+        $ptfCrecimientoIniciativas = count($ptfCrecimientoIniciativas);
+
+//        0 calidad
+//        1 costos
+//        2 crecimiento
+//        3 gente
+//        4 servicios
+
+        $dataOperaciones = [0 => $ptfCalidadOperaciones, 1 => $ptfCostoOperaciones, 2 => $ptfCrecimientoOperaciones, 3 => $ptfGenteOperaciones, 4 => $ptfServicioOperaciones];
+        $dataAdministrativo = [0 => $ptfCalidadAdministrativo, 1 => $ptfCostoAdministrativo, 2 => $ptfCrecimientoAdministrativo, 3 => $ptfGenteAdministrativo, 4 => $ptfServicioAdministrativo];
+        $dataProyectos = [0 => $ptfCalidadproyecto, 1 => $ptfCostoproyecto, 2 => $ptfCrecimientoproyecto, 3 => $ptfGenteproyecto, 4 => $ptfServicioproyecto];
+        $dataIniciativas = [0 => $ptfCalidadIniciativas, 1 => $ptfCostoIniciativas, 2 => $ptfCrecimientoIniciativas, 3 => $ptfGenteIniciativas, 4 => $ptfServicioIniciativas];
+
+        $total = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+        $total = count($total);
+
+//        dd($dataOperaciones, $dataAdministrativo, $dataproyecto, $dataIniciativas);
+
+        $estados = array_keys($dataEstados);
+        $conteoEstados = array_values($dataEstados);
+
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        return view('pages.graficas.proyectos', compact(
+            'proyectoenfoque', 'proyectoTrabajo', 'proyectoFase','proyectoIndicador','proyectoArea','proyectotrabajoenfoque','proyectoEstado', 'compania','total',
+            'peCrecimiento', 'peCalidad', 'peGente', 'peServicio', 'peCosto',
+            'ptOperaciones', 'ptAdministrativo', 'ptProyectos', 'ptIniciativas',
+            'fases', 'conteofases',
+            'indicadores', 'conteoIndicadores',
+            'areas', 'conteoAreas',
+            'estados', 'conteoEstados',
+            'dataOperaciones', 'dataAdministrativo', 'dataProyectos', 'dataIniciativas', 'direcciones', 'gerencias', 'dir'));
     }
 
     public function toActivities()

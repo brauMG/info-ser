@@ -40,7 +40,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Proyecto</label>
+                                            <label>Etapas</label>
                                             <select required id="etapa" type='text' class="custom-select @error('etapa') is-invalid @enderror"  name="etapa" >
                                                 @foreach($etapas as $etapa)
                                                     <option class='min' value="{{$etapa->id}}">{{$etapa->descripcion}}</option>

@@ -33,15 +33,35 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Lista de Etapas</h4>
-                            <p class="card-category">Estas son las etapas registradas para los proyectos</p>
-                            <button type="button" class="btn btn-info" id="new" onclick="AddEtapa();">Agregar Etapa <i class="material-icons">add_circle_outline</i></button>
+                            <div style="display: flex; flex-wrap: wrap">
+                                <div class="col-md-8">
+                                    <h4 class="card-title ">Lista de Etapas</h4>
+                                    <p class="card-category">Estas son las etapas registradas para los proyectos</p>
+                                    <button type="button" class="btn btn-info" id="new" onclick="AddEtapa();">Agregar Etapa <i class="material-icons">add_circle_outline</i></button>
+                                </div>
+                                @if($rol == 4 || $rol == 7)
+                                    <div class="col-md-4">
+                                        <div class="form-group" style="float: right">
+                                            <label class="text-white">Filtrar Gerencia</label>
+                                            <select id="gerencia-filter" class="custom-select">
+                                                <option value="">Todas</option>
+                                                @foreach($gerencias as $gerencia)
+                                                    <option>{{$gerencia->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
-                                    <th>Identificador<i class="material-icons sort">sort</i></th>
+                                    <th>ID<i class="material-icons sort">sort</i></th>
+                                    @if($rol == 4 || $rol == 7)
+                                        <th>Gerencia<i class="material-icons sort">sort</i></th>
+                                    @endif
                                     <th>Proyecto<i class="material-icons sort">sort</i></th>
                                     <th>Fase del proyecto<i class="material-icons sort">sort</i></th>
                                     <th>Descripción<i class="material-icons sort">sort</i></th>
@@ -53,7 +73,10 @@
                                     <tbody>
                                     @foreach ($etapa as $item)
                                         <tr>
-                                            <td>{{$item->id}}</td>
+                                            <td>{{$item->id}}<i class="material-icons plus">add_circle</i></td>
+                                            @if($rol == 4 || $rol == 7)
+                                                <td>{{$item->gerencia}}</td>
+                                            @endif
                                             <td>{{$item->proyecto}}</td>
                                             <td>{{$item->fase}}</td>
                                             <td>{{$item->descripcion}}</td>
@@ -116,7 +139,7 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
 
-        $('.data-table').DataTable({
+        var table = $('.data-table').DataTable({
                 responsive: true,
                 lengthMenu: [
                     [10, 25, 50, -1],
@@ -160,6 +183,10 @@
 
             }
         );
+
+        $('#gerencia-filter').on('change', function(){
+            table.search(this.value).draw();
+        });
 
         function AddEtapa() {
             $('#myModal').load( '{{ url('/etapas/new') }}',function(response, status, xhr)

@@ -202,7 +202,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Graficas
     Route::get('/graficas/proyectos', 'App\Http\Controllers\GraficasController@toProjects')->name('ChartsProjects');
+    Route::post('/graficas/proyectos-dir', 'App\Http\Controllers\GraficasController@toProjectsDir')->name('ChartsProjectsDir');
+    Route::post('/graficas/proyectos-ger', 'App\Http\Controllers\GraficasController@toProjectsGer')->name('ChartsProjectsGer');
     Route::get('/graficas/actividades', 'App\Http\Controllers\GraficasController@toActivities')->name('ChartsActivities');
+    Route::post('/graficas/actividades-dir', 'App\Http\Controllers\GraficasController@toActivitiesDir')->name('ChartsActivitiesDir');
+    Route::post('/graficas/actividades-ger', 'App\Http\Controllers\GraficasController@toActivitiesGer')->name('ChartsActivitiesGer');
 
     //Roles en Fases
     Route::get('/roles-fases', 'App\Http\Controllers\RolesFaseController@index');
