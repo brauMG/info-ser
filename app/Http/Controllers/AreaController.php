@@ -75,12 +75,12 @@ class AreaController extends Controller
                 'descripcion' => ['required', 'string', 'max:500150']
             ]);
             Areas::create([
-                'Descripcion' => $area['descripcion'],
-                'Clave_Compania' => Auth::user()->Clave_Compania,
-                'Activo' => 1,
-                'FechaCreacion' => Carbon::today()->toDateString()
+                'descripcion' => $area['descripcion'],
+                'id_companias' => Auth::user()->id_compania,
+                'activo' => 1,
+                'fecha_creacion' => Carbon::today()->toDateString()
             ]);
-            return redirect('/Admin/Areas')->with('mensaje', "Nueva área agregada correctamente");
+            return redirect('/areas')->with('mensaje', "Nueva área agregada correctamente");
         }
     }
 
