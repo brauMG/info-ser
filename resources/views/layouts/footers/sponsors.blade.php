@@ -65,6 +65,7 @@
             $("#c > li").eq(i + 1).css('transition-delay','0.5s');
             $("#c > li").eq(i + 2).css('transition-delay','0.75s');
             $("#c > li").eq(i + 3).css('transition-delay','1s');
+            $("#c > li").eq(i + 4).css('transition-delay','1.25s');
 
             if (i < max-4) {
                 i = i+4;
