@@ -307,7 +307,7 @@ class GraficasController extends Controller
         }
         $dir = Direccion::find($id_direccion);
 
-        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 2) {
             $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
             $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
         }
@@ -773,7 +773,7 @@ class GraficasController extends Controller
         $id_direccion = $ger->id_direccion;
         $dir = Direccion::find($id_direccion);
 
-        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 2) {
             $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
             $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
         }
@@ -1233,7 +1233,7 @@ class GraficasController extends Controller
     {
         $dir = null;
         $rol = Auth::user()->id_rol;
-        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 2) {
             $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
             $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
         }
