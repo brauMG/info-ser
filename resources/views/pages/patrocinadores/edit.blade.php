@@ -68,21 +68,6 @@
                         <input type="hidden" name="hidden_image" value="{{ $sponsor->imagen }}" />
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Mostrar en Inicio</label>
-                            <select name="show" class="form-control">
-                                @if($sponsor->mostrar == 1)
-                                    <option value="1" selected>Si</option>
-                                    <option value="0">No</option>
-                                @else
-                                    <option value="1">Si</option>
-                                    <option value="0" selected>No</option>
-                                @endif
-                            </select>
-                        </div>
-                    </div>
-
                 </div>
             </div>
             <div class="modal-footer">

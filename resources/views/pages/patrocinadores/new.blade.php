@@ -67,16 +67,6 @@
                         <input type="file" name="image" id="file" class="form-control" required />
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Mostrar en Inicio</label>
-                            <select name="show" class="form-control">
-                                <option value="1">Si</option>
-                                <option value="0">No</option>
-                            </select>
-                        </div>
-                    </div>
-
                 </div>
             </div>
             <div class="modal-footer">

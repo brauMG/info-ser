@@ -125,3 +125,145 @@
     left: 20px !important;
     z-index: unset !important;
 }
+
+.sponsors-active {
+    display: block !important;
+}
+
+.sponsor-nav[data-background-color="black"] .nav .nav-item .nav-link {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="black"] .nav .nav-item i {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sponsor-nav[data-background-color="black"] .nav .nav-item.active [data-toggle="collapse"],
+.sponsor-nav[data-background-color="black"] .nav .nav-item:hover [data-toggle="collapse"] {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="black"] .nav .nav-item.active [data-toggle="collapse"] i,
+.sponsor-nav[data-background-color="black"] .nav .nav-item:hover [data-toggle="collapse"] i {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sponsor-nav[data-background-color="black"] .user a {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="black"] .simple-text {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="black"] .sponsor-nav-background:after {
+    background: #000;
+    opacity: .8;
+}
+
+.sponsor-nav[data-background-color="black"] .nav li .dropdown-menu .dropdown-item {
+    color: #fff;
+}
+
+.sponsor-nav[data-color="purple"] li.active>a {
+    background-color: #9c27b0;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+}
+
+.sponsor-nav[data-color="azure"] li.active>a {
+    background-color: #00bcd4;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 188, 212, 0.4);
+}
+
+.sponsor-nav[data-color="green"] li.active>a {
+    background-color: #4caf50;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(76, 175, 80, 0.4);
+}
+
+.sponsor-nav[data-color="orange"] li.active>a {
+    background-color: #ff9800;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
+}
+
+.sponsor-nav[data-color="danger"] li.active>a {
+    background-color: #f44336;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
+}
+
+.sponsor-nav[data-color="rose"] li.active>a {
+    background-color: #e91e63;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4);
+}
+
+.sponsor-nav[data-color="white"] li.active>a {
+    background-color: #fff;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 255, 255, 0.4);
+}
+
+.sponsor-nav[data-color="white"] .nav .nav-item.active>a:not([data-toggle="collapse"]) {
+    color: #3C4858;
+    opacity: 1;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(60, 72, 88, 0.4);
+}
+
+.sponsor-nav[data-color="white"] .nav .nav-item.active>a:not([data-toggle="collapse"]) i {
+    color: rgba(60, 72, 88, 0.8);
+}
+
+.sponsor-nav[data-background-color="blue"] .nav .nav-item .nav-link {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="blue"] .nav .nav-item i {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sponsor-nav[data-background-color="blue"] .nav .nav-item.active [data-toggle="collapse"],
+.sponsor-nav[data-background-color="blue"] .nav .nav-item:hover [data-toggle="collapse"] {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="blue"] .nav .nav-item.active [data-toggle="collapse"] i,
+.sponsor-nav[data-background-color="blue"] .nav .nav-item:hover [data-toggle="collapse"] i {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sponsor-nav[data-background-color="blue"] .user a {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="blue"] .simple-text {
+    color: #fff;
+}
+
+.sponsor-nav[data-background-color="blue"] .sponsor-nav-background:after {
+    background: #0c385a;
+    opacity: .8;
+}
+
+.sponsor-nav[data-background-color="blue"] .user:after,
+.sponsor-nav[data-background-color="blue"] .logo:after,
+.sponsor-nav[data-background-color="blue"] .nav li.separator:after {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.sponsor-nav[data-background-color="red"] .nav li:hover:not(.active)>a,
+.sponsor-nav[data-background-color="red"] .nav li.active>[data-toggle="collapse"] {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sponsor-nav[data-image]:after,
+.sponsor-nav.has-image:after {
+    opacity: .77;
+}
+
+.off-canvas-sponsor-nav .navbar-collapse .nav>li>a,
+.off-canvas-sponsor-nav .navbar-collapse .nav>li>a:hover {
+    color: #fff;
+    margin: 0 15px;
+}
+
+.sponsor-nav[data-image]:after,
+.sponsor-nav.has-image:after {
+    opacity: .77;
+}

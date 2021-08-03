@@ -35,6 +35,7 @@
                     <div class="card">
                         <div class="card-header card-header-primary">
                             <div style="display: flex; flex-wrap: wrap">
+                                @if($rol != 7)
                                 <div class="col-md-4">
                                     <form action="{{route('ChartsProjectsDir')}}" method="POST">
                                         @csrf
@@ -42,28 +43,32 @@
                                             <label class="text-white">Dirección</label>
                                             <select class="custom-select" name="direccion" style="width: 250px">
                                                     <option value="0">Todas</option>
-                                                @foreach($direcciones as $direccion)
-                                                    @if($dir != null)
-                                                        @if($dir->id == $direccion->id)
-                                                            <option value="{{$direccion->id}}" selected>{{$direccion->nombre}}</option>
+                                                    @foreach($direcciones as $direccion)
+                                                        @if($dir != null)
+                                                            @if($dir->id == $direccion->id)
+                                                                <option value="{{$direccion->id}}" selected>{{$direccion->nombre}}</option>
+                                                            @else
+                                                                <option value="{{$direccion->id}}">{{$direccion->nombre}}</option>
+                                                            @endif
                                                         @else
                                                             <option value="{{$direccion->id}}">{{$direccion->nombre}}</option>
                                                         @endif
-                                                    @else
-                                                        <option value="{{$direccion->id}}">{{$direccion->nombre}}</option>
-                                                    @endif
-                                                @endforeach
+                                                    @endforeach
                                             </select>
                                             <button type="submit" class="btn btn-info"><i class="material-icons">sort</i>Filtrar</button>
                                         </div>
                                     </form>
                                 </div>
+                                @endif
                                 <div class="col-md-4">
                                     <form action="{{route('ChartsProjectsGer')}}" method="POST">
                                         @csrf
                                         <div class="form-group">
                                             <label class="text-white">Gerencia</label>
                                             <select class="custom-select" name="gerencia" style="width: 250px">
+                                                @if($rol == 7)
+                                                    <option value="0">Todas</option>
+                                                @endif
                                                 @foreach($gerencias as $gerencia)
                                                     <option value="{{$gerencia->id}}">{{$gerencia->nombre}}</option>
                                                 @endforeach
@@ -74,7 +79,7 @@
                                 </div>
                                 @if($dir != null)
                                     <div class="col-md-4">
-                                        <label class="text-white" style="float: right">Viendo resultados de la dirección: <strong>{{$dir->nombre}}</strong></label>
+                                        <label class="text-white" style="float: right">Viendo resultados de la dirección: <strong>{{$dir->nombre}}@if(isset($ger)), gerencia: {{$ger->nombre}}@endif</strong></label>
                                     </div>
                                 @else
                                     <div class="col-md-4">

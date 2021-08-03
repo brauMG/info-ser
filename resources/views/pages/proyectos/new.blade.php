@@ -47,6 +47,23 @@
 
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label>Gerencia</label>
+                            <select name="gerencia" type="text" class="custom-select  @error('gerencia') is-invalid @enderror" required>
+                                <option disabled selected>Seleccionar</option>
+                                @php($count=0)
+                                @foreach($gerencias as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nombre}}</option>
+                                    @php($count++)
+                                @endforeach
+                                @if($count ==0)
+                                    <option disabled selected>No hay gerencias</option>
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label>Área</label>
                             <select name="area" type="text" class="custom-select  @error('area') is-invalid @enderror" required>
                                 <option disabled selected>Seleccionar</option>

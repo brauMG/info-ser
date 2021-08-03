@@ -43,23 +43,13 @@ class SponsorsController extends Controller
             $new_name = rand() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('sponsors'), $new_name);
 
-            if ($show == null) {
-                $sponsor_data = array(
-                    'nombre' => $request->name,
-                    'description' => $request->description,
-                    'enlace' => $request->link,
-                    'imagen' => $new_name,
-                    'mostrar' => 0
-                );
-            } else {
-                $sponsor_data = array(
-                    'nombre' => $request->name,
-                    'description' => $request->description,
-                    'enlace' => $request->link,
-                    'imagen' => $new_name,
-                    'mostrar' => 1
-                );
-            }
+            $sponsor_data = array(
+                'nombre' => $request->name,
+                'description' => $request->description,
+                'enlace' => $request->link,
+                'imagen' => $new_name,
+                'mostrar' => 0
+            );
 
             $addSponsors = Sponsors::create($sponsor_data);
 
@@ -123,23 +113,13 @@ class SponsorsController extends Controller
                 ]);
             }
 
-            if ($show == null) {
-                $sponsor_data = array(
-                    'nombre' => $request->name,
-                    'description' => $request->description,
-                    'enlace' => $request->link,
-                    'imagen' => $image_name,
-                    'mostrar' => 0
-                );
-            } else {
-                $sponsor_data = array(
-                    'nombre' => $request->name,
-                    'description' => $request->description,
-                    'enlace' => $request->link,
-                    'imagen' => $image_name,
-                    'mostrar' => 1
-                );
-            }
+            $sponsor_data = array(
+                'nombre' => $request->name,
+                'description' => $request->description,
+                'enlace' => $request->link,
+                'imagen' => $image_name,
+                'mostrar' => 0
+            );
 
             $addSponsors = Sponsors::where('id', $sponsorId)->update($sponsor_data);
 
@@ -165,6 +145,7 @@ class SponsorsController extends Controller
     public function delete(Request $request, $id)
     {
         if (Auth::user()->id_rol == 1) {
+            SponsorsCompanies::where('id_patrocinador', $id)->delete();
             Sponsors::where('id', $id)->delete();
             return redirect('/patrocinadores')->with('mensaje', 'El patrocinador fue eliminado exitosamente.');
         }
