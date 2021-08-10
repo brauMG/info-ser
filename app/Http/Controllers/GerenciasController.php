@@ -35,7 +35,7 @@ class GerenciasController extends Controller
     }
     public function edit($id){
         $gerencia = Gerencia::where('id', $id)->get()->toArray();
-        $gerentes = User::where('id_rol', 7)->get()->toArray();
+        $gerentes = User::where('id_rol', 7)->where('id_compania', Auth::user()->id_compania)->get()->toArray();
         $gerenciaID = $gerencia[0]['id'];
         $gerencia = $gerencia[0];
         $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get()->toArray();
@@ -61,7 +61,7 @@ class GerenciasController extends Controller
     }
 
     public function new(){
-        $gerentes = User::where('id_rol', 7)->get()->toArray();
+        $gerentes = User::where('id_rol', 7)->where('id_compania', Auth::user()->id_compania)->get()->toArray();
         $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get()->toArray();
         return view('pages.gerencias.new', compact('gerentes', 'direcciones'));
     }

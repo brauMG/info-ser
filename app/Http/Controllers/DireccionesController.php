@@ -32,7 +32,7 @@ class DireccionesController extends Controller
     }
     public function edit($id){
         $direccion = Direccion::where('id', $id)->get()->toArray();
-        $directores = User::where('id_rol', 6)->get()->toArray();
+        $directores = User::where('id_rol', 6)->where('id_compania', Auth::user()->id_compania)->get()->toArray();
         $direccionID = $direccion[0]['id'];
         $direccion = $direccion[0];
 
@@ -55,7 +55,7 @@ class DireccionesController extends Controller
     }
 
     public function new(){
-        $directores = User::where('id_rol', 6)->get()->toArray();
+        $directores = User::where('id_rol', 6)->where('id_compania', Auth::user()->id_compania)->get()->toArray();
         return view('pages.direcciones.new', compact('directores'));
     }
 

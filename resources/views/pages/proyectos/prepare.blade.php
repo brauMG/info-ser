@@ -183,6 +183,38 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header card-header-info">
+                                        <h4 class="card-title"><i class="material-icons icons-charts-list">theater_comedy</i> Direcciones</h4>
+                                    </div>
+                                    <div class="card-body" style="height: 250px; overflow: auto">
+                                        @foreach($direcciones as $direccion)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="direccionesCheck{{$direccion->id}}" name="direcciones[]" value="{{$direccion->id}}">
+                                                <label class="form-check-label" for="direccionesCheck{{$direccion->id}}">{{$direccion->nombre}}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header card-header-info">
+                                        <h4 class="card-title"><i class="material-icons icons-charts-list">theater_comedy</i> Gerencias</h4>
+                                    </div>
+                                    <div class="card-body" style="height: 250px; overflow: auto">
+                                        @foreach($gerencias as $gerencia)
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="gerenciasCheck{{$gerencia->id}}" name="gerencias[]" value="{{$gerencia->id}}">
+                                                <label class="form-check-label" for="gerenciasCheck{{$gerencia->id}}">{{$gerencia->nombre}}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-12">
                                 <div class="container text-center">
                                     <button type="submit" class="btn  btn-sm btn-primary" onclick="myFunction()">Generar Reporte</button>
@@ -196,6 +228,9 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
 
                 <script>
                     function myFunction() {

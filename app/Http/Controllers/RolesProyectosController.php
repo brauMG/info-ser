@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 //use App\Mail\AdviceActivity;
 //use App\Mail\AdviceUserProject;
+use App\Models\Direccion;
 use App\Models\Gerencia;
 use Illuminate\Support\Facades\Mail;
 
@@ -200,14 +201,55 @@ class RolesProyectosController extends Controller
     }
 
     public function preparePdf(Request $request) {
-        $proyectos=Proyecto::where('id_compania',Auth::user()->id_compania)->get();
-        $fases=Fase::where('id_compania',Auth::user()->id_compania)->get();
-        $rasics=RolRASIC::all();
-        $usuarios=User::where('id_compania',Auth::user()->id_compania)->get();
-        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $rol = Auth::user()->id_rol;
 
+        if ($rol == 2 || $rol == 4 || $rol == 5) {
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $rasics = RolRASIC::all();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if ($rol == 6) {
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $rasics = RolRASIC::all();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $direcciones = Direccion::where('id_director', Auth::user()->id)->get();
+            $ids_direccion = [];
+            foreach ($direcciones as $direccion) {
+                $ids_direccion [] += $direccion->id;
+            }
+            $gerencias = DB::table('gerencias')
+                ->where(function ($query) use ($ids_direccion, $request) {
+                    if ($ids_direccion != null) {
+                        $query->whereIn('gerencias.id_direccion', $ids_direccion);
+                    }
+                })->get();
+        }
+        if ($rol == 7) {
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $rasics = RolRASIC::all();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+            $ids_direccion = [];
+            foreach ($gerencias as $gerencia) {
+                $ids_direccion [] += $gerencia->id_direccion;
+            }
+            $direcciones = DB::table('direcciones')
+                ->where(function ($query) use ($ids_direccion, $request) {
+                    if ($ids_direccion != null) {
+                        $query->whereIn('direcciones.id', $ids_direccion);
+                    }
+                })->get();
+        }
 
-        return view('pages.roles-proyectos.prepare', compact('proyectos', 'fases', 'rasics', 'usuarios', 'compania'));
+        return view('pages.roles-proyectos.prepare', compact('direcciones','gerencias','rol','proyectos', 'fases', 'rasics', 'usuarios', 'compania'));
     }
 
     public function exportPdf(Request $request)
@@ -216,6 +258,8 @@ class RolesProyectosController extends Controller
         $fases = $request->input('fases');
         $rasics = $request->input('rasics');
         $usuarios = $request->input('usuarios');
+        $direcciones = $request->input('direcciones');
+        $gerencias = $request->input('gerencias');
         $datetime = Carbon::now();
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
@@ -226,6 +270,18 @@ class RolesProyectosController extends Controller
             ->where(function($query) use ($proyectos, $request) {
                 if ($proyectos != null) {
                     $query->whereIn('roles_proyectos.id_proyecto', $proyectos);
+                }
+            })
+            ->join('gerencias', 'proyectos.id_gerencia', 'gerencias.id')
+            ->where(function ($query) use ($gerencias, $request) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->join('direcciones', 'gerencias.id_direccion', '=', 'direcciones.id')
+            ->where(function ($query) use ($direcciones, $request) {
+                if ($direcciones != null) {
+                    $query->whereIn('gerencias.id_direccion', $direcciones);
                 }
             })
             ->join('fases', 'roles_proyectos.id_fase', '=', 'fases.id')
@@ -246,7 +302,7 @@ class RolesProyectosController extends Controller
                     $query->whereIn('roles_proyectos.id_usuario', $usuarios);
                 }
             })
-            ->select('proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'roles_rasic.rol_rasic as rol_rasic', 'usuarios.nombres as usuario')
+            ->select('proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'roles_rasic.rol_rasic as rol_rasic', 'usuarios.nombres as usuario','direcciones.nombre as direccion', 'gerencias.nombre as gerencia')
             ->get();
 
         $pdf = PDF::loadView('pdf.userproject', compact('rolesUser', 'date', 'time'));

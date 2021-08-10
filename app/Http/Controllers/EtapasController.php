@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 //use App\Mail\AdviceActivity;
 //use App\Mail\AdviceStage;
 
+use App\Models\Direccion;
 use App\Models\Gerencia;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -271,16 +272,64 @@ class EtapasController extends Controller
     }
 
     public function preparePdf(Request $request) {
-        $etapas = DB::table('etapas')
-            ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
-            ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
-            ->where('etapas.id_compania', '=', Auth::user()->id_compania)
-            ->get();
-        $compania=Companias::where('id',Auth::user()->id_compania)->first();
-        $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
-        $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+        $rol = Auth::user()->id_rol;
 
-        return view('pages.etapas.prepare', compact('proyectos', 'fases', 'etapas', 'compania'));
+        if ($rol == 2 || $rol == 4 || $rol == 5) {
+            $etapas = DB::table('etapas')
+                ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+                ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
+                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->get();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if ($rol == 6) {
+            $etapas = DB::table('etapas')
+                ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+                ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
+                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->get();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $direcciones = Direccion::where('id_director', Auth::user()->id)->get();
+            $ids_direccion = [];
+            foreach ($direcciones as $direccion) {
+                $ids_direccion [] += $direccion->id;
+            }
+            $gerencias = DB::table('gerencias')
+                ->where(function ($query) use ($ids_direccion, $request) {
+                    if ($ids_direccion != null) {
+                        $query->whereIn('gerencias.id_direccion', $ids_direccion);
+                    }
+                })->get();
+        }
+        if ($rol == 7) {
+            $etapas = DB::table('etapas')
+                ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+                ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
+                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->get();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+            $ids_direccion = [];
+            foreach ($gerencias as $gerencia) {
+                $ids_direccion [] += $gerencia->id_direccion;
+            }
+            $direcciones = DB::table('direcciones')
+                ->where(function ($query) use ($ids_direccion, $request) {
+                    if ($ids_direccion != null) {
+                        $query->whereIn('direcciones.id', $ids_direccion);
+                    }
+                })->get();
+        }
+
+        return view('pages.etapas.prepare', compact('direcciones','gerencias','rol','proyectos', 'fases', 'etapas', 'compania'));
     }
 
     public function exportPdf(Request $request)
@@ -288,6 +337,8 @@ class EtapasController extends Controller
         $proyectos = $request->input('proyectos');
         $etapas2 = $request->input('etapas');
         $fases = $request->input('fases');
+        $direcciones = $request->input('direcciones');
+        $gerencias = $request->input('gerencias');
         $datetime = Carbon::now();
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
@@ -302,6 +353,18 @@ class EtapasController extends Controller
             ->join('companias', 'etapas.id_compania', '=', 'companias.id')
             ->where('etapas.id_compania', '=', Auth::user()->id_compania)
             ->join('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+            ->join('gerencias', 'proyectos.id_gerencia', 'gerencias.id')
+            ->where(function ($query) use ($gerencias, $request) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->join('direcciones', 'gerencias.id_direccion', '=', 'direcciones.id')
+            ->where(function ($query) use ($direcciones, $request) {
+                if ($direcciones != null) {
+                    $query->whereIn('gerencias.id_direccion', $direcciones);
+                }
+            })
             ->where(function($query) use ($proyectos, $request) {
                 if ($proyectos != null) {
                     $query->whereIn('etapas.id_proyecto', $proyectos);
@@ -313,7 +376,7 @@ class EtapasController extends Controller
                     $query->whereIn('etapas.id_fase', $fases);
                 }
             })
-            ->select('etapas.*', 'companias.descripcion as compania', 'fases.descripcion as fase', 'proyectos.descripcion as proyecto')
+            ->select('etapas.*', 'companias.descripcion as compania', 'fases.descripcion as fase', 'proyectos.descripcion as proyecto','direcciones.nombre as direccion', 'gerencias.nombre as gerencia')
             ->get();
 
         $pdf = PDF::loadView('pdf.stages', compact('etapas', 'date', 'time'));

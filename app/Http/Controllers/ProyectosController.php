@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Direccion;
 use App\Models\Gerencia;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -347,16 +348,64 @@ class ProyectosController extends Controller
     }
 
     public function preparePdf(Request $request) {
-        $compania=Companias::where('id',Auth::user()->id_compania)->first();
-        $areas=Areas::where('id_companias',Auth::user()->id_compania)->get();
-        $enfoques=Enfoques::all();
-        $trabajos=Trabajo::all();
-        $indicadores=Indicador::where('id_compania',Auth::user()->id_compania)->get();
-        $estados=Status::where('id_compania',Auth::user()->id_compania)->get();
-        $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
-        $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+        $rol = Auth::user()->id_rol;
 
-        return view('pages.proyectos.prepare', compact('proyectos', 'fases', 'estados', 'compania', 'areas', 'enfoques', 'trabajos', 'indicadores'));
+        if ($rol == 2 || $rol == 4 || $rol == 5) {
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $areas = Areas::where('id_companias', Auth::user()->id_compania)->get();
+            $enfoques = Enfoques::all();
+            $trabajos = Trabajo::all();
+            $indicadores = Indicador::where('id_compania', Auth::user()->id_compania)->get();
+            $estados = Status::where('id_compania', Auth::user()->id_compania)->get();
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if ($rol == 6) {
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $areas = Areas::where('id_companias', Auth::user()->id_compania)->get();
+            $enfoques = Enfoques::all();
+            $trabajos = Trabajo::all();
+            $indicadores = Indicador::where('id_compania', Auth::user()->id_compania)->get();
+            $estados = Status::where('id_compania', Auth::user()->id_compania)->get();
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $direcciones = Direccion::where('id_director', Auth::user()->id)->get();
+            $ids_direccion = [];
+            foreach ($direcciones as $direccion) {
+                $ids_direccion [] += $direccion->id;
+            }
+            $gerencias = DB::table('gerencias')
+                ->where(function ($query) use ($ids_direccion, $request) {
+                    if ($ids_direccion != null) {
+                        $query->whereIn('gerencias.id_direccion', $ids_direccion);
+                    }
+                })->get();
+        }
+        if ($rol == 7) {
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            $areas = Areas::where('id_companias', Auth::user()->id_compania)->get();
+            $enfoques = Enfoques::all();
+            $trabajos = Trabajo::all();
+            $indicadores = Indicador::where('id_compania', Auth::user()->id_compania)->get();
+            $estados = Status::where('id_compania', Auth::user()->id_compania)->get();
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+            $ids_direccion = [];
+            foreach ($gerencias as $gerencia) {
+                $ids_direccion [] += $gerencia->id_direccion;
+            }
+            $direcciones = DB::table('direcciones')
+                ->where(function ($query) use ($ids_direccion, $request) {
+                    if ($ids_direccion != null) {
+                        $query->whereIn('direcciones.id', $ids_direccion);
+                    }
+                })->get();
+        }
+
+        return view('pages.proyectos.prepare', compact('direcciones','gerencias','rol','proyectos', 'fases', 'estados', 'compania', 'areas', 'enfoques', 'trabajos', 'indicadores'));
     }
 
     public function exportPdf(Request $request)
@@ -367,6 +416,8 @@ class ProyectosController extends Controller
         $indicadores = $request->input('indicadores');
         $trabajos = $request->input('trabajos');
         $enfoques = $request->input('enfoques');
+        $direcciones = $request->input('direcciones');
+        $gerencias = $request->input('gerencias');
         $areas = $request->input('areas');
         $datetime = Carbon::now();
         $datetime->setTimezone('GMT-7');
@@ -377,6 +428,18 @@ class ProyectosController extends Controller
             ->where(function($query) use ($proyectos2, $request) {
                 if ($proyectos2 != null) {
                     $query->whereIn('proyectos.id', $proyectos2);
+                }
+            })
+            ->join('gerencias', 'proyectos.id_gerencia', 'gerencias.id')
+            ->where(function ($query) use ($gerencias, $request) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->join('direcciones', 'gerencias.id_direccion', '=', 'direcciones.id')
+            ->where(function ($query) use ($direcciones, $request) {
+                if ($direcciones != null) {
+                    $query->whereIn('gerencias.id_direccion', $direcciones);
                 }
             })
             ->join('fases', 'proyectos.id_fase', '=', 'fases.id')
@@ -415,7 +478,7 @@ class ProyectosController extends Controller
                     $query->whereIn('proyectos.id_area', $areas);
                 }
             })
-            ->select('proyectos.*', 'fases.descripcion as fase', 'estado.estado as estado', 'indicadores.descripcion as indicador', 'trabajos.descripcion as trabajo', 'enfoques.descripcion as enfoque', 'areas.descripcion as area')
+            ->select('proyectos.*', 'fases.descripcion as fase', 'estado.estado as estado', 'indicadores.descripcion as indicador', 'trabajos.descripcion as trabajo', 'enfoques.descripcion as enfoque', 'areas.descripcion as area','direcciones.nombre as direccion', 'gerencias.nombre as gerencia')
             ->get();
 
         $pdf = PDF::loadView('pdf.projects', compact('proyectos', 'date', 'time'));

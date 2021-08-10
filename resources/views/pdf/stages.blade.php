@@ -10,6 +10,8 @@
                     <thead class="table-header" style="font-size: 0.5em !important; background-color: #c6e2f5 !important; color: black !important; vertical-align: middle !important;">
                     <tr>
                         <th scope="col" style="text-transform: uppercase">Proyecto</th>
+                        <th scope="col" style="text-transform: uppercase">Direccion</th>
+                        <th scope="col" style="text-transform: uppercase">Gerencia</th>
                         <th scope="col" style="text-transform: uppercase">Fase</th>
                         <th scope="col" style="text-transform: uppercase">Etapa</th>
                         <th scope="col" style="text-transform: uppercase">Fecha de Creación</th>
@@ -21,6 +23,8 @@
                     @foreach ($etapas as $item)
                         <tr id="{{$item->id}}">
                             <td class="td td-center" style="font-size: 0.5em !important;">{{$item->proyecto}}</td>
+                            <td class="td td-center" style="font-size: 0.5em !important;">{{$item->direccion}}</td>
+                            <td class="td td-center" style="font-size: 0.5em !important;">{{$item->gerencia}}</td>
                             <td class="td td-center" style="font-size: 0.5em !important;">{{$item->fase}}</td>
                             <td class="td td-center" style="font-size: 0.5em !important;">{{$item->descripcion}}</td>
                             <td class="td td-center" style="font-size: 0.5em !important;">{{$item->created_at}}</td>
