@@ -1522,6 +1522,7 @@ class GraficasController extends Controller
 
         //ACTIVIDADES POR ESTADO
         $ActividadesEstado = DB::table('actividades')
+            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
             ->select('actividades.descricion as actividad','actividades.estado as activo')
             ->where('actividades.id_compania', Auth::user()->id_compania)
             ->where(function($query) use ($gerencias) {
@@ -1532,6 +1533,7 @@ class GraficasController extends Controller
             ->get();
 
         $aePendiente = DB::table('actividades')
+            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
             ->select('actividades.descricion as actividad')
             ->where('actividades.estado', 0)
             ->where('actividades.id_compania', Auth::user()->id_compania)
@@ -1542,6 +1544,7 @@ class GraficasController extends Controller
             })
             ->get();
         $aeAprobada = DB::table('actividades')
+            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
             ->select('actividades.descricion as actividad')
             ->where('actividades.estado', 1)
             ->where('actividades.id_compania', Auth::user()->id_compania)
@@ -1552,6 +1555,7 @@ class GraficasController extends Controller
             })
             ->get();
         $aeDesaprobada = DB::table('actividades')
+            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
             ->select('actividades.descricion as actividad')
             ->where('actividades.estado', 2)
             ->where('actividades.id_compania', Auth::user()->id_compania)
@@ -1568,6 +1572,7 @@ class GraficasController extends Controller
 
         //ACTIVIDADES POR USUARIO
         $ActividadesUsuarios = DB::table('actividades')
+            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
             ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
             ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
             ->where('actividades.id_compania', Auth::user()->id_compania)
@@ -1598,6 +1603,7 @@ class GraficasController extends Controller
 
         //ACTIVIDADES POR ETAPA
         $ActividadesEtapas = DB::table('actividades')
+            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
             ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
             ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
             ->where('actividades.id_compania', Auth::user()->id_compania)
