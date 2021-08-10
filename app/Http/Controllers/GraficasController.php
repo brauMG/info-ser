@@ -56,36 +56,66 @@ class GraficasController extends Controller
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto', 'enfoques.descripcion as enfoque')
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $peCalidad = DB::table('proyectos')
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('enfoques.id', 1)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $peGente = DB::table('proyectos')
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('enfoques.id', 2)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $peCosto = DB::table('proyectos')
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('enfoques.id', 3)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $peServicio = DB::table('proyectos')
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('enfoques.id', 4)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $peCrecimiento = DB::table('proyectos')
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('enfoques.id', 5)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $peCalidad = count($peCalidad);
@@ -99,30 +129,55 @@ class GraficasController extends Controller
             ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
             ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo')
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $ptOperaciones = DB::table('proyectos')
             ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('trabajos.id', 1)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $ptAdministrativo = DB::table('proyectos')
             ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('trabajos.id', 2)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $ptProyecto = DB::table('proyectos')
             ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('trabajos.id', 3)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $ptIniciativas = DB::table('proyectos')
             ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
             ->select('proyectos.descripcion as proyecto')
             ->where('trabajos.id', 4)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $ptOperaciones = count($ptOperaciones);
@@ -135,6 +190,11 @@ class GraficasController extends Controller
             ->leftJoin('fases', 'proyectos.id_fase', 'fases.id')
             ->select('proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'proyectos.id_fase')
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
 
@@ -161,6 +221,11 @@ class GraficasController extends Controller
             ->leftJoin('indicadores', 'proyectos.id_indicador', 'indicadores.id')
             ->select('proyectos.descripcion as proyecto', 'indicadores.descripcion as indicador', 'proyectos.id_indicador')
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $indicadores = Indicador::where('id_compania', Auth::user()->id_compania)->get();
@@ -186,6 +251,11 @@ class GraficasController extends Controller
             ->leftJoin('areas', 'proyectos.id_area', 'areas.id')
             ->select('proyectos.descripcion as proyecto', 'areas.descripcion as area', 'proyectos.id_area')
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $areas = Areas::where('id_companias', Auth::user()->id_compania)->get();
@@ -211,6 +281,11 @@ class GraficasController extends Controller
             ->leftJoin('estado', 'proyectos.id_estado', 'estado.id')
             ->select('proyectos.descripcion as proyecto', 'estado.estado as estado', 'proyectos.id_estado')
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $estados = Status::where('id_compania', Auth::user()->id_compania)->get();
@@ -237,54 +312,159 @@ class GraficasController extends Controller
             ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
             ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo','enfoques.descripcion as enfoque', 'proyectos.id_enfoque', 'proyectos.id_trabajo')
             ->where('proyectos.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         // Operaciones
-        $ptfCalidadOperaciones = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCalidadOperaciones = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCalidadOperaciones = count($ptfCalidadOperaciones);
-        $ptfGenteOperaciones = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfGenteOperaciones = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfGenteOperaciones = count($ptfGenteOperaciones);
-        $ptfCostoOperaciones = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCostoOperaciones = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCostoOperaciones = count($ptfCostoOperaciones);
-        $ptfServicioOperaciones = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfServicioOperaciones = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfServicioOperaciones = count($ptfServicioOperaciones);
-        $ptfCrecimientoOperaciones = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCrecimientoOperaciones = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCrecimientoOperaciones = count($ptfCrecimientoOperaciones);
 
         // Administrativo
-        $ptfCalidadAdministrativo = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCalidadAdministrativo = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCalidadAdministrativo = count($ptfCalidadAdministrativo);
-        $ptfGenteAdministrativo = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfGenteAdministrativo = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfGenteAdministrativo = count($ptfGenteAdministrativo);
-        $ptfCostoAdministrativo = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCostoAdministrativo = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCostoAdministrativo = count($ptfCostoAdministrativo);
-        $ptfServicioAdministrativo = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfServicioAdministrativo = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfServicioAdministrativo = count($ptfServicioAdministrativo);
-        $ptfCrecimientoAdministrativo = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCrecimientoAdministrativo = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCrecimientoAdministrativo = count($ptfCrecimientoAdministrativo);
 
         // proyecto
-        $ptfCalidadproyecto = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCalidadproyecto = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCalidadproyecto = count($ptfCalidadproyecto);
-        $ptfGenteproyecto = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfGenteproyecto = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfGenteproyecto = count($ptfGenteproyecto);
-        $ptfCostoproyecto = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCostoproyecto = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCostoproyecto = count($ptfCostoproyecto);
-        $ptfServicioproyecto = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfServicioproyecto = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfServicioproyecto = count($ptfServicioproyecto);
-        $ptfCrecimientoproyecto = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCrecimientoproyecto = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCrecimientoproyecto = count($ptfCrecimientoproyecto);
 
         // Iniciativas
-        $ptfCalidadIniciativas = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCalidadIniciativas = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCalidadIniciativas = count($ptfCalidadIniciativas);
-        $ptfGenteIniciativas = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfGenteIniciativas = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfGenteIniciativas = count($ptfGenteIniciativas);
-        $ptfCostoIniciativas = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCostoIniciativas = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCostoIniciativas = count($ptfCostoIniciativas);
-        $ptfServicioIniciativas = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfServicioIniciativas = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfServicioIniciativas = count($ptfServicioIniciativas);
-        $ptfCrecimientoIniciativas = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->get();
+        $ptfCrecimientoIniciativas = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
+            ->get();
         $ptfCrecimientoIniciativas = count($ptfCrecimientoIniciativas);
 
 //        0 calidad
@@ -1312,6 +1492,11 @@ class GraficasController extends Controller
             ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
             ->select('actividades.descricion as actividad', 'proyectos.descripcion as proyecto', 'actividades.id_proyecto')
             ->where('actividades.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
@@ -1339,22 +1524,42 @@ class GraficasController extends Controller
         $ActividadesEstado = DB::table('actividades')
             ->select('actividades.descricion as actividad','actividades.estado as activo')
             ->where('actividades.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $aePendiente = DB::table('actividades')
             ->select('actividades.descricion as actividad')
             ->where('actividades.estado', 0)
             ->where('actividades.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $aeAprobada = DB::table('actividades')
             ->select('actividades.descricion as actividad')
             ->where('actividades.estado', 1)
             ->where('actividades.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
         $aeDesaprobada = DB::table('actividades')
             ->select('actividades.descricion as actividad')
             ->where('actividades.estado', 2)
             ->where('actividades.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $aePendiente = count($aePendiente);
@@ -1366,6 +1571,11 @@ class GraficasController extends Controller
             ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
             ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
             ->where('actividades.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
@@ -1391,6 +1601,11 @@ class GraficasController extends Controller
             ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
             ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
             ->where('actividades.id_compania', Auth::user()->id_compania)
+            ->where(function($query) use ($gerencias) {
+                if ($gerencias != null) {
+                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+                }
+            })
             ->get();
 
         $etapas = Etapas::where('id_compania', Auth::user()->id_compania)->get();
