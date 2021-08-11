@@ -1419,7 +1419,7 @@ class GraficasController extends Controller
                 ->select('gerencias.*')
                 ->where('direcciones.id_director', Auth::user()->id)
                 ->where('gerencias.id_direccion', $dir->id)
-                ->where('gerencia.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_compania', Auth::user()->id_compania)
                 ->get();
         }
         if (Auth::user()->id_rol == 7) {
