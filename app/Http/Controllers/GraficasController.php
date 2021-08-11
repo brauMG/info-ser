@@ -1911,6 +1911,119 @@ class GraficasController extends Controller
         if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 2) {
             $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
             $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+
+            //ACTIVIDADES POR PROYECTO
+            $Actividadesproyecto = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->select('actividades.descricion as actividad', 'proyectos.descripcion as proyecto', 'actividades.id_proyecto')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->get();
+
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $proyectos = $proyectos->unique('descripcion');
+            $dataproyecto = [];
+
+            $i = 1;
+            foreach ($proyectos as $proyecto) {
+                foreach ($Actividadesproyecto as $actividad) {
+                    if ($actividad->id_proyecto == $proyecto->id) {
+                        $dataproyecto [$proyecto->descripcion] = $i;
+                        $i++;
+                    }
+                }
+                $i = 1;
+            }
+
+            $proyectos = array_keys($dataproyecto);
+            $conteoproyecto = array_values($dataproyecto);
+
+            $total = Actividad::where('id_compania', Auth::user()->id_compania)->get();
+            $total = count($total);
+
+            //ACTIVIDADES POR ESTADO
+            $ActividadesEstado = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->select('actividades.descricion as actividad','actividades.estado as activo')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->get();
+
+            $aePendiente = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 0)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->get();
+            $aeAprobada = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 1)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->get();
+            $aeDesaprobada = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 2)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->get();
+
+            $aePendiente = count($aePendiente);
+            $aeAprobada = count($aeAprobada);
+            $aeDesaprobada = count($aeDesaprobada);
+
+            //ACTIVIDADES POR USUARIO
+            $ActividadesUsuarios = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
+                ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->get();
+
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
+            $usuarios = $usuarios->unique('nombres');
+            $dataUsuarios = [];
+
+            $i = 1;
+            foreach ($usuarios as $usuario) {
+                foreach ($ActividadesUsuarios as $actividad) {
+                    if ($actividad->id_usuario == $usuario->id) {
+                        $dataUsuarios [$usuario->nombres] = $i;
+                        $i++;
+                    }
+                }
+                $i = 1;
+            }
+
+            $usuarios = array_keys($dataUsuarios);
+            $conteoUsuarios = array_values($dataUsuarios);
+
+            //ACTIVIDADES POR ETAPA
+            $ActividadesEtapas = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
+                ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->get();
+
+            $etapas = Etapas::where('id_compania', Auth::user()->id_compania)->get();
+            $etapas = $etapas->unique('descripcion');
+            $dataEtapas = [];
+
+            $i = 1;
+            foreach ($etapas as $etapa) {
+                foreach ($ActividadesEtapas as $actividad) {
+                    if ($actividad->id_etapa == $etapa->id) {
+                        $dataEtapas [$etapa->descripcion] = $i;
+                        $i++;
+                    }
+                }
+                $i = 1;
+            }
+
+            $etapas = array_keys($dataEtapas);
+            $conteoEtapas = array_values($dataEtapas);
+
+
+            $compania=Companias::where('id',Auth::user()->id_compania)->first();
         }
         if (Auth::user()->id_rol == 6) {
             $direcciones = Direccion::where('id_director', Auth::user()->id)->where('id_compania', Auth::user()->id_compania)->get();
@@ -1920,161 +2033,281 @@ class GraficasController extends Controller
                 ->where('direcciones.id_director', Auth::user()->id)
                 ->where('gerencias.id_compania', Auth::user()->id_compania)
                 ->get();
+
+            //ACTIVIDADES POR PROYECTO
+            $Actividadesproyecto = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad', 'proyectos.descripcion as proyecto', 'actividades.id_proyecto')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $proyectos = $proyectos->unique('descripcion');
+            $dataproyecto = [];
+
+            $i = 1;
+            foreach ($proyectos as $proyecto) {
+                foreach ($Actividadesproyecto as $actividad) {
+                    if ($actividad->id_proyecto == $proyecto->id) {
+                        $dataproyecto [$proyecto->descripcion] = $i;
+                        $i++;
+                    }
+                }
+                $i = 1;
+            }
+
+            $proyectos = array_keys($dataproyecto);
+            $conteoproyecto = array_values($dataproyecto);
+
+            $total = Actividad::where('id_compania', Auth::user()->id_compania)->get();
+            $total = count($total);
+
+            //ACTIVIDADES POR ESTADO
+            $ActividadesEstado = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad','actividades.estado as activo')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $aePendiente = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 0)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+            $aeAprobada = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 1)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+            $aeDesaprobada = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 2)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $aePendiente = count($aePendiente);
+            $aeAprobada = count($aeAprobada);
+            $aeDesaprobada = count($aeDesaprobada);
+
+            //ACTIVIDADES POR USUARIO
+            $ActividadesUsuarios = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
+                ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
+            $usuarios = $usuarios->unique('nombres');
+            $dataUsuarios = [];
+
+            $i = 1;
+            foreach ($usuarios as $usuario) {
+                foreach ($ActividadesUsuarios as $actividad) {
+                    if ($actividad->id_usuario == $usuario->id) {
+                        $dataUsuarios [$usuario->nombres] = $i;
+                        $i++;
+                    }
+                }
+                $i = 1;
+            }
+
+            $usuarios = array_keys($dataUsuarios);
+            $conteoUsuarios = array_values($dataUsuarios);
+
+            //ACTIVIDADES POR ETAPA
+            $ActividadesEtapas = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
+                ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $etapas = Etapas::where('id_compania', Auth::user()->id_compania)->get();
+            $etapas = $etapas->unique('descripcion');
+            $dataEtapas = [];
+
+            $i = 1;
+            foreach ($etapas as $etapa) {
+                foreach ($ActividadesEtapas as $actividad) {
+                    if ($actividad->id_etapa == $etapa->id) {
+                        $dataEtapas [$etapa->descripcion] = $i;
+                        $i++;
+                    }
+                }
+                $i = 1;
+            }
+
+            $etapas = array_keys($dataEtapas);
+            $conteoEtapas = array_values($dataEtapas);
+
+
+            $compania=Companias::where('id',Auth::user()->id_compania)->first();
         }
         if (Auth::user()->id_rol == 7) {
             $direcciones = null;
             $gerencias = Gerencia::where('id_gerente', Auth::user()->id)
                 ->where('id_compania', Auth::user()->id_compania)
                 ->get();
-        }
 
-        //ACTIVIDADES POR PROYECTO
-        $Actividadesproyecto = DB::table('actividades')
-            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
-            ->select('actividades.descricion as actividad', 'proyectos.descripcion as proyecto', 'actividades.id_proyecto')
-            ->where('actividades.id_compania', Auth::user()->id_compania)
-            ->where(function($query) use ($gerencias) {
-                if ($gerencias != null) {
-                    $query->whereIn('proyectos.id_gerencia', $gerencias);
-                }
-            })
-            ->get();
+            //ACTIVIDADES POR PROYECTO
+            $Actividadesproyecto = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad', 'proyectos.descripcion as proyecto', 'actividades.id_proyecto')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->get();
 
-        $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
-        $proyectos = $proyectos->unique('descripcion');
-        $dataproyecto = [];
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
+            $proyectos = $proyectos->unique('descripcion');
+            $dataproyecto = [];
 
-        $i = 1;
-        foreach ($proyectos as $proyecto) {
-            foreach ($Actividadesproyecto as $actividad) {
-                if ($actividad->id_proyecto == $proyecto->id) {
-                    $dataproyecto [$proyecto->descripcion] = $i;
-                    $i++;
-                }
-            }
             $i = 1;
-        }
-
-        $proyectos = array_keys($dataproyecto);
-        $conteoproyecto = array_values($dataproyecto);
-
-        $total = Actividad::where('id_compania', Auth::user()->id_compania)->get();
-        $total = count($total);
-
-        //ACTIVIDADES POR ESTADO
-        $ActividadesEstado = DB::table('actividades')
-            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
-            ->select('actividades.descricion as actividad','actividades.estado as activo')
-            ->where('actividades.id_compania', Auth::user()->id_compania)
-            ->where(function($query) use ($gerencias) {
-                if ($gerencias != null) {
-                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+            foreach ($proyectos as $proyecto) {
+                foreach ($Actividadesproyecto as $actividad) {
+                    if ($actividad->id_proyecto == $proyecto->id) {
+                        $dataproyecto [$proyecto->descripcion] = $i;
+                        $i++;
+                    }
                 }
-            })
-            ->get();
-
-        $aePendiente = DB::table('actividades')
-            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
-            ->select('actividades.descricion as actividad')
-            ->where('actividades.estado', 0)
-            ->where('actividades.id_compania', Auth::user()->id_compania)
-            ->where(function($query) use ($gerencias) {
-                if ($gerencias != null) {
-                    $query->whereIn('proyectos.id_gerencia', $gerencias);
-                }
-            })
-            ->get();
-        $aeAprobada = DB::table('actividades')
-            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
-            ->select('actividades.descricion as actividad')
-            ->where('actividades.estado', 1)
-            ->where('actividades.id_compania', Auth::user()->id_compania)
-            ->where(function($query) use ($gerencias) {
-                if ($gerencias != null) {
-                    $query->whereIn('proyectos.id_gerencia', $gerencias);
-                }
-            })
-            ->get();
-        $aeDesaprobada = DB::table('actividades')
-            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
-            ->select('actividades.descricion as actividad')
-            ->where('actividades.estado', 2)
-            ->where('actividades.id_compania', Auth::user()->id_compania)
-            ->where(function($query) use ($gerencias) {
-                if ($gerencias != null) {
-                    $query->whereIn('proyectos.id_gerencia', $gerencias);
-                }
-            })
-            ->get();
-
-        $aePendiente = count($aePendiente);
-        $aeAprobada = count($aeAprobada);
-        $aeDesaprobada = count($aeDesaprobada);
-
-        //ACTIVIDADES POR USUARIO
-        $ActividadesUsuarios = DB::table('actividades')
-            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
-            ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
-            ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
-            ->where('actividades.id_compania', Auth::user()->id_compania)
-            ->where(function($query) use ($gerencias) {
-                if ($gerencias != null) {
-                    $query->whereIn('proyectos.id_gerencia', $gerencias);
-                }
-            })
-            ->get();
-
-        $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
-        $usuarios = $usuarios->unique('nombres');
-        $dataUsuarios = [];
-
-        $i = 1;
-        foreach ($usuarios as $usuario) {
-            foreach ($ActividadesUsuarios as $actividad) {
-                if ($actividad->id_usuario == $usuario->id) {
-                    $dataUsuarios [$usuario->nombres] = $i;
-                    $i++;
-                }
+                $i = 1;
             }
+
+            $proyectos = array_keys($dataproyecto);
+            $conteoproyecto = array_values($dataproyecto);
+
+            $total = Actividad::where('id_compania', Auth::user()->id_compania)->get();
+            $total = count($total);
+
+            //ACTIVIDADES POR ESTADO
+            $ActividadesEstado = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad','actividades.estado as activo')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->get();
+
+            $aePendiente = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 0)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->get();
+            $aeAprobada = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 1)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->get();
+            $aeDesaprobada = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->select('actividades.descricion as actividad')
+                ->where('actividades.estado', 2)
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $aePendiente = count($aePendiente);
+            $aeAprobada = count($aeAprobada);
+            $aeDesaprobada = count($aeDesaprobada);
+
+            //ACTIVIDADES POR USUARIO
+            $ActividadesUsuarios = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
+                ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
+            $usuarios = $usuarios->unique('nombres');
+            $dataUsuarios = [];
+
             $i = 1;
-        }
-
-        $usuarios = array_keys($dataUsuarios);
-        $conteoUsuarios = array_values($dataUsuarios);
-
-        //ACTIVIDADES POR ETAPA
-        $ActividadesEtapas = DB::table('actividades')
-            ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
-            ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
-            ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
-            ->where('actividades.id_compania', Auth::user()->id_compania)
-            ->where(function($query) use ($gerencias) {
-                if ($gerencias != null) {
-                    $query->whereIn('proyectos.id_gerencia', $gerencias);
+            foreach ($usuarios as $usuario) {
+                foreach ($ActividadesUsuarios as $actividad) {
+                    if ($actividad->id_usuario == $usuario->id) {
+                        $dataUsuarios [$usuario->nombres] = $i;
+                        $i++;
+                    }
                 }
-            })
-            ->get();
-
-        $etapas = Etapas::where('id_compania', Auth::user()->id_compania)->get();
-        $etapas = $etapas->unique('descripcion');
-        $dataEtapas = [];
-
-        $i = 1;
-        foreach ($etapas as $etapa) {
-            foreach ($ActividadesEtapas as $actividad) {
-                if ($actividad->id_etapa == $etapa->id) {
-                    $dataEtapas [$etapa->descripcion] = $i;
-                    $i++;
-                }
+                $i = 1;
             }
+
+            $usuarios = array_keys($dataUsuarios);
+            $conteoUsuarios = array_values($dataUsuarios);
+
+            //ACTIVIDADES POR ETAPA
+            $ActividadesEtapas = DB::table('actividades')
+                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
+                ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
+                ->where('actividades.id_compania', Auth::user()->id_compania)
+                ->where('direcciones.id_director', Auth::user()->id)
+                ->get();
+
+            $etapas = Etapas::where('id_compania', Auth::user()->id_compania)->get();
+            $etapas = $etapas->unique('descripcion');
+            $dataEtapas = [];
+
             $i = 1;
+            foreach ($etapas as $etapa) {
+                foreach ($ActividadesEtapas as $actividad) {
+                    if ($actividad->id_etapa == $etapa->id) {
+                        $dataEtapas [$etapa->descripcion] = $i;
+                        $i++;
+                    }
+                }
+                $i = 1;
+            }
+
+            $etapas = array_keys($dataEtapas);
+            $conteoEtapas = array_values($dataEtapas);
+
+
+            $compania=Companias::where('id',Auth::user()->id_compania)->first();
         }
-
-        $etapas = array_keys($dataEtapas);
-        $conteoEtapas = array_values($dataEtapas);
-
-
-        $compania=Companias::where('id',Auth::user()->id_compania)->first();
 
         return view('pages.graficas.actividades', compact('usuarios', 'conteoUsuarios','ActividadesUsuarios','ActividadesEtapas','etapas','conteoEtapas',
             'total','compania','Actividadesproyecto','proyectos', 'conteoproyecto','ActividadesEstado','aePendiente','aeAprobada', 'aeDesaprobada', 'direcciones', 'gerencias', 'rol', 'dir'));
