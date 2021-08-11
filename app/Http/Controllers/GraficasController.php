@@ -838,8 +838,7 @@ class GraficasController extends Controller
                 ->get();
 
             // Operaciones
-            $ptfCalidadOperaciones = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCalidadOperaciones = Proyecto::join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)where('id_enfoque', 1)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
             $ptfCalidadOperaciones = count($ptfCalidadOperaciones);
             $ptfGenteOperaciones = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
