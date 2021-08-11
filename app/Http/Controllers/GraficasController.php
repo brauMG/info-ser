@@ -844,7 +844,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 1)
                 ->where('id_trabajo', 1)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCalidadOperaciones = count($ptfCalidadOperaciones);
             $ptfGenteOperaciones = DB::table('proyectos')
@@ -853,7 +853,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 2)
                 ->where('id_trabajo', 1)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfGenteOperaciones = count($ptfGenteOperaciones);
             $ptfCostoOperaciones = DB::table('proyectos')
@@ -862,7 +862,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 3)
                 ->where('id_trabajo', 1)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfServicioOperaciones = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -870,7 +870,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 4)
                 ->where('id_trabajo', 1)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCrecimientoOperaciones = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -878,7 +878,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 5)
                 ->where('id_trabajo', 1)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCrecimientoOperaciones = count($ptfCrecimientoOperaciones);
 
@@ -889,7 +889,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 1)
                 ->where('id_trabajo', 2)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCalidadAdministrativo = count($ptfCalidadAdministrativo);
             $ptfGenteAdministrativo = DB::table('proyectos')
@@ -898,7 +898,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 2)
                 ->where('id_trabajo', 2)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCostoAdministrativo = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -906,7 +906,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 3)
                 ->where('id_trabajo', 2)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfServicioAdministrativo = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -914,7 +914,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 4)
                 ->where('id_trabajo', 2)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCrecimientoAdministrativo = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -922,7 +922,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 5)
                 ->where('id_trabajo', 2)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
 
             // proyecto
@@ -932,7 +932,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 1)
                 ->where('id_trabajo', 3)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfGenteproyecto = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -940,7 +940,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 2)
                 ->where('id_trabajo', 3)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCostoproyecto = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -948,7 +948,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 3)
                 ->where('id_trabajo', 3)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfServicioproyecto = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
@@ -956,7 +956,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 4)
                 ->where('id_trabajo', 3)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfServicioproyecto = count($ptfServicioproyecto);
             $ptfCrecimientoproyecto = DB::table('proyectos')
@@ -965,7 +965,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 5)
                 ->where('id_trabajo', 3)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCrecimientoproyecto = count($ptfCrecimientoproyecto);
 
@@ -976,7 +976,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 1)
                 ->where('id_trabajo', 4)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCalidadIniciativas = count($ptfCalidadIniciativas);
             $ptfGenteIniciativas = DB::table('proyectos')
@@ -985,7 +985,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 2)
                 ->where('id_trabajo', 4)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfGenteIniciativas = count($ptfGenteIniciativas);
             $ptfCostoIniciativas = DB::table('proyectos')
@@ -994,7 +994,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 3)
                 ->where('id_trabajo', 4)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCostoIniciativas = count($ptfCostoIniciativas);
             $ptfServicioIniciativas = DB::table('proyectos')
@@ -1003,7 +1003,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 4)
                 ->where('id_trabajo', 4)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfServicioIniciativas = count($ptfServicioIniciativas);
             $ptfCrecimientoIniciativas = DB::table('proyectos')
@@ -1012,7 +1012,7 @@ class GraficasController extends Controller
                 ->where('gerencias.id_gerente', Auth::user()->id)
                 ->where('id_enfoque', 5)
                 ->where('id_trabajo', 4)
-                ->where('id_compania', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->get();
             $ptfCrecimientoIniciativas = count($ptfCrecimientoIniciativas);
 
