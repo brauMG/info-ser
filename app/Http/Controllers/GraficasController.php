@@ -838,70 +838,182 @@ class GraficasController extends Controller
                 ->get();
 
             // Operaciones
-            $ptfCalidadOperaciones = Proyecto::join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)where('id_enfoque', 1)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->get();
+            $ptfCalidadOperaciones = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 1)
+                ->where('id_trabajo', 1)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfCalidadOperaciones = count($ptfCalidadOperaciones);
-            $ptfGenteOperaciones = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfGenteOperaciones = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 2)
+                ->where('id_trabajo', 1)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfGenteOperaciones = count($ptfGenteOperaciones);
-            $ptfCostoOperaciones = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfCostoOperaciones = count($ptfCostoOperaciones);
-            $ptfServicioOperaciones = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfServicioOperaciones = count($ptfServicioOperaciones);
-            $ptfCrecimientoOperaciones = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 1)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCostoOperaciones = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 3)
+                ->where('id_trabajo', 1)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfServicioOperaciones = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 4)
+                ->where('id_trabajo', 1)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfCrecimientoOperaciones = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 5)
+                ->where('id_trabajo', 1)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfCrecimientoOperaciones = count($ptfCrecimientoOperaciones);
 
             // Administrativo
-            $ptfCalidadAdministrativo = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCalidadAdministrativo = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 1)
+                ->where('id_trabajo', 2)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfCalidadAdministrativo = count($ptfCalidadAdministrativo);
-            $ptfGenteAdministrativo = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfGenteAdministrativo = count($ptfGenteAdministrativo);
-            $ptfCostoAdministrativo = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfCostoAdministrativo = count($ptfCostoAdministrativo);
-            $ptfServicioAdministrativo = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfServicioAdministrativo = count($ptfServicioAdministrativo);
-            $ptfCrecimientoAdministrativo = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 2)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfCrecimientoAdministrativo = count($ptfCrecimientoAdministrativo);
+            $ptfGenteAdministrativo = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 2)
+                ->where('id_trabajo', 2)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfCostoAdministrativo = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 3)
+                ->where('id_trabajo', 2)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfServicioAdministrativo = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 4)
+                ->where('id_trabajo', 2)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfCrecimientoAdministrativo = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 5)
+                ->where('id_trabajo', 2)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
 
             // proyecto
-            $ptfCalidadproyecto = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfCalidadproyecto = count($ptfCalidadproyecto);
-            $ptfGenteproyecto = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfGenteproyecto = count($ptfGenteproyecto);
-            $ptfCostoproyecto = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
-            $ptfCostoproyecto = count($ptfCostoproyecto);
-            $ptfServicioproyecto = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCalidadproyecto = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 1)
+                ->where('id_trabajo', 3)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfGenteproyecto = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 2)
+                ->where('id_trabajo', 3)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfCostoproyecto = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 3)
+                ->where('id_trabajo', 3)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
+            $ptfServicioproyecto = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 4)
+                ->where('id_trabajo', 3)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfServicioproyecto = count($ptfServicioproyecto);
-            $ptfCrecimientoproyecto = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 3)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCrecimientoproyecto = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 5)
+                ->where('id_trabajo', 3)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfCrecimientoproyecto = count($ptfCrecimientoproyecto);
 
             // Iniciativas
-            $ptfCalidadIniciativas = Proyecto::where('id_enfoque', 1)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCalidadIniciativas = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 1)
+                ->where('id_trabajo', 4)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfCalidadIniciativas = count($ptfCalidadIniciativas);
-            $ptfGenteIniciativas = Proyecto::where('id_enfoque', 2)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfGenteIniciativas = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 2)
+                ->where('id_trabajo', 4)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfGenteIniciativas = count($ptfGenteIniciativas);
-            $ptfCostoIniciativas = Proyecto::where('id_enfoque', 3)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCostoIniciativas = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 3)
+                ->where('id_trabajo', 4)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfCostoIniciativas = count($ptfCostoIniciativas);
-            $ptfServicioIniciativas = Proyecto::where('id_enfoque', 4)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfServicioIniciativas = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 4)
+                ->where('id_trabajo', 4)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfServicioIniciativas = count($ptfServicioIniciativas);
-            $ptfCrecimientoIniciativas = Proyecto::where('id_enfoque', 5)->where('id_trabajo', 4)->where('id_compania', Auth::user()->id_compania)->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')->where('gerencias.id_gerente', Auth::user()->id)->get();
+            $ptfCrecimientoIniciativas = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
+                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('id_enfoque', 5)
+                ->where('id_trabajo', 4)
+                ->where('id_compania', Auth::user()->id_compania)
+                ->get();
             $ptfCrecimientoIniciativas = count($ptfCrecimientoIniciativas);
 
 //        0 calidad
