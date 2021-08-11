@@ -2047,7 +2047,7 @@ class GraficasController extends Controller
 
             //ACTIVIDADES POR ESTADO
             $ActividadesEstado = DB::table('actividades')
-                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('proyectos', 'actividades.id_proyecto', 'proyectos.id')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->select('actividades.descricion as actividad','actividades.estado as activo')
@@ -2056,31 +2056,31 @@ class GraficasController extends Controller
                 ->get();
 
             $aePendiente = DB::table('actividades')
-                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('proyectos', 'actividades.id_proyecto', 'proyectos.id')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->select('actividades.descricion as actividad')
-                ->where('actividades.estado', 0)
                 ->where('actividades.id_compania', Auth::user()->id_compania)
                 ->where('direcciones.id_director', Auth::user()->id)
+                ->where('actividades.estado', 0)
                 ->get();
             $aeAprobada = DB::table('actividades')
-                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('proyectos', 'actividades.id_proyecto', 'proyectos.id')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->select('actividades.descricion as actividad')
-                ->where('actividades.estado', 1)
                 ->where('actividades.id_compania', Auth::user()->id_compania)
                 ->where('direcciones.id_director', Auth::user()->id)
+                ->where('actividades.estado', 1)
                 ->get();
             $aeDesaprobada = DB::table('actividades')
-                ->leftJoin('proyectos', 'actividades.id_proyecto', 'proyectos.id')
+                ->join('proyectos', 'actividades.id_proyecto', 'proyectos.id')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->select('actividades.descricion as actividad')
-                ->where('actividades.estado', 2)
                 ->where('actividades.id_compania', Auth::user()->id_compania)
                 ->where('direcciones.id_director', Auth::user()->id)
+                ->where('actividades.estado', 2)
                 ->get();
 
             $aePendiente = count($aePendiente);
@@ -2215,7 +2215,7 @@ class GraficasController extends Controller
                 ->select('actividades.descricion as actividad')
                 ->where('actividades.estado', 2)
                 ->where('actividades.id_compania', Auth::user()->id_compania)
-                ->where('direcciones.id_director', Auth::user()->id)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             $aePendiente = count($aePendiente);
@@ -2229,7 +2229,7 @@ class GraficasController extends Controller
                 ->leftJoin('usuarios', 'actividades.id_usuario', 'usuarios.id')
                 ->select('actividades.descricion as actividad', 'usuarios.nombres as usuario', 'actividades.id_usuario')
                 ->where('actividades.id_compania', Auth::user()->id_compania)
-                ->where('direcciones.id_director', Auth::user()->id)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             $usuarios = User::where('id_compania', Auth::user()->id_compania)->get();
@@ -2257,7 +2257,7 @@ class GraficasController extends Controller
                 ->leftJoin('etapas', 'actividades.id_etapa', 'etapas.id')
                 ->select('actividades.descricion as actividad', 'etapas.descripcion as etapa', 'actividades.id_etapa')
                 ->where('actividades.id_compania', Auth::user()->id_compania)
-                ->where('direcciones.id_director', Auth::user()->id)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             $etapas = Etapas::where('id_compania', Auth::user()->id_compania)->get();
