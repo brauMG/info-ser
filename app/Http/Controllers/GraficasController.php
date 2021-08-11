@@ -619,7 +619,6 @@ class GraficasController extends Controller
             //PROYECTOS POR ENFOQUE
             $proyectoenfoque = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
                 ->select('proyectos.descripcion as proyecto', 'enfoques.descripcion as enfoque')
                 ->where('proyectos.id_compania', Auth::user()->id_compania)
@@ -627,7 +626,6 @@ class GraficasController extends Controller
                 ->get();
             $peCalidad = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('enfoques.id', 1)
@@ -636,7 +634,6 @@ class GraficasController extends Controller
                 ->get();
             $peGente = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('enfoques.id', 2)
@@ -645,7 +642,6 @@ class GraficasController extends Controller
                 ->get();
             $peCosto = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('enfoques.id', 3)
@@ -654,7 +650,6 @@ class GraficasController extends Controller
                 ->get();
             $peServicio = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('enfoques.id', 4)
@@ -680,42 +675,42 @@ class GraficasController extends Controller
             //PROYECTOS POR TRABAJO
             $proyectoTrabajo = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
                 ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo')
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
             $ptOperaciones = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('trabajos.id', 1)
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
             $ptAdministrativo = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('trabajos.id', 2)
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
             $ptProyecto = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('trabajos.id', 3)
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
             $ptIniciativas = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
                 ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
                 ->select('proyectos.descripcion as proyecto')
                 ->where('trabajos.id', 4)
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             $ptOperaciones = count($ptOperaciones);
@@ -724,11 +719,12 @@ class GraficasController extends Controller
             $ptIniciativas = count($ptIniciativas);
 
             //PROYECTOS POR FASE
-            $proyectoFase = DB::table('proyectos')->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            $proyectoFase = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->leftJoin('fases', 'proyectos.id_fase', 'fases.id')
                 ->select('proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'proyectos.id_fase')
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
 
@@ -751,11 +747,12 @@ class GraficasController extends Controller
             $conteofases = array_values($datafases);
 
             //PROYECTOS POR INDICADOR
-            $proyectoIndicador = DB::table('proyectos')->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            $proyectoIndicador = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->leftJoin('indicadores', 'proyectos.id_indicador', 'indicadores.id')
                 ->select('proyectos.descripcion as proyecto', 'indicadores.descripcion as indicador', 'proyectos.id_indicador')
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             $indicadores = Indicador::where('id_compania', Auth::user()->id_compania)->get();
@@ -777,11 +774,12 @@ class GraficasController extends Controller
             $conteoIndicadores = array_values($dataIndicadores);
 
             //PROYECTOS POR AREA
-            $proyectoArea = DB::table('proyectos')->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            $proyectoArea = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->leftJoin('areas', 'proyectos.id_area', 'areas.id')
                 ->select('proyectos.descripcion as proyecto', 'areas.descripcion as area', 'proyectos.id_area')
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             $areas = Areas::where('id_companias', Auth::user()->id_compania)->get();
@@ -803,11 +801,12 @@ class GraficasController extends Controller
             $conteoAreas = array_values($dataAreas);
 
             //PROYECTOS POR ESTADO
-            $proyectoEstado = DB::table('proyectos')->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            $proyectoEstado = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->leftJoin('estado', 'proyectos.id_estado', 'estado.id')
                 ->select('proyectos.descripcion as proyecto', 'estado.estado as estado', 'proyectos.id_estado')
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             $estados = Status::where('id_compania', Auth::user()->id_compania)->get();
@@ -829,12 +828,13 @@ class GraficasController extends Controller
             $conteoEstados = array_values($dataEstados);
 
             //PROYECTOS POR TRABAJOS POR ENFOQUE
-            $proyectotrabajoenfoque = DB::table('proyectos')->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
-                ->join('direcciones', 'direcciones.id', 'gerencias.id_direccion')
+            $proyectotrabajoenfoque = DB::table('proyectos')
+                ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->leftJoin('trabajos', 'proyectos.id_trabajo', 'trabajos.id')
                 ->leftJoin('enfoques', 'proyectos.id_enfoque', 'enfoques.id')
                 ->select('proyectos.descripcion as proyecto', 'trabajos.descripcion as trabajo','enfoques.descripcion as enfoque', 'proyectos.id_enfoque', 'proyectos.id_trabajo')
-                ->where('proyectos.id_compania', Auth::user()->id_compania)->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('proyectos.id_compania', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
                 ->get();
 
             // Operaciones
