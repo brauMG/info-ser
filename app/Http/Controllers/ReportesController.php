@@ -41,7 +41,7 @@ class ReportesController extends Controller
             else{
                 $result=[];
             }
-            $enfoques=Enfoque::all();
+            $enfoques=Enfoques::all();
             $trabajos=Trabajo::all();
             return view('Admin.Reportes.ReporteAsignacionesPorEnfoque',['result'=>$result,'enfoques'=>$enfoques,'trabajos'=>$trabajos,'company'=>$company,'proyectos'=>$proyectos,'Clave_Compania'=>$request->Compania,'Clave_Proyecto'=>$Clave_Proyecto,'Clave_Enfoque'=>$request->Enfoque,'Clave_Trabajo'=>$request->Trabajo,'compania'=>$company]);
 
@@ -55,7 +55,7 @@ class ReportesController extends Controller
     }
     public function ActividadesEmpresaPorStatus(Request $request){
 
-        $company=Compania::where('Clave',Auth::user()->Clave_Compania)->first();
+        $company=Companias::where('Clave',Auth::user()->Clave_Compania)->first();
         $activity =DB::select('CALL Get_ReportActivityByStatus(?)',array($company->Clave));
         return view('Admin.Reportes.ReporteActividadesPorEstatus',['activity'=>$activity,'company'=>$company,'Clave_Compania'=>$company->Clave,'compania'=>$company]);
     }

@@ -1,46 +1,12 @@
 @extends('layouts.app', ['activePage' => 'EtapasPDF', 'titlePage' => __('Etapas Reporte')])
 
 @section('content')
+
     <div class="content">
+    <form class="form-control" method="POST" action="{{route('StagesPDF')}}">
+                        @csrf
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-12">
-                    @if ( session('mensaje') )
-                        <div class="alert alert-success" role="alert" id="message">
-                            {{ session('mensaje') }}
-                        </div>
-                    @endif
-                    @if ( session('mensajeAlert') )
-                        <div class="alert alert-warning" role="alert" id="message">
-                            {{ session('mensajeAlert') }}
-                        </div>
-                    @endif
-                    @if ( session('mensajeDanger') )
-                        <div class="alert alert-danger" role="alert" id="message">
-                            {{ session('mensajeDanger') }}
-                        </div>
-                    @endif
-                    @if($errors->any())
-                        <div class="alert alert-danger" role="alert" id="message">
-                            Se encontraron los siguientes errores: <br>
-                            @foreach($errors->all() as $error)
-                                <br>
-                                {{'• '.$error }}
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h4 class="card-title">Filtros - Reporte de Etapas</h4>
-                        </div>
-                    </div>
-                </div>
-                    <form class="form-control" method="POST" action="{{route('StagesPDF')}}">
-                        @csrf
-                        <div class="col-md-12">
-                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="card">
                                         <div class="card-header card-header-info">
@@ -145,10 +111,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
-            </div>
-        </div>
-    </div>
+
 
                 <script>
         function myFunction() {

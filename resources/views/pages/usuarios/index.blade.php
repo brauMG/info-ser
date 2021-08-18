@@ -78,9 +78,9 @@
                                                 <button clave="{{$item->id}}" onclick="edit(this);" type="button" rel="tooltip" class="btn btn-sm btn-warning btn-adjust">
                                                     <i class="material-icons">edit</i>
                                                 </button>
-                                                <button clave="{{$item->id}}" onclick="deleted(this);" type="button" rel="tooltip" class="btn btn-sm btn-danger btn-adjust">
-                                                    <i class="material-icons">delete</i>
-                                                </button>
+{{--                                                <button clave="{{$item->id}}" onclick="deleted(this);" type="button" rel="tooltip" class="btn btn-sm btn-danger btn-adjust">--}}
+{{--                                                    <i class="material-icons">delete</i>--}}
+{{--                                                </button>--}}
                                             </td>
                                         </tr>
                                     @endforeach
