@@ -37,7 +37,7 @@
                                 <div class="col-md-8">
                                     <h4 class="card-title ">Actividades</h4>
                                     <p class="card-category">Esta es la lista de actividades registradas en el sistema</p>
-                                    @if($rol == 4 || $rol == 3 || $rol == 7)
+                                    @if($rol == 4 || $rol == 3)
                                     <a href="{{url('/proyectos')}}" class="btn btn-info" id="new">Agregar Actividad <i class="material-icons">add_circle_outline</i></a>
                                     @endif
                                 </div>
@@ -61,7 +61,7 @@
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
                                     <th>ID<i class="material-icons sort">sort</i></th>
-                                    @if($rol == 4 || $rol == 3 || $rol == 7)
+                                    @if($rol == 4 || $rol == 3 || $rol == 7 || $rol == 6)
                                         <th>Gerencia<i class="material-icons sort">sort</i></th>
                                     @endif
                                     <th>Proyecto<i class="material-icons sort">sort</i></th>
@@ -70,6 +70,7 @@
                                     <th>Usuario<i class="material-icons sort">sort</i></th>
                                     <th>Descripción<i class="material-icons sort">sort</i></th>
                                     <th>Decisión<i class="material-icons sort">sort</i></th>
+                                    <th>Evidencia<i class="material-icons sort">sort</i></th>
                                     <th>Fecha de Creación<i class="material-icons sort">sort</i></th>
                                     <th>Estado de Revisión<i class="material-icons sort">sort</i></th>
                                     <th>Fecha de Revisión<i class="material-icons sort">sort</i></th>
@@ -81,7 +82,7 @@
                                     @foreach ($actividad as $item)
                                         <tr>
                                         <td>{{$item->id}}<i class="material-icons plus">add_circle</i></td>
-                                            @if($rol == 4 || $rol == 3 || $rol == 7)
+                                            @if($rol == 4 || $rol == 3 || $rol == 7 || $rol == 6)
                                                 <td>{{$item->gerencia}}</td>
                                             @endif
                                         <td>{{$item->proyecto}}</td>
@@ -89,7 +90,16 @@
                                         <td>{{$item->etapa}}</td>
                                         <td>{{$item->usuario}}</td>
                                         <td>{{$item->descripcion}}</td>
-                                        <td>{{$item->decision}}
+                                            <td>{{$item->decision}}</td>
+                                            @if($item->evidence == null)
+                                                <td class="action-row" style="text-align: center">
+                                                    <a class="btn btn-sm btn-dark text-white" disabled="true">Sin Evidencia</a>
+                                                </td>
+                                            @else
+                                                <td class="action-row" style="text-align: center">
+                                                    <a class="btn btn-sm btn-info text-white" href="{{('/evidence/'.$item->evidence)}}" target="_blank"><i class="material-icons">visibility</i> Ver</a>
+                                                </td>
+                                            @endif
                                         <td style="text-align: center">
                                             <a class="btn btn-sm btn-dark text-white"><i class="material-icons">event_available</i>{{$item->fecha_creacion}}</a>
                                         </td>
