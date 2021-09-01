@@ -276,7 +276,7 @@
             </li>
             @endif
 
-            @if(Auth::user()->id_rol == 3 || Auth::user()->id_rol == 4)
+            @if(Auth::user()->id_rol == 3 || Auth::user()->id_rol == 4 || Auth::user()->id_rol == 6 || Auth::user()->id_rol == 7)
             <li class="nav-item{{ $activePage == 'Actividades' ? ' active' : '' }}">
                 <a class="nav-link" href="{{ url('/actividades/') }}">
                     <i class="material-icons text-white">add_task</i>

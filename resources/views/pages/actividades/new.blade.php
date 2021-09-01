@@ -36,7 +36,7 @@
                             <h4 class="card-title ">Registrar Nueva Actividad</h4>
                         </div>
                         <div class="card-body">
-                        <form method="POST" action="{{route('CreateActivity')}}">
+                        <form method="POST" action="{{route('CreateActivity')}}" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <input type="hidden" name="proyecto" value="{{$proyectoID}}">
@@ -62,9 +62,16 @@
                                                autocomplete="decision" autofocus>
                                     </div>
                                 </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Evidencia (imagen u archivo)</label>
+                                    </div>
+                                    <input type="file" name="file" id="file" class="form-control"/>
+                                </div>
                             </div>
 
-                            <div class="container" style="text-align: center">
+                            <div class="container mt-3" style="text-align: center">
                                 <button type="submit" class="btn btn-primary"><i class="material-icons">check</i>Guardar</button>
                             </div>
                         </form>
