@@ -892,7 +892,6 @@ class GraficasController extends Controller
             $proyectoEstado = DB::table('proyectos')
                 ->join('gerencias', 'gerencias.id', 'proyectos.id_gerencia')
                 ->leftJoin('estado', 'proyectos.id_estado', 'estado.id')
-                ->leftJoin('estado', 'proyectos.id_estado', 'estado.id')
                 ->select('proyectos.descripcion as proyecto', 'estado.estado as estado', 'proyectos.id_estado')
                 ->where('proyectos.id_compania', Auth::user()->id_compania)
                 ->where('gerencias.id_gerente', Auth::user()->id)
