@@ -1617,6 +1617,7 @@ class GraficasController extends Controller
     }
 
     public function toProjectsGer(Request $request) {
+        $ger = null;
         $id_gerencia = $request->input('gerencia');
         if ($id_gerencia == 0) {
             return redirect('/graficas/proyectos');
@@ -2746,6 +2747,7 @@ class GraficasController extends Controller
 
     public function toActivitiesGer(Request $request)
     {
+        $ger = null;
         $id_gerencia = $request->input('gerencia');
         if ($id_gerencia == 0) {
             return redirect('/graficas/actividades');
