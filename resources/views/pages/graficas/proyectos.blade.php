@@ -69,13 +69,17 @@
                                                 @if($rol == 7)
                                                     <option value="0">Todas</option>
                                                 @endif
-                                                @foreach($gerencias as $gerencia)
-                                                        @if($ger->id == $gerencia->id)
-                                                            <option value="{{$gerencia->id}}" selected>{{$gerencia->nombre}}</option>
+                                                    @foreach($gerencias as $gerencia)
+                                                        @if($ger != null)
+                                                            @if($ger->id == $gerencia->id)
+                                                                <option value="{{$gerencia->id}}" selected>{{$gerencia->nombre}}</option>
+                                                            @else
+                                                                <option value="{{$gerencia->id}}">{{$gerencia->nombre}}</option>
+                                                            @endif
                                                         @else
                                                             <option value="{{$gerencia->id}}">{{$gerencia->nombre}}</option>
                                                         @endif
-                                                @endforeach
+                                                    @endforeach
                                             </select>
                                             <button type="submit" class="btn btn-info"><i class="material-icons">sort</i>Filtrar</button>
                                         </div>
