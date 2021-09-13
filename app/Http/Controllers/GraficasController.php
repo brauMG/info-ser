@@ -31,6 +31,7 @@ class GraficasController extends Controller
     }
 
     public function toProjects() {
+        $ger = null;
         $dir = null;
         $rol = Auth::user()->id_rol;
         if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 2) {
@@ -1071,6 +1072,7 @@ class GraficasController extends Controller
     }
 
     public function toProjectsDir(Request $request) {
+        $ger = null;
         $id_direccion = $request->input('direccion');
         $rol = Auth::user()->id_rol;
         if ($id_direccion == 0) {
@@ -1624,6 +1626,7 @@ class GraficasController extends Controller
         }
         $rol = Auth::user()->id_rol;
         $ger = Gerencia::find($id_gerencia);
+        dd($ger);
         $id_direccion = $ger->id_direccion;
         $dir = Direccion::find($id_direccion);
 
@@ -2177,6 +2180,7 @@ class GraficasController extends Controller
 
     public function toActivities()
     {
+        $ger = null;
         $dir = null;
         $rol = Auth::user()->id_rol;
         if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 5 || Auth::user()->id_rol == 2) {
@@ -2574,11 +2578,12 @@ class GraficasController extends Controller
         }
 
         return view('pages.graficas.actividades', compact('usuarios', 'conteoUsuarios','ActividadesUsuarios','ActividadesEtapas','etapas','conteoEtapas',
-            'total','compania','Actividadesproyecto','proyectos', 'conteoproyecto','ActividadesEstado','aePendiente','aeAprobada', 'aeDesaprobada', 'direcciones', 'gerencias', 'rol', 'dir'));
+            'total','compania','Actividadesproyecto','proyectos', 'conteoproyecto','ActividadesEstado','aePendiente','aeAprobada', 'aeDesaprobada', 'direcciones', 'gerencias', 'rol', 'dir', 'ger'));
     }
 
     public function toActivitiesDir(Request $request)
     {
+        $ger = null;
         $id_direccion = $request->input('direccion');
         $rol = Auth::user()->id_rol;
         if ($id_direccion == 0) {
@@ -2742,7 +2747,7 @@ class GraficasController extends Controller
         $compania=Companias::where('id',Auth::user()->id_compania)->first();
 
         return view('pages.graficas.actividades', compact('usuarios', 'conteoUsuarios','ActividadesUsuarios','ActividadesEtapas','etapas','conteoEtapas',
-            'total','compania','Actividadesproyecto','proyectos', 'conteoproyecto','ActividadesEstado','aePendiente','aeAprobada', 'aeDesaprobada', 'direcciones', 'gerencias', 'rol', 'dir'));
+            'total','compania','Actividadesproyecto','proyectos', 'conteoproyecto','ActividadesEstado','aePendiente','aeAprobada', 'aeDesaprobada', 'direcciones', 'gerencias', 'rol', 'dir', 'ger'));
     }
 
     public function toActivitiesGer(Request $request)

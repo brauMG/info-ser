@@ -70,7 +70,7 @@
                                                     <option value="0">Todas</option>
                                                 @endif
                                                     @foreach($gerencias as $gerencia )
-                                                        @if( $ger != null )
+                                                        @if($ger != null)
                                                             @if($ger->id == $gerencia->id)
                                                                 <option value="{{$gerencia->id}}" selected>{{$gerencia->nombre}}</option>
                                                             @else
