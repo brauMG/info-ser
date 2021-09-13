@@ -1068,7 +1068,7 @@ class GraficasController extends Controller
                     'indicadores', 'conteoIndicadores',
                     'areas', 'conteoAreas',
                     'estados', 'conteoEstados',
-                    'dataOperaciones', 'dataAdministrativo', 'dataProyectos', 'dataIniciativas', 'direcciones', 'gerencias', 'dir', 'rol'));
+                    'dataOperaciones', 'dataAdministrativo', 'dataProyectos', 'dataIniciativas', 'direcciones', 'gerencias', 'dir', 'rol', 'ger'));
     }
 
     public function toProjectsDir(Request $request) {
@@ -1615,7 +1615,7 @@ class GraficasController extends Controller
             'indicadores', 'conteoIndicadores',
             'areas', 'conteoAreas',
             'estados', 'conteoEstados',
-            'dataOperaciones', 'dataAdministrativo', 'dataProyectos', 'dataIniciativas', 'direcciones', 'gerencias', 'dir', 'rol'));
+            'dataOperaciones', 'dataAdministrativo', 'dataProyectos', 'dataIniciativas', 'direcciones', 'gerencias', 'dir', 'rol', 'ger'));
     }
 
     public function toProjectsGer(Request $request) {
@@ -1626,7 +1626,6 @@ class GraficasController extends Controller
         }
         $rol = Auth::user()->id_rol;
         $ger = Gerencia::find($id_gerencia);
-        dd($ger);
         $id_direccion = $ger->id_direccion;
         $dir = Direccion::find($id_direccion);
 
