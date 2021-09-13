@@ -1883,7 +1883,6 @@ class GraficasController extends Controller
             ->select('proyectos.descripcion as proyecto', 'estado.estado as estado', 'proyectos.id_estado')
             ->where('gerencias.id', $id_gerencia)
             ->where('proyectos.id_compania', Auth::user()->id_compania)
-            ->leftJoin('estado', 'proyectos.id_estado', 'estado.id')
             ->where('estado.activo', 1)
             ->get();
 
