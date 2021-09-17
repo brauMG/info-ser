@@ -91,7 +91,7 @@
                                         <td>{{$item->usuario}}</td>
                                         <td>{{$item->descripcion}}</td>
                                             <td>{{$item->decision}}</td>
-                                            @if($item->evidence == null)
+                                            @if(isset($item->evidence) == null)
                                                 <td class="action-row" style="text-align: center">
                                                     <a class="btn btn-sm btn-dark text-white" disabled="true">Sin Evidencia</a>
                                                 </td>
