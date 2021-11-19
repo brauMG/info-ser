@@ -250,8 +250,13 @@ class ActividadesController extends Controller
         ]);
 
         $image = $request->file('file');
-        $new_name = rand() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('evidence'), $new_name);
+        if(isset($image)) {
+            $new_name = rand() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('evidence'), $new_name);
+        }
+        else {
+            $new_name = null;
+        }
 
         $actity = Actividad::create([
             'id_compania' => $companiaId,
