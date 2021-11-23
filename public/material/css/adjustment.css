@@ -116,7 +116,7 @@
 }
 
 .form-check .form-check-input {
-    opacity: 0 !important;
+    opacity: 1 !important;
     height: 10px !important;
     width: 10px !important;
     overflow: hidden !important;

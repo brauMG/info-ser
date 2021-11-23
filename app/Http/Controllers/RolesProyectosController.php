@@ -207,7 +207,7 @@ class RolesProyectosController extends Controller
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
             $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
             $rasics = RolRASIC::all();
-            $usuarios = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 3)->orWhere('id_rol', 4)->get();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->whereIn('id_rol', [3,4])->get();
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $direcciones = Direccion::where('id_compania', Auth::user()->id_compania)->get();
             $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
@@ -216,7 +216,7 @@ class RolesProyectosController extends Controller
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
             $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
             $rasics = RolRASIC::all();
-            $usuarios = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 3)->orWhere('id_rol', 4)->get();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->whereIn('id_rol', [3,4])->get();
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $direcciones = Direccion::where('id_director', Auth::user()->id)->get();
             $ids_direccion = [];
@@ -234,7 +234,7 @@ class RolesProyectosController extends Controller
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
             $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
             $rasics = RolRASIC::all();
-            $usuarios = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 3)->orWhere('id_rol', 4)->get();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->whereIn('id_rol', [3,4])->get();
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
             $ids_direccion = [];

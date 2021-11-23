@@ -335,7 +335,7 @@ class ActividadesController extends Controller
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
             $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
-            $usuarios = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 3)->orWhere('id_rol', 4)->get();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->whereIn('id_rol', [3,4])->get();
             $estados = [
                 0,
                 1,
@@ -354,7 +354,7 @@ class ActividadesController extends Controller
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
             $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
-            $usuarios = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 3)->orWhere('id_rol', 4)->get();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->whereIn('id_rol', [3,4])->get();
             $estados = [
                 0,
                 1,
@@ -382,7 +382,7 @@ class ActividadesController extends Controller
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
             $fases = Fase::where('id_compania', Auth::user()->id_compania)->get();
-            $usuarios = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 3)->orWhere('id_rol', 4)->get();
+            $usuarios = User::where('id_compania', Auth::user()->id_compania)->whereIn('id_rol', [3,4])->get();
             $estados = [
                 0,
                 1,
