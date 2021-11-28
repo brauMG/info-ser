@@ -364,7 +364,7 @@ class EtapasController extends Controller
                     $query->whereIn('etapas.id', $etapas2);
                 }
                 else {
-                    $query->whereIn('etapas.id', [1,3,4]);
+                    $query->whereIn('etapas.id', $todas_etapas);
                 }
             })
             ->join('companias', 'etapas.id_compania', '=', 'companias.id')
