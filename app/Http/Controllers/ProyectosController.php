@@ -411,6 +411,9 @@ class ProyectosController extends Controller
     public function exportPdf(Request $request)
     {
         $proyectos2 = $request->input('proyectos');
+        if($proyectos2 == null) {
+            $proyectos2 = Proyecto::where('id_compania', Auth::user()->id_compania)->get('id');
+        }
         $fases = $request->input('fases');
         $estados = $request->input('estados');
         $indicadores = $request->input('indicadores');

@@ -255,6 +255,9 @@ class RolesProyectosController extends Controller
     public function exportPdf(Request $request)
     {
         $proyectos = $request->input('proyectos');
+        if($proyectos == null) {
+            $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get('id');
+        }
         $fases = $request->input('fases');
         $rasics = $request->input('rasics');
         $usuarios = $request->input('usuarios');

@@ -192,6 +192,7 @@ class UsuariosController extends Controller
         $time = $datetime->toTimeString();
 
         $usuarios = DB::table('usuarios')
+            ->where('id_compania', Auth::user()->id_compania)
             ->join('areas', 'usuarios.id_area', '=', 'areas.id')
             ->where(function($query) use ($areas, $request) {
                 if ($areas != null) {

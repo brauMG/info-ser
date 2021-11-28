@@ -278,7 +278,7 @@ class EtapasController extends Controller
             $etapas = DB::table('etapas')
                 ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
                 ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
-                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
                 ->get();
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
@@ -290,7 +290,7 @@ class EtapasController extends Controller
             $etapas = DB::table('etapas')
                 ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
                 ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
-                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
                 ->get();
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
@@ -311,7 +311,7 @@ class EtapasController extends Controller
             $etapas = DB::table('etapas')
                 ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
                 ->select('etapas.id as id', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa')
-                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
                 ->get();
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
             $proyectos = Proyecto::where('id_compania', Auth::user()->id_compania)->get();
@@ -336,6 +336,20 @@ class EtapasController extends Controller
     {
         $proyectos = $request->input('proyectos');
         $etapas2 = $request->input('etapas');
+        $todas_etapas = [];
+        if($etapas2 == null) {
+            $count = 0;
+            $new = DB::table('etapas')
+                ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+                ->select('etapas.id as id')
+                ->where('proyectos.id_compania', '=', Auth::user()->id_compania)
+                ->get();
+
+            foreach ($new as $etapa) {
+                $todas_etapas[$count] = $etapa->id;
+                $count++;
+            }
+        }
         $fases = $request->input('fases');
         $direcciones = $request->input('direcciones');
         $gerencias = $request->input('gerencias');
@@ -345,9 +359,12 @@ class EtapasController extends Controller
         $time = $datetime->toTimeString();
 
         $etapas = DB::table('etapas')
-            ->where(function($query) use ($etapas2, $request) {
+            ->where(function($query) use ($etapas2, $todas_etapas, $request) {
                 if ($etapas2 != null) {
                     $query->whereIn('etapas.id', $etapas2);
+                }
+                else {
+                    $query->whereIn('etapas.id', [1,3,4]);
                 }
             })
             ->join('companias', 'etapas.id_compania', '=', 'companias.id')
