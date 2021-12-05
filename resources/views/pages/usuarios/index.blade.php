@@ -41,14 +41,14 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
-                                    <th>ID<i class="material-icons sort">sort</i></th>
-                                    <th>Compañia<i class="material-icons sort">sort</i></th>
-                                    <th>Nombres<i class="material-icons sort">sort</i></th>
-                                    <th>Correo<i class="material-icons sort">sort</i></th>
-                                    <th>Área<i class="material-icons sort">sort</i></th>
-                                    <th>Puesto<i class="material-icons sort">sort</i></th>
-                                    <th>Rol<i class="material-icons sort">sort</i></th>
-                                    <th>Recibe Correo<i class="material-icons sort">sort</i></th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ID</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Compañia</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Nombres</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Correo</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Área</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Puesto</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Rol</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Recibe Correo</th>
                                     <th class="action-row">Acción</th>
                                     </thead>
                                     <tbody>
@@ -96,7 +96,7 @@
 
     <script>
         $('.data-table').DataTable({
-                responsive: true,
+
                 lengthMenu: [
                     [10, 25, 50, -1],
                     ['10 Filas', '25 Filas', '50 Filas', 'Mostrar todo']

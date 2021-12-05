@@ -15,7 +15,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th></th>
+                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"></th>
                     <th class="text-center">Free</th>
                     <th class="text-center">PRO</th>
                   </tr>

@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Nombre de la Etapa</label>
+                            <label>Estado</label>
                             <select name="status" type="text" class="custom-select  @error('status') is-invalid @enderror" required>
                                 @foreach($estados as $item)
                                     @if($item == 1)

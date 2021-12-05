@@ -20,12 +20,12 @@
                 <table class="table table-hover" id="table">
                     <thead>
                         <tr>
-                            <th>Clave</th>
-                            <th>Proyecto</th>
-                            <th>Fase</th>
-                            <th>Rol RASIC</th>
-                            <th>Usuario</th>
-                            <th></th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Clave</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Proyecto</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fase</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Rol RASIC</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Usuario</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"></th>
                         </tr>
                     </thead>
                     <tbody>

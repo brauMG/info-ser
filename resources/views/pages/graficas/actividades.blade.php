@@ -112,8 +112,8 @@
                                         <table class="table-bordered table-striped charts-table">
                                             <thead>
                                             <tr>
-                                                <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
-                                                <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                                <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -148,8 +148,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
-                                            <th><i class="material-icons icons-charts-list">theater_comedy</i> Estado</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">theater_comedy</i> Estado</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -190,8 +190,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
-                                            <th><i class="material-icons icons-charts-list">person_pin</i> Usuario</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">person_pin</i> Usuario</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -226,8 +226,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">task</i> Actividad</th>
-                                            <th><i class="material-icons icons-charts-list">push_pin</i> Etapa</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">task</i> Actividad</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">push_pin</i> Etapa</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -345,7 +345,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
@@ -408,7 +408,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
@@ -459,7 +459,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
@@ -510,7 +510,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {

@@ -267,3 +267,13 @@
 .sponsor-nav.has-image:after {
     opacity: .77;
 }
+
+@media (max-width: 1366px) {
+    .table thead tr th {
+        font-size: 14px;
+    }
+
+    .table td {
+        font-size: 12px;
+    }
+}

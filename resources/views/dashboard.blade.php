@@ -378,10 +378,10 @@
             <div class="card-body table-responsive">
               <table class="table table-hover">
                 <thead class="text-warning">
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Salary</th>
-                  <th>Country</th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ID</th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Name</th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Salary</th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Country</th>
                 </thead>
                 <tbody>
                   <tr>

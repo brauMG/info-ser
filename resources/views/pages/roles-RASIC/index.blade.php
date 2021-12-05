@@ -40,8 +40,8 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
-                                    <th>ID<i class="material-icons sort">sort</i></th>
-                                    <th>ROL RASIC<i class="material-icons sort">sort</i></th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ID</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ROL RASIC</th>
                                     </thead>
                                     <tbody>
                                     @foreach ($rolRASIC as $item)
@@ -62,7 +62,7 @@
 
     <script>
         $('.data-table').DataTable({
-                responsive: true,
+
                 paginate: false,
                 "order": [],
                 dom: 'Blfrtip',

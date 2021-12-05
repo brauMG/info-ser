@@ -14,12 +14,12 @@
             <div class="table-responsive">
               <table class="table">
                 <thead class=" text-primary">
-                  <th>ID</th>
-                  <th>Descripción</th>
-                  <th>Dominio</th>
-                  <th>City
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ID</th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Descripción</th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Dominio</th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">City
                   </th>
-                  <th>
+                  <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">
                     Salary
                   </th>
                 </thead>

@@ -135,7 +135,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Etapas
     Route::get('/etapas', 'App\Http\Controllers\EtapasController@index');
-    Route::get('/etapas/new', 'App\Http\Controllers\EtapasController@new');
+    Route::get('/etapas/get/{id}', 'App\Http\Controllers\EtapasController@sub_index');
+    Route::get('/etapas/new', 'App\Http\Controllers\EtapasController@new_stage');
+    Route::get('/etapas/new_modal/{id}', 'App\Http\Controllers\EtapasController@new_modal');
     Route::get('/etapas/edit/{id}', 'App\Http\Controllers\EtapasController@edit');
     Route::get('/etapas/delete/{id}', 'App\Http\Controllers\EtapasController@prepare');
     Route::post('/etapas/create', 'App\Http\Controllers\EtapasController@store')->name('CreateEtapa');
@@ -183,6 +185,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //roles en Proyectos
     Route::get('/roles-proyectos', 'App\Http\Controllers\RolesProyectosController@index');
+    Route::get('/roles-proyectos/get/{id}', 'App\Http\Controllers\RolesProyectosController@sub_index');
     Route::get('/roles-proyectos/new', 'App\Http\Controllers\RolesProyectosController@new')->name('NewProjectUser');
     Route::get('/roles-proyectos/select', 'App\Http\Controllers\RolesProyectosController@select')->name('select');
     Route::post('/roles-proyectos/create', 'App\Http\Controllers\RolesProyectosController@store')->name('CreateProjectUser');

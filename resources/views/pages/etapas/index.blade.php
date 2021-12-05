@@ -58,17 +58,17 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
-                                    <th>ID<i class="material-icons sort">sort</i></th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ID</th>
                                     @if($rol == 4 || $rol == 7)
-                                        <th>Gerencia<i class="material-icons sort">sort</i></th>
+                                        <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Gerencia</th>
                                     @endif
-                                    <th>Proyecto<i class="material-icons sort">sort</i></th>
-                                    <th>Fase del proyecto<i class="material-icons sort">sort</i></th>
-                                    <th>Descripción<i class="material-icons sort">sort</i></th>
-                                    <th>Fecha de Vencimiento<i class="material-icons sort">sort</i></th>
-                                    <th>Hora de Vencimiento<i class="material-icons sort">sort</i></th>
-                                    <th>Fecha de Creación<i class="material-icons sort">sort</i></th>
-                                    <th>Acción<i class="material-icons sort">sort</i></th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Proyecto</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fase del proyecto</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Descripción</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fecha de Vencimiento</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Hora de Vencimiento</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fecha de Creación</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Acción</th>
                                     </thead>
                                     <tbody>
                                     @foreach ($etapa as $item)
@@ -139,8 +139,8 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
 
+        if(window.innerWidth > 500) {
         var table = $('.data-table').DataTable({
-                responsive: true,
                 lengthMenu: [
                     [10, 25, 50, -1],
                     ['10 Filas', '25 Filas', '50 Filas', 'Mostrar todo']
@@ -180,9 +180,53 @@
                         "csv": "Excel"
                     }
                 },
-
             }
         );
+        } else {
+            var table = $('.data-table').DataTable({
+                    responsive: true,
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        ['10 Filas', '25 Filas', '50 Filas', 'Mostrar todo']
+                    ],
+                    dom: 'Blfrtip',
+                    buttons: [
+                        { extend: 'pdf', text: 'Exportar a PDF',charset: 'UTF-8' },
+                        { extend: 'csv', text: 'Exportar a EXCEL',charset: 'UTF-8'  }
+                    ],
+                    language: {
+                        "sProcessing": "Procesando...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla =(",
+                        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Buscar:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+                        "buttons": {
+                            "copy": "Copiar",
+                            "colvis": "Visibilidad",
+                            "print": "Imprimir",
+                            "csv": "Excel"
+                        }
+                    },
+                }
+            );
+        }
 
         $('#gerencia-filter').on('change', function(){
             table.search(this.value).draw();

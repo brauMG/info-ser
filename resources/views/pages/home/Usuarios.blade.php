@@ -21,14 +21,14 @@
                 <table class="table table-hover" id="table">
                     <thead>
                         <tr>
-                            <th>Clave</th>
-                            <th>Compañía</th>
-                            <th>Nombre(s)</th>
-                            <th>Correo</th>
-                            <th>Area</th>
-                            <th>Puesto</th>
-                            <th>Rol</th>
-                            <th></th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Clave</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Compañía</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Nombre(s)</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Correo</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Area</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Puesto</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Rol</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"></th>
                         </tr>
                     </thead>
                     <tbody>

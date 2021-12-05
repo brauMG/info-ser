@@ -111,9 +111,9 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
-                                            <th><i class="material-icons icons-charts-list">work</i> Trabajo</th>
-                                            <th><i class="material-icons icons-charts-list">loupe</i> Enfoque</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">work</i> Trabajo</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">loupe</i> Enfoque</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -148,8 +148,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
-                                            <th><i class="material-icons icons-charts-list">loupe</i> Enfoque</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">loupe</i> Enfoque</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -183,8 +183,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
-                                            <th><i class="material-icons icons-charts-list">work</i> Trabajo</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">work</i> Trabajo</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -219,8 +219,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
-                                            <th><i class="material-icons icons-charts-list">push_pin</i> Fases</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">push_pin</i> Fases</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -255,8 +255,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
-                                            <th><i class="material-icons icons-charts-list">plagiarism</i> Indicadores</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">plagiarism</i> Indicadores</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -291,8 +291,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
-                                            <th><i class="material-icons icons-charts-list">account_tree</i> Áreas</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">account_tree</i> Áreas</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -327,8 +327,8 @@
                                     <table class="table-bordered table-striped charts-table">
                                         <thead>
                                         <tr>
-                                            <th><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
-                                            <th><i class="material-icons icons-charts-list">theater_comedy</i> Estados</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">auto_stories</i> Proyecto</th>
+                                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer"><i class="material-icons icons-charts-list">theater_comedy</i> Estados</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -495,7 +495,7 @@
             },
             options: {
                 indexAxis: 'y',
-                responsive: true,
+
                 maintainAspectRatio: false,
                 legend: {
                     position: 'right'
@@ -572,7 +572,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
@@ -641,7 +641,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     anchor: 'center',
@@ -692,7 +692,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
@@ -743,7 +743,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
@@ -794,7 +794,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {
@@ -845,7 +845,7 @@
                 }]
             },
             options: {
-                responsive: true,
+
                 maintainAspectRatio: false,
                 plugins: {
                     datalabels: {

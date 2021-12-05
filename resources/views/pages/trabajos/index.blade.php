@@ -40,8 +40,8 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
-                                    <th>ID<i class="material-icons sort">sort</i></th>
-                                    <th>Descripción<i class="material-icons sort">sort</i></th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ID</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Descripción</th>
                                     </thead>
                                     <tbody>
                                     @foreach ($trabajo as $item)
@@ -62,7 +62,7 @@
 
     <script>
         $('.data-table').DataTable({
-                responsive: true,
+
                 paginate: false,
                 lengthMenu: [
                     [10, 25, 50, -1],

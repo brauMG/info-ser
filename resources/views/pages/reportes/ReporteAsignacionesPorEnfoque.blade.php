@@ -5,8 +5,8 @@
 @endif
 @section('title', 'Reporte de Asignaciones por Enfoque')
     <div class="row">
-        @include('Shared.sidebar') 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">           
+        @include('Shared.sidebar')
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Reporte de Asignaciones por Enfoque</h1>
             </div>
@@ -21,7 +21,7 @@
                             @endforeach
                         </select>
                     </div>
-                </div>  
+                </div>
                 <div class="col-3">
                     <div class="form-group">
                         <label>Proyecto</label>
@@ -33,7 +33,7 @@
                         </select>
                     </div>
                 </div>
-                              
+
                 <div class="col-3">
                     <div class="form-group">
                         <label class="col-12">&nbsp;</label>
@@ -41,19 +41,19 @@
                     </div>
                 </div>
             </div>
-            <div class="row"> 
+            <div class="row">
                 <div class="col-12">
                     <div class="table-responsive">
                         <table class="table table-hover" id="table">
                             <thead>
-                                <tr>                            
-                                    <th>Fases</th> 
-                                    <th>Actividad</th>
-                                    <th>Usuario</th> 
-                                    <th>Rol</th>                                 
-                                    <th>Decisión</th> 
-                                    <th>Fecha Acción</th> 
-                                    <th>Estado</th>
+                                <tr>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fases</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Actividad</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Usuario</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Rol</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Decisión</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fecha Acción</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Estado</th>
                                     <th class="text-center">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="seleccionarTodos" onclick="selectAll();">
@@ -61,16 +61,16 @@
                                         </div>
                                     </th>
                                 </tr>
-                            </thead>                    
+                            </thead>
                             <tbody>
                                 @foreach ($result as $item)
-                                    <tr>                                
+                                    <tr>
                                         <td>{{$item->Fases}}</td>
-                                        <td>{{$item->Actividad}}</td> 
+                                        <td>{{$item->Actividad}}</td>
                                         <td>{{$item->Usuario}}</td>
-                                        <td>{{$item->Clave_RASIC}}</td>      
-                                        <td>{{$item->Decision}}</td>   
-                                        <td>{{$item->FechaAccion}}</td>   
+                                        <td>{{$item->Clave_RASIC}}</td>
+                                        <td>{{$item->Decision}}</td>
+                                        <td>{{$item->FechaAccion}}</td>
                                         <td>{{$item->Status}}</td>
                                         <td class="text-center">
                                             <div class="custom-control custom-checkbox">
@@ -84,7 +84,7 @@
                         </table>
                     </div>
                 </div>
-            </div>	
+            </div>
         </main>
     </div>
     <script type="text/javascript">
@@ -96,7 +96,7 @@
             data.addColumn('number', 'cantidad');
             data.addRows([
                 /*foreach($enfoques as $item)
-                   
+
                 endforeach*/
                 ["prueba",5]
             ]);
@@ -111,15 +111,15 @@
             if (checkBox.checked == true){
                 $('.select-rolFase').prop('checked',true);
                 $('#sendEmail').fadeIn();
-            } else {  
+            } else {
                 $('.select-rolFase').prop('checked',false);
                  $('#sendEmail').fadeOut();
-            }            
+            }
         }
         function selectActividadFase($id){
             var checkBox = document.getElementById($id);
             if (checkBox.checked == true){
-                $('#sendEmail').fadeIn();                
+                $('#sendEmail').fadeIn();
                 var actividad=checkBox.attributes["id-actividad"].value;
                 var fases=checkBox.attributes["id-fase"].value;
                 var checkBoxes = document.getElementsByClassName("select-rolFase");
@@ -127,7 +127,7 @@
                     if (checkBoxes[i].attributes["id-actividad"].value == actividad && checkBoxes[i].attributes["id-fase"].value==fases){
                         checkBoxes[i].checked=true
                     }
-                }                
+                }
             }else{
                 var checked=false;
                 var actividad=checkBox.attributes["id-actividad"].value;
@@ -135,12 +135,12 @@
                 var checkBoxes = document.getElementsByClassName("select-rolFase");
                 for(var i=0; i<checkBoxes.length; i++){
                     if (checkBoxes[i].attributes["id-actividad"].value == actividad && checkBoxes[i].attributes["id-fase"].value==fases){
-                        checkBoxes[i].checked=false                        
+                        checkBoxes[i].checked=false
                     }
                     if (checkBoxes[i].checked == true){
                         checked=true
-                    }                    
-                }                
+                    }
+                }
                 if(checked==false){
                     $('#sendEmail').fadeOut();
                 }
@@ -149,26 +149,26 @@
 
         @if(Auth::user()->Clave_Rol==1)
             function companiaChange(){
-                var compania=$('#compania').val();            
+                var compania=$('#compania').val();
                 location.href="{{url('/Reportes/Proyectos')}}?Compania="+compania;
             }
-        @endif        
+        @endif
         function proyectoChange(){
             var compania='{{Auth::user()->Clave_Compania}}';
 
             var enfoque=$('#enfoque').val();
             var proyecto=$('#proyecto').val();
-            
+
             location.href="{{ url('/Reportes/Proyectos') }}?Compania="+compania+"&Enfoque="+enfoque+"&Proyecto="+proyecto;
         }
         function enfoqueChange(){
-            var compania='{{Auth::user()->Clave_Compania}}';             
+            var compania='{{Auth::user()->Clave_Compania}}';
             var Enfoque = $('#enfoque').val();
             location.href="{{ url('/Reportes/Proyectos') }}?Compania="+compania+"&Enfoque="+Enfoque;
         }
-        
+
         function sendEmail(){
-            var checkBoxes          =   document.getElementsByClassName("select-rolFase");            
+            var checkBoxes          =   document.getElementsByClassName("select-rolFase");
             var FasesActividades    =   [];
             var FaseActividad       =   [];
             var index               =   0;
@@ -184,21 +184,21 @@
                 if(checkBoxes[i].checked==true){
                         FaseActividad=
                         {
-                            Fase:       fase, 
+                            Fase:       fase,
                             Actividad:  actividad,
                             Usuarios:   []
                         };
-                    
+
 
                     if(FasesActividades.some(item=>item.Fase==fase&&item.Actividad==actividad)==false){
                         FaseActividad.Usuarios.push({Usuario:usuario});
                         index=FasesActividades.push(FaseActividad);
                         console.log("index:"+index);
-                        
+
                     }else{
                         FasesActividades[(index-1)].Usuarios.push({Usuario:usuario});
                     }
-                }               
+                }
             }
             console.log(FasesActividades);
             var error=false;
@@ -224,7 +224,7 @@
                             text: data.responseJSON.message
                         })
                     }*/
-                }).fail(function(){                    
+                }).fail(function(){
                     Swal.fire({
                         type: 'error',
                         title: 'Error',
@@ -237,12 +237,12 @@
                         text: 'Correos enviados Correctamente'
                     })
                 });
-            }            
+            }
         }
         $("#nav-ReporteEnfoque").addClass("active");
         $('#nav-ReporteEnfoque').css({"background": "#9b9634","color": "white"});
         var table=$('#table').DataTable({
-            dom: 
+            dom:
                 '<"row" <"col-4 col-md-4" > <"col-4 col-md-4 text-center" B> <"col-4 col-md-4" f>>'+
                 "<'row'<'col-12'tr>>" +
                 "<'row'<'col-3'i><'col-9 text-center'p>>",

@@ -69,6 +69,47 @@ class EtapasController extends Controller
         return view('pages.etapas.index',['gerencias' => $gerencias, 'rol' => $rol, 'etapa' => $etapa,'compania'=>$compania, 'date'=>$date, 'time'=>$time]);
     }
 
+    public function sub_index($id){
+        $rol = Auth::user()->id_rol;
+        $compania=Companias::where('id',Auth::user()->id_compania)->first();
+        $datetime = Carbon::now();
+        $datetime->setTimezone('GMT-7');
+        $date = $datetime->toDateString();
+        $time = $datetime->toTimeString();
+        if (Auth::user()->id_rol == 4) {
+            $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+        }
+        if (Auth::user()->id_rol == 7) {
+            $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+        }
+
+        if (Auth::user()->id_rol == 4) {
+            $etapa = DB::table('etapas')
+                ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+                ->leftJoin('fases', 'etapas.id_fase', '=', 'fases.id')
+                ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                ->select('gerencias.nombre as gerencia', 'etapas.id', 'proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'etapas.descripcion', 'etapas.fecha_vencimiento', 'etapas.hora_vencimiento', 'etapas.created_at as creado')
+                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->where('etapas.id_proyecto', $id)
+                ->orderBy('creado', 'asc')
+                ->get();
+        }
+        else {
+            $etapa = DB::table('etapas')
+                ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
+                ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                ->leftJoin('fases', 'etapas.id_fase', '=', 'fases.id')
+                ->select('gerencias.nombre as gerencia', 'etapas.id', 'proyectos.descripcion as proyecto', 'fases.descripcion as fase', 'etapas.descripcion', 'etapas.fecha_vencimiento', 'etapas.hora_vencimiento', 'etapas.created_at as creado')
+                ->where('etapas.id_compania', '=', Auth::user()->id_compania)
+                ->where('gerencias.id_gerente', Auth::user()->id)
+                ->where('etapas.id_proyecto', $id)
+                ->orderBy('creado', 'asc')
+                ->get();
+        }
+
+        return view('pages.proyectos.seeStage',['gerencias' => $gerencias, 'rol' => $rol, 'etapa' => $etapa,'compania'=>$compania, 'date'=>$date, 'time'=>$time, 'id_proyecto'=>$id]);
+    }
+
     public function edit($id){
         $etapa=Etapas::where('id', $id)->get()->toArray();
         $etapaId = $etapa[0]['id'];
@@ -79,7 +120,7 @@ class EtapasController extends Controller
         return view('pages.etapas.edit', compact('etapa', 'etapaId', 'company', 'etapaCompany'));
     }
 
-    public function new(){
+    public function new_stage(){
         $compania=Companias::where('id',Auth::user()->id_compania)->first();
         if (Auth::user()->id_rol == 4) {
             $proyectos= Proyecto::where('id_compania',Auth::user()->id_compania)->get();
@@ -93,6 +134,11 @@ class EtapasController extends Controller
         }
 
         return view('pages.etapas.new', compact('proyectos'));
+    }
+
+    public function new_modal($proyecto_id){
+        $id = $proyecto_id;
+        return view('pages.proyectos.addStage', compact( 'id'));
     }
 
     public function store(Request $request){

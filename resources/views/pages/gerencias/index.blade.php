@@ -41,10 +41,10 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered data-table">
                                     <thead class="text-primary thead-color">
-                                    <th>ID<i class="material-icons sort">sort</i></th>
-                                    <th>Nombre<i class="material-icons sort">sort</i></th>
-                                    <th>Gerente<i class="material-icons sort">sort</i></th>
-                                    <th>Dirección<i class="material-icons sort">sort</i></th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">ID</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Nombre</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Gerente</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Dirección</th>
                                     <th class="action-row">Acción</th>
                                     </thead>
                                     <tbody>
@@ -76,7 +76,7 @@
 
     <script>
         $('.data-table').DataTable({
-                responsive: true,
+
                 lengthMenu: [
                     [10, 25, 50, -1],
                     ['10 Filas', '25 Filas', '50 Filas', 'Mostrar todo']
