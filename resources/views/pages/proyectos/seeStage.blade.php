@@ -9,7 +9,9 @@
         <div class="card-header card-header-primary">
             <div style="display: flex; flex-wrap: wrap">
                 <div class="col-md-8">
-                    <button clave="{{$id_proyecto}}" type="button" class="btn btn-info" id="new" onclick="AddStage(this);">Agregar Etapa <i class="material-icons">add_circle_outline</i></button>
+                    @if($estado == 1)
+                        <button clave="{{$id_proyecto}}" type="button" class="btn btn-info" id="new" onclick="AddStage(this);">Agregar Etapa <i class="material-icons">add_circle_outline</i></button>
+                    @endif
                 </div>
             </div>
         </div>

@@ -51,7 +51,7 @@
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Actividad</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Usuario</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Rol</th>
-                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Decisión</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Seguimiento</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fecha Acción</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Estado</th>
                                     <th class="text-center">

@@ -428,6 +428,7 @@ class ActividadesController extends Controller
                 ->where('actividades.id_compania', '=', Auth::user()->id_compania)
                 ->join('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
                 ->join('gerencias', 'proyectos.id_gerencia', 'gerencias.id')
+                ->join('usuarios as gerentes', 'gerencias.id_gerente', '=', 'gerentes.id')
                 ->where(function ($query) use ($gerencias, $request) {
                     if ($gerencias != null) {
                         $query->whereIn('proyectos.id_gerencia', $gerencias);
@@ -477,7 +478,7 @@ class ActividadesController extends Controller
                         $query->whereIn('actividades.estado', $estados);
                     }
                 })
-                ->select('actividades.*', 'etapas.descripcion as etapa', 'companias.descripcion as compania', 'fases.descripcion as fase', 'usuarios.nombres as usuario', 'proyectos.descripcion as proyecto', 'gerencias.nombre as gerencia', 'direcciones.nombre as direccion')
+                ->select('actividades.*', 'etapas.descripcion as etapa', 'companias.descripcion as compania', 'fases.descripcion as fase', 'usuarios.nombres as usuario', 'gerentes.nombres as gerente','proyectos.descripcion as proyecto', 'gerencias.nombre as gerencia', 'direcciones.nombre as direccion')
                 ->get();
 
         $pdf = PDF::loadView('pdf.activities', compact('actividades', 'date', 'time'));

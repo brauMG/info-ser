@@ -10,8 +10,10 @@
             <div style="display: flex; flex-wrap: wrap">
                 <div class="col-md-8">
                     <form action="{{route('NewProjectUser')}}">
-                        <input type="hidden" name="proyecto" id="proyecto" value="{{$id_proyecto}}">
-                        <button type="submit" class="btn btn-info"><i class="material-icons">check</i>Agregar Usuario a Proyecto <i class="material-icons">add_circle_outline</i></button>
+                        @if($estado == 1)
+                            <input type="hidden" name="proyecto" id="proyecto" value="{{$id_proyecto}}">
+                            <button type="submit" class="btn btn-info"><i class="material-icons">check</i>Agregar Usuario a Proyecto <i class="material-icons">add_circle_outline</i></button>
+                        @endif
                     </form>
                 </div>
             </div>

@@ -72,6 +72,8 @@ class RolesProyectosController extends Controller
     }
 
     public function sub_index($id){
+        $estado = DB::table('proyectos')->leftJoin('estado', 'proyectos.id_estado', '=', 'estado.id')->where('proyectos.id', $id)->select('estado.activo')->get();
+        $estado = $estado[0]->activo;
         $rol = Auth::user()->id_rol;
         if (Auth::user()->id_rol == 4) {
             $gerencias = Gerencia::all();
@@ -110,7 +112,7 @@ class RolesProyectosController extends Controller
                 ->get();
         }
 
-        return view('pages.proyectos.seeRole',['gerencias' => $gerencias,'rol' => $rol,'rolPROYECTO' => $rolPROYECTO,'compania' => $compania,'id_proyecto' => $id]);
+        return view('pages.proyectos.seeRole',['gerencias' => $gerencias,'rol' => $rol,'rolPROYECTO' => $rolPROYECTO,'compania' => $compania,'id_proyecto' => $id, 'estado' => $estado]);
     }
 
     public function editStatus($id) {

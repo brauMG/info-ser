@@ -55,7 +55,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Decisión</label>
+                                        <label>Seguimiento</label>
                                         <input type="text"
                                                class="form-control @error('decision') is-invalid @enderror"
                                                name="decision" value="{{ old('decision') }}" required

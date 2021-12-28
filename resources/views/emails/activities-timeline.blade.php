@@ -78,7 +78,7 @@
                     <tr>
                         <th scope="col" style="text-transform: uppercase">Actividad</th>
                         <th scope="col" style="text-transform: uppercase">Proyecto</th>
-                        <th scope="col" style="text-transform: uppercase">Decisión</th>
+                        <th scope="col" style="text-transform: uppercase">Seguimiento</th>
                         <th scope="col" style="text-transform: uppercase">Fecha de Vencimiento</th>
                         <th scope="col" style="text-transform: uppercase">Hora de Vencimiento</th>
                     </tr>

@@ -12,10 +12,12 @@
             <th scope="col" style="text-transform: uppercase">Proyecto</th>
             <th scope="col" style="text-transform: uppercase">Direccion</th>
             <th scope="col" style="text-transform: uppercase">Gerencia</th>
+            <th scope="col" style="text-transform: uppercase">Gerente</th>
+            <th scope="col" style="text-transform: uppercase">Usuario</th>
             <th scope="col" style="text-transform: uppercase">Fase</th>
             <th scope="col" style="text-transform: uppercase">Etapa</th>
             <th scope="col" style="text-transform: uppercase">Descripción</th>
-            <th scope="col" style="text-transform: uppercase">Decisión</th>
+            <th scope="col" style="text-transform: uppercase">Seguimiento</th>
             <th scope="col" style="text-transform: uppercase">Fecha de Creación</th>
         </tr>
         </thead>
@@ -25,6 +27,8 @@
                 <td class="td td-center" style="font-size: 0.5em !important;">{{$item->proyecto}}</td>
                 <td class="td td-center" style="font-size: 0.5em !important;">{{$item->direccion}}</td>
                 <td class="td td-center" style="font-size: 0.5em !important;">{{$item->gerencia}}</td>
+                <td class="td td-center" style="font-size: 0.5em !important;">{{$item->gerente}}</td>
+                <td class="td td-center" style="font-size: 0.5em !important;">{{$item->usuario}}</td>
                 <td class="td td-center" style="font-size: 0.5em !important;">{{$item->fase}}</td>
                 <td class="td td-center" style="font-size: 0.5em !important;">{{$item->etapa}}</td>
                 <td class="td td-center" style="font-size: 0.5em !important;">{{$item->descricion}}</td>

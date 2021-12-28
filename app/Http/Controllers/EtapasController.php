@@ -70,6 +70,8 @@ class EtapasController extends Controller
     }
 
     public function sub_index($id){
+        $estado = DB::table('proyectos')->leftJoin('estado', 'proyectos.id_estado', '=', 'estado.id')->where('proyectos.id', $id)->select('estado.activo')->get();
+        $estado = $estado[0]->activo;
         $rol = Auth::user()->id_rol;
         $compania=Companias::where('id',Auth::user()->id_compania)->first();
         $datetime = Carbon::now();
@@ -107,7 +109,7 @@ class EtapasController extends Controller
                 ->get();
         }
 
-        return view('pages.proyectos.seeStage',['gerencias' => $gerencias, 'rol' => $rol, 'etapa' => $etapa,'compania'=>$compania, 'date'=>$date, 'time'=>$time, 'id_proyecto'=>$id]);
+        return view('pages.proyectos.seeStage',['gerencias' => $gerencias, 'rol' => $rol, 'etapa' => $etapa,'compania'=>$compania, 'date'=>$date, 'time'=>$time, 'id_proyecto'=>$id, 'estado' => $estado]);
     }
 
     public function edit($id){
