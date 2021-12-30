@@ -229,8 +229,9 @@ class ActividadesController extends Controller
         $compania=Companias::where('id',Auth::user()->id_compania)->first();
         $companiaId=Auth::user()->id_compania;
         $usuarioId=Auth::user()->id;
+        $proyectoName = Proyecto::find($proyectoID);
 
-        return view('pages.actividades.new',compact('etapa','proyectoID', 'companiaId', 'usuarioId', 'compania'));
+        return view('pages.actividades.new',compact('etapa','proyectoID', 'companiaId', 'usuarioId', 'compania', 'proyectoName'));
     }
 
     public function store(Request $request){
