@@ -33,7 +33,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Selecciona la etapa</h4>
+                            <h4 class="card-title ">Proyecto {{$proyectoName->descripcion}} - Seleccionar la etapa</h4>
                         </div>
                         <div class="card-body">
                             <form action="{{route('NewActivity', $proyectoID)}}">

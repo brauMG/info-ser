@@ -33,7 +33,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h4 class="card-title ">Proyecto {{$proyectoName->nombre}} - Registrar Nueva Actividad</h4>
+                            <h4 class="card-title ">Proyecto {{$proyectoName->descripcion}} - Registrar nueva actividad</h4>
                         </div>
                         <div class="card-body">
                         <form method="POST" action="{{route('CreateActivity')}}" enctype="multipart/form-data">
