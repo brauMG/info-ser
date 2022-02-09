@@ -258,7 +258,7 @@ class ActividadesController extends Controller
         $datetime = Carbon::now();
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
-        $etapas = Etapas::where('id_proyecto', $actividad->id_proyecto)->where('fecha_vencimiento', '>', $date)->get();
+        $etapas = Etapas::where('id_proyecto', $actividad->id_proyecto)->where('fecha_vencimiento', '>', $date)->orWhere('id', $actividad->id_etapa)->get();
         return view('pages.proyectos.editActivity',compact('actividad', 'etapas', 'id'));
     }
 
