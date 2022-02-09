@@ -171,6 +171,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Actividades
     Route::get('/actividades', 'App\Http\Controllers\ActividadesController@index');
+    Route::get('/actividades/get/{id}', 'App\Http\Controllers\ActividadesController@sub_index');
+    Route::get('/actividades/sub_edit/{id}', 'App\Http\Controllers\ActividadesController@sub_edit');
+    Route::put('/actividades/sub_update/{id}','App\Http\Controllers\ActividadesController@sub_update')->name('UpdateActivity');
     Route::get('/actividades/type/{id}', 'App\Http\Controllers\ActividadesController@type')->name('TypeActivity');
     Route::get('/actividades/new/{proyectoID}', 'App\Http\Controllers\ActividadesController@new')->name('NewActivity');
     Route::get('/actividades/edit/{id}', 'App\Http\Controllers\ActividadesController@edit');

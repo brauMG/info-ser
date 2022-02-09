@@ -136,12 +136,162 @@ class ActividadesController extends Controller
         }
     }
 
+    public function sub_index($id)
+    {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7 || Auth::user()->id_rol == 6) {
+            $rol = Auth::user()->id_rol;
+            $companyId = Auth::user()->id_compania;
+            $datetime = Carbon::now();
+            $datetime->setTimezone('GMT-7');
+            $date = $datetime->toDateString();
+            $time = $datetime->toTimeString();
+            if (Auth::user()->id_rol == 4) {
+                $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
+            }
+            if (Auth::user()->id_rol == 7) {
+                $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
+            }
+            if (Auth::user()->id_rol == 6) {
+                $gerencias = DB::table('gerencias')
+                    ->join('direcciones', 'gerencias.id_direccion', 'direcciones.id')
+                    ->where('direcciones.id_director', Auth::user()->id)
+                    ->select('gerencias.*')
+                    ->get();
+            }
+
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+            if (Auth::user()->id_rol == 4) {
+                $actividad = DB::table('actividades')
+                    ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+                    ->leftJoin('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
+                    ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                    ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+                    ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+                    ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+                    ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado', 'actividades.evidence_url as evidence')
+                    ->where('actividades.id_compania', '=', $companyId)
+                    ->where('actividades.id_proyecto', $id)
+                    ->get();
+            }
+            if (Auth::user()->id_rol ==6) {
+                $actividad = DB::table('actividades')
+                    ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+                    ->leftJoin('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
+                    ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                    ->leftJoin('direcciones', 'gerencias.id_direccion', 'direcciones.id')
+                    ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+                    ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+                    ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+                    ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado', 'actividades.evidence_url as evidence')
+                    ->where('actividades.id_compania', '=', $companyId)
+                    ->where('direcciones.id_director', Auth::user()->id)
+                    ->where('actividades.id_proyecto', $id)
+                    ->get();
+            }
+            if (Auth::user()->id_rol == 7) {
+                $actividad = DB::table('actividades')
+                    ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+                    ->leftJoin('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
+                    ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                    ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+                    ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+                    ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+                    ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado', 'actividades.evidence_url as evidence')
+                    ->where('actividades.id_compania', '=', $companyId)
+                    ->where('gerencias.id_gerente', Auth::user()->id)
+                    ->where('actividades.id_proyecto', $id)
+                    ->get();
+            }
+            if (Auth::user()->id_rol == 3) {
+                $actividad = DB::table('actividades')
+                    ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+                    ->leftJoin('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
+                    ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                    ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+                    ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+                    ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+                    ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado')
+                    ->where('actividades.id_compania', '=', $companyId)
+                    ->where('gerencias.id_gerente', Auth::user()->id)
+                    ->where('actividades.id_proyecto', $id)
+                    ->get();
+            }
+
+            return view('pages.proyectos.seeActivities', ['gerencias'=>$gerencias,'actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol, 'id_proyecto' =>  $id]);
+        }
+
+        if (Auth::user()->id_rol == 3) {
+            $rol = Auth::user()->id_rol;
+            $companyId = Auth::user()->id_compania;
+            $datetime = Carbon::now();
+            $datetime->setTimezone('GMT-7');
+            $date = $datetime->toDateString();
+            $time = $datetime->toTimeString();
+            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+
+            $actividad = DB::table('actividades')
+                ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+                ->leftJoin('roles_proyectos', 'actividades.id_proyecto', '=', 'roles_proyectos.id_proyecto')
+                ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
+                ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+                ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+                ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+                ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+                ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado')
+                ->where('actividades.id_compania', '=', $companyId)
+                ->where('roles_proyectos.id_usuario', Auth::user()->id)
+                ->get();
+            return view('pages.actividades.index', ['actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol]);
+        }
+    }
+
     public function edit($id){
         $actividad=Actividad::where('id', $id)->get()->toArray();
         $proyectos=Proyecto::where('id_compania', Auth::user()->id_compania)->get();
         $fases=Fase::all();
         $status=Status::all();
         return view('pages.actividades.edit',compact('actividad','proyectos','fases', 'status'));
+    }
+
+    public function sub_edit($id){
+        $actividad=Actividad::where('id', $id)->first();
+        $datetime = Carbon::now();
+        $datetime->setTimezone('GMT-7');
+        $date = $datetime->toDateString();
+        $etapas = Etapas::where('id_proyecto', $actividad->id_proyecto)->where('fecha_vencimiento', '>', $date)->get();
+        return view('pages.proyectos.editActivity',compact('actividad', 'etapas', 'id'));
+    }
+
+    public function sub_update(Request $request, $id){
+        $descripcion = $request->input('descripcion');
+        $decision = $request->input('decision');
+        $etapa = $request->input('etapa');
+
+        $evidencia = $request->file('file');
+        if ($evidencia != null) {
+            if (isset($evidencia)) {
+                $new_name = rand() . '.' . $evidencia->getClientOriginalExtension();
+                $evidencia->move(public_path('evidence'), $new_name);
+            } else {
+                $new_name = null;
+            }
+
+            Actividad::where('id', $id)->update([
+                'descricion' => $descripcion,
+                'decision' => $decision,
+                'id_etapa' => $etapa,
+                'evidence_url' => $new_name,
+            ]);
+        }
+        else {
+            Actividad::where('id', $id)->update([
+                'descricion' => $descripcion,
+                'decision' => $decision,
+                'id_etapa' => $etapa,
+            ]);
+        }
+
+        return redirect('/proyectos')->with('mensaje', "El estado de la actividad fue actualizado correctamente");
     }
 
     public function editStatus($id) {

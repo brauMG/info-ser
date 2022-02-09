@@ -77,6 +77,9 @@
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Hora de Revisión</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fecha de Vencimiento</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Hora de Vencimiento</th>
+                                    @if($rol == 4 || $rol == 7)
+                                        <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Acciones</th>
+                                    @endif
                                     </thead>
                                     <tbody>
                                     @foreach ($actividad as $item)
@@ -109,11 +112,11 @@
                                             </td>
                                         @elseif($item->estado == 1)
                                             <td style="text-align: center">
-                                                <a class="btn btn-sm btn-success text-white" data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="material-icons">check_circle</i> Aprobada</a>
+                                                <a class="btn btn-sm btn-success text-white" @if($rol == 4) clave="{{$item->id}}" onclick="changeEstado(this);" @endif data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="material-icons">check_circle</i> Aprobada</a>
                                             </td>
                                         @elseif($item->estado == 2)
                                             <td style="text-align: center">
-                                                <a class="btn btn-sm btn-danger text-white" data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="material-icons">dangerous</i> Desaprobada</a>
+                                                <a class="btn btn-sm btn-danger text-white" @if($rol == 4) clave="{{$item->id}}" onclick="changeEstado(this);" @endif data-toggle="tooltip" data-placement="top" title="Esta actividad ya fue revisada"><i class="material-icons">dangerous</i> Desaprobada</a>
                                             </td>
                                         @endif
                                         @if($item->fecha_revision == null)
@@ -169,6 +172,13 @@
                                                 <a class="btn btn-sm btn-danger text-white"><i class="material-icons">hourglass_bottom</i> Vencio a las: {{$item->hora_vencimiento}}</a>
                                             </td>
                                         @endif
+                                            @if($rol === 4 || $rol === 7)
+                                                <td class="action-row" style="font-size: 12px">
+                                                    <button clave="{{$item->id}}" onclick="editActivity(this);" type="button" rel="tooltip" class="btn btn-sm btn-warning btn-adjust">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -290,6 +300,15 @@
             var clave = $(button).attr('clave');
             $('#myModal').load( '{{ url('/actividades/ChangeStatus') }}/'+clave,function(response, status, xhr){
                 if ( status == "success" ) {
+                    $('#myModal').modal('show');
+                }
+            } );
+        }
+
+        function editActivity(button){
+            var clave = $(button).attr('clave');
+            $('#myModal').load( '{{ url('/actividades/sub_edit') }}/'+clave,function(response, status, xhr){
+                if ( status === "success" ) {
                     $('#myModal').modal('show');
                 }
             } );

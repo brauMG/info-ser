@@ -90,7 +90,7 @@
                                                     <button type="button" class="btn btn-sm btn-warning" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeEstado(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->estado}}</button>
                                                 </td>
                                                 <td style="text-align: center">
-                                                    <a class="btn btn-sm btn-secondary" href="{{route('TypeActivity', $item->id)}}"><i class="material-icons">edit</i> Registrar Actividad</a>
+                                                    <button type="button" class="btn btn-sm btn-secondary" clave="{{$item->id}}" onclick="seeActividades(this);" style="cursor: pointer"><i class="material-icons">edit</i> Registrar Actividad</button>
                                                 </td>
                                                 <td style="text-align: center">
                                                     <button type="button" class="btn btn-sm btn-success" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeFase(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->fase}}</button>
@@ -288,6 +288,15 @@
         function seeEtapas(button){
             var clave = $(button).attr('clave');
             $('#myModal').load( '{{ url('/etapas/get/') }}/'+clave,function(response, status, xhr){
+                if ( status === "success" ) {
+                    $('#myModal').modal('show');
+                }
+            } );
+        }
+
+        function seeActividades(button){
+            var clave = $(button).attr('clave');
+            $('#myModal').load( '<?php echo e(url('/actividades/get/')); ?>/'+clave,function(response, status, xhr){
                 if ( status === "success" ) {
                     $('#myModal').modal('show');
                 }
