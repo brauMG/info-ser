@@ -164,6 +164,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/proyectos/UpdateStage/{id}','App\Http\Controllers\ProyectosController@updateStage')->name('UpdateStage');
     Route::put('/proyectos/UpdateStatus/{id}','App\Http\Controllers\ProyectosController@updateStatus')->name('UpdateStatus');
     Route::get('/proyectos/area-users', 'App\Http\Controllers\ProyectosController@getUsers');
+    Route::get('/proyectos/delete/{id}', 'App\Http\Controllers\ProyectosController@delete');
+    Route::post('/proyectos/confirm_delete/{id}', 'App\Http\Controllers\ProyectosController@confirm_delete')->name('DeleteProject');;
+    Route::get('/proyectos/edit/{id}', 'App\Http\Controllers\ProyectosController@edit_project');
+    Route::put('/proyectos/update/{id}', 'App\Http\Controllers\ProyectosController@update_project')->name('UpdateProject');
     //PDF
     Route::get('/proyectos/prepare','App\Http\Controllers\ProyectosController@preparePdf')->name('FiltersProjects');
     Route::post('/proyectos/PDF','App\Http\Controllers\ProyectosController@exportPdf')->name('ProjectsPDF');

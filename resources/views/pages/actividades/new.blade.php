@@ -45,7 +45,7 @@
                                 <input type="hidden" name="etapa" value="{{$etapa}}">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Descripcion</label>
+                                        <label>¿Qué se hizo?</label>
                                         <input type="text"
                                             class="form-control @error('descripcion') is-invalid @enderror"
                                             name="descripcion" value="{{ old('descripcion') }}" required
@@ -55,7 +55,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Seguimiento</label>
+                                        <label>Pendiente por Hacer</label>
                                         <input type="text"
                                                class="form-control @error('decision') is-invalid @enderror"
                                                name="decision" value="{{ old('decision') }}" required

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actividad;
+use App\Models\RolProyecto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -119,6 +121,8 @@ class UsuariosController extends Controller
     public function delete($id){
         $user = User::find($id);
         $user->delete();
+        Actividad::where('id_usuario', $id)->delete();
+        RolProyecto::where('id_usuario', $id)->delete();
         return redirect('/usuarios')->with('mensajeAlert', "Usuario eliminado correctamente");
     }
     public function update(Request $request, $id){

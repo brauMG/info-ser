@@ -65,7 +65,7 @@
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Objetivo</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Criterio de Exito</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Estado</th>
-                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Registro de Actividades</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Ver Actividades</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fase</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Etapas</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Roles</th>
@@ -76,6 +76,7 @@
                                         <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Gerencia</th>
                                     @endif
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Área</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Acciones</th>
 
                                     </thead>
                                     <tbody>
@@ -90,7 +91,7 @@
                                                     <button type="button" class="btn btn-sm btn-warning" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeEstado(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->estado}}</button>
                                                 </td>
                                                 <td style="text-align: center">
-                                                    <button type="button" class="btn btn-sm btn-secondary" clave="{{$item->id}}" onclick="seeActividades(this);" style="cursor: pointer"><i class="material-icons">edit</i> Registrar Actividad</button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" clave="{{$item->id}}" onclick="seeActividades(this);" style="cursor: pointer"><i class="material-icons">edit</i> Ver Actividades</button>
                                                 </td>
                                                 <td style="text-align: center">
                                                     <button type="button" class="btn btn-sm btn-success" @if($rol == 4 || $rol == 7) clave="{{$item->id}}" onclick="changeFase(this);" @endif style="cursor: pointer"><i class="material-icons">edit</i> {{$item->fase}}</button>
@@ -150,6 +151,16 @@
                                                 @endif
                                                 <td>{{$item->area}}</td>
                                         @endif
+                                            @if($rol === 4 || $rol === 7)
+                                                <td class="action-row" style="font-size: 12px">
+                                                    <button clave="{{$item->id}}" onclick="editProject(this);" type="button" rel="tooltip" class="btn btn-sm btn-warning btn-adjust">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                    <button clave="{{$item->id}}" onclick="deleteProject(this);" type="button" rel="tooltip" class="btn btn-sm btn-danger btn-adjust">
+                                                        <i class="material-icons">delete</i>
+                                                    </button>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -320,6 +331,24 @@
                 }
             } );
             }
+
+        function editProject(button){
+            var clave = $(button).attr('clave');
+            $('#myModal').load( '{{ url('/proyectos/edit') }}/'+clave,function(response, status, xhr){
+                if ( status === "success" ) {
+                    $('#myModal').modal('show');
+                }
+            } );
+        }
+
+        function deleteProject(button){
+            var clave = $(button).attr('clave');
+            $('#myModal').load( '{{ url('/proyectos/delete') }}/'+clave,function(response, status, xhr){
+                if ( status === "success" ) {
+                    $('#myModal').modal('show');
+                }
+            } );
+        }
 
     </script>
 @endsection

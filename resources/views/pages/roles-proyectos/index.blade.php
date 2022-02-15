@@ -89,7 +89,7 @@
                                             </td>
                                         @else
                                             <td style="text-align: center">
-                                                <a class="btn btn-sm btn-danger text-white" clave="{{$item->id}}" onclick="changeEstado(this);" data-toggle="tooltip" data-placement="top" title="Este usuario no puede registrar actividades"><i class="material-icons">edit</i> Inactivo</a>
+                                                <a class="btn btn-sm btn-danger text-white" clave="{{$item->id}}" onclick="changeEstado(this);" data-toggle="tooltip" data-placement="top" title="Este usuario no puede Ver Actividadeses"><i class="material-icons">edit</i> Inactivo</a>
                                             </td>
                                         @endif
                                         </tr>

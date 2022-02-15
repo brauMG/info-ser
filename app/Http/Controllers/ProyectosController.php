@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Direccion;
 use App\Models\Gerencia;
+use App\Models\Rol;
+use App\Models\RolProyecto;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
@@ -111,16 +113,56 @@ class ProyectosController extends Controller
         }
     }
 
+    public function edit_project($id){
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7) {
+            $proyecto= Proyecto::find($id);
+            $areas =Areas::where('id_companias', '=', Auth::user()->id_compania)->get();
+            $gerencia_actual = Gerencia::find($proyecto->id_gerencia);
+            $gerencias =Gerencia::where('id_direccion', '=', $gerencia_actual->id_direccion)->get();
+            $fases=Fase::all();
+            $enfoques=Enfoques::all();
+            $trabajos=Trabajo::all();
+            $indicadores=Indicador::all();
+            return view('pages.proyectos.editProject', ['proyecto'=>$proyecto,'gerencias'=>$gerencias,'areas'=>$areas,'fases'=>$fases,'enfoques'=>$enfoques,'trabajos'=>$trabajos,'indicadores'=>$indicadores, 'id' => $id]);
+        }
+    }
+
+    public function update_project(Request $request, $id){
+        $nombre = $request->input('nombre');
+        $objetivo = $request->input('objetivo');
+        $criterio = $request->input('criterio');
+        $gerencia = $request->input('gerencia');
+        $area = $request->input('area');
+        $fase = $request->input('fase');
+        $enfoque = $request->input('enfoque');
+        $trabajo = $request->input('trabajo');
+        $indicador = $request->input('indicador');
+
+        Proyecto::where('id', $id)->update([
+            'descripcion' => $nombre,
+            'objetivo' => $objetivo,
+            'criterio' => $criterio,
+            'id_gerencia' => $gerencia,
+            'id_area' => $area,
+            'id_fase' => $fase,
+            'id_enfoque' => $enfoque,
+            'id_trabajo' => $trabajo,
+            'id_indicador' => $indicador,
+        ]);
+
+        return redirect('/proyectos')->with('mensaje', "El estado del proyecto fue actualizado correctamente");
+	}
+
     public function edit($id){
-		if(Auth::user()->id_rol==4){
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7) {
 			$proyecto= Proyecto::find($id);
 			$compania=Companias::where('id', '=', Auth::user()->id_compania)->get();
-			$area=Areas::where('id_companias', '=', Auth::user()->id_compania)->get();
-			$fase=Fase::all();
-			$enfoque=Enfoques::all();
-			$trabajo=Trabajo::all();
-			$indicador=Indicador::all();
-    		return view('pages.proyectos.edit', ['proyecto'=>$proyecto,'companias'=>$compania,'areas'=>$area,'fases'=>$fase,'enfoques'=>$enfoque,'trabajos'=>$trabajo,'indicadores'=>$indicador]);
+			$areas=Areas::where('id_companias', '=', Auth::user()->id_compania)->get();
+			$fases=Fase::all();
+			$enfoques=Enfoques::all();
+			$trabajos=Trabajo::all();
+			$indicadores=Indicador::all();
+    		return view('pages.proyectos.edit', ['proyecto'=>$proyecto,'companias'=>$compania,'areas'=>$areas,'fases'=>$fases,'enfoques'=>$enfoques,'trabajos'=>$trabajos,'indicadores'=>$indicadores]);
 		}
 		else{
 			return redirect('/');
@@ -180,11 +222,24 @@ class ProyectosController extends Controller
         ]);
         return redirect('/proyectos')->with('mensaje', "Nuevo proyecto agregado correctamente");
     }
+
     public function delete($id){
-    	$proyecto = Proyecto::find($id);
-    	$proyecto->delete();
-        return redirect('/proyectos')->with('mensajeAlert', "Proyecto eliminado correctamente");
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7) {
+            return view('pages.proyectos.deleteProject', ['id' => $id]);
+        }
     }
+
+    public function confirm_delete($id){
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7) {
+            $proyecto = Proyecto::find($id);
+            $proyecto->delete();
+            Actividad::where('id_proyecto', $id)->delete();
+            RolProyecto::where('id_proyecto', $id)->delete();
+            Etapas::where('id_proyecto', $id)->delete();
+            return redirect('/proyectos')->with('mensaje', "El proyecto fue eliminado.");
+        }
+    }
+
     public function update(Request $request){
     	$proyecto = Proyecto::find($request->id);
     	$proyecto->id_compania = Auth::user()->id_compania;
@@ -200,6 +255,7 @@ class ProyectosController extends Controller
 		$proyecto->save();
 		return response()->json(['proyecto'=>$proyecto]);
     }
+
     public function ProyectByCompany($company){
     	$projects = Proyecto::where('id_compania',$company)
         ->get();
