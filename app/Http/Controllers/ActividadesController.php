@@ -323,43 +323,43 @@ class ActividadesController extends Controller
         $actity = $actity[0];
 
         // DATOS DEL CORREO
-//        $user = Auth::user()->nombres;
-//        $activityName = $actity['descricion'];
-//        $date = $actity['fecha_vencimiento'];
-//        $time = $actity['hora_revision'];
-//        $status = $actity['estado'];
-//        $project = Proyecto::where('id', $actity['id_proyecto'])->get();
-//        $projectId = $project[0]->id;
-//        $project = $project[0]->descripcion;
-//        $phase = Fase::where('id', $actity['id_fase'])->get();
-//        $phase = $phase[0]->descripcion;
-//        $stage = Etapas::where('id', $actity['id_etapa'])->get();
-//        $stage = $stage[0]->descripcion;
+        $user = Auth::user()->nombres;
+        $activityName = $actity['descricion'];
+        $date = $actity['fecha_vencimiento'];
+        $time = $actity['hora_revision'];
+        $status = $actity['estado'];
+        $project = Proyecto::where('id', $actity['id_proyecto'])->get();
+        $projectId = $project[0]->id;
+        $project = $project[0]->descripcion;
+        $phase = Fase::where('id', $actity['id_fase'])->get();
+        $phase = $phase[0]->descripcion;
+        $stage = Etapas::where('id', $actity['id_etapa'])->get();
+        $stage = $stage[0]->descripcion;
 
         //A QUIEN DIRIGIR EL CORREO
-//        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
-//        $emailsAdmins = $emailsAdmins->pluck('email');
-//        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
-//        $emailsPMOs = $emailsPMOs->pluck('email');
-//        $emailsUsers = DB::table('usuarios')
-//            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
-//            ->select('usuarios.email')
-//            ->where('roles_proyectos.id_proyectos', $projectId)
-//            ->where('usuarios.envio_de_correo', 1)
-//            ->where('usuarios.id_rol', 3)
-//            ->get();
-//        $emailsUsers = $emailsUsers->pluck('email');
+        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+        $emailsAdmins = $emailsAdmins->pluck('email');
+        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+        $emailsPMOs = $emailsPMOs->pluck('email');
+        $emailsUsers = DB::table('usuarios')
+            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+            ->select('usuarios.email')
+            ->where('roles_proyectos.id_proyectos', $projectId)
+            ->where('usuarios.envio_de_correo', 1)
+            ->where('usuarios.id_rol', 3)
+            ->get();
+        $emailsUsers = $emailsUsers->pluck('email');
 
         //ENVIO DE CORREOS
-//        foreach ($emailsAdmins as $email){
-//            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
-//        }
-//        foreach ($emailsPMOs as $email){
-//            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
-//        }
-//        foreach ($emailsUsers as $email){
-//            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
-//        }
+        foreach ($emailsAdmins as $email){
+            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
+        }
+        foreach ($emailsPMOs as $email){
+            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
+        }
+        foreach ($emailsUsers as $email){
+            Mail::to($email)->queue(new AdviceActivityStatus($user, $activityName, $date, $time, $status, $project, $phase, $stage));
+        }
 
         return redirect('/actividades')->with('mensaje', "El estado de la revisión fue actualizado correctamente");
     }
@@ -427,45 +427,45 @@ class ActividadesController extends Controller
         ]);
 
         // DATOS DEL CORREO
-//        $user = Auth::user()->nombres;
-//        $area = Auth::user()->id_area;
-//        $area = Areas::where('id', $area)->get();
-//        $InArea = $area[0]->descripcion;
-//        $activityName = $actity->descricion;
-//        $date = $actity->fecha_vencimiento;
-//        $time = $actity->hora_vencimiento;
-//        $project = Proyecto::where('id', $actity->id_proyecto)->get();
-//        $projectId = $project[0]->id;
-//        $project = $project[0]->descripcion;
-//        $phase = Fase::where('id', $actity->id_fase)->get();
-//        $phase = $phase[0]->descripcion;
-//        $stage = Etapas::where('id', $actity->id_etapa)->get();
-//        $stage = $stage[0]->descripcion;
+        $user = Auth::user()->nombres;
+        $area = Auth::user()->id_area;
+        $area = Areas::where('id', $area)->get();
+        $InArea = $area[0]->descripcion;
+        $activityName = $actity->descricion;
+        $date = $actity->fecha_vencimiento;
+        $time = $actity->hora_vencimiento;
+        $project = Proyecto::where('id', $actity->id_proyecto)->get();
+        $projectId = $project[0]->id;
+        $project = $project[0]->descripcion;
+        $phase = Fase::where('id', $actity->id_fase)->get();
+        $phase = $phase[0]->descripcion;
+        $stage = Etapas::where('id', $actity->id_etapa)->get();
+        $stage = $stage[0]->descripcion;
 
         //A QUIEN DIRIGIR EL CORREO
-//        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
-//        $emailsAdmins = $emailsAdmins->pluck('email');
-//        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
-//        $emailsPMOs = $emailsPMOs->pluck('email');
-//        $emailsUsers = DB::table('usuarios')
-//            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
-//            ->select('usuarios.email')
-//            ->where('roles_proyectos.id_proyecto', $projectId)
-//            ->where('usuarios.envio_de_correo', 1)
-//            ->where('usuarios.id_rol', 3)
-//            ->get();
-//        $emailsUsers = $emailsUsers->pluck('email');
+        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+        $emailsAdmins = $emailsAdmins->pluck('email');
+        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+        $emailsPMOs = $emailsPMOs->pluck('email');
+        $emailsUsers = DB::table('usuarios')
+            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+            ->select('usuarios.email')
+            ->where('roles_proyectos.id_proyecto', $projectId)
+            ->where('usuarios.envio_de_correo', 1)
+            ->where('usuarios.id_rol', 3)
+            ->get();
+        $emailsUsers = $emailsUsers->pluck('email');
 
         //ENVIO DE CORREOS
-//        foreach ($emailsAdmins as $email){
-//            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
-//        }
-//        foreach ($emailsPMOs as $email){
-//            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
-//        }
-//        foreach ($emailsUsers as $email){
-//            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
-//        }
+        foreach ($emailsAdmins as $email){
+            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
+        }
+        foreach ($emailsPMOs as $email){
+            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
+        }
+        foreach ($emailsUsers as $email){
+            Mail::to($email)->queue(new AdviceActivity($user, $InArea, $activityName, $date, $time, $project, $phase, $stage));
+        }
 
         return redirect('/actividades')->with('mensaje', "Nueva actividad agregada correctamente");
     }

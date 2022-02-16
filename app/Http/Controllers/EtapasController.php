@@ -176,30 +176,30 @@ class EtapasController extends Controller
         $projectId = $project[0]->id;
         $project = $project[0]->descripcion;
 
-        //A QUIEN DIRIGIR EL CORREO
-//        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
-//        $emailsAdmins = $emailsAdmins->pluck('email');
-//        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
-//        $emailsPMOs = $emailsPMOs->pluck('email');
-//        $emailsUsers = DB::table('usuarios')
-//            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
-//            ->select('usuarios.email')
-//            ->where('roles_proyectos.id_proyecto', $projectId)
-//            ->where('usuarios.envio_de_correo', 1)
-//            ->where('usuarios.id_rol', 3)
-//            ->get();
-//        $emailsUsers = $emailsUsers->pluck('email');
+//        A QUIEN DIRIGIR EL CORREO
+        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+        $emailsAdmins = $emailsAdmins->pluck('email');
+        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+        $emailsPMOs = $emailsPMOs->pluck('email');
+        $emailsUsers = DB::table('usuarios')
+            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+            ->select('usuarios.email')
+            ->where('roles_proyectos.id_proyecto', $projectId)
+            ->where('usuarios.envio_de_correo', 1)
+            ->where('usuarios.id_rol', 3)
+            ->get();
+        $emailsUsers = $emailsUsers->pluck('email');
 
-        //ENVIO DE CORREOS
-//        foreach ($emailsAdmins as $email){
-//            Mail::to($email)->queue(new AdviceStage($user, $date, $time, $project, $stageName));
-//        }
-//        foreach ($emailsPMOs as $email){
-//            Mail::to($email)->queue(new AdviceStage($user, $date, $time, $project, $stageName));
-//        }
-//        foreach ($emailsUsers as $email){
-//            Mail::to($email)->queue(new AdviceStage($user, $date, $time, $project, $stageName));
-//        }
+//        ENVIO DE CORREOS
+        foreach ($emailsAdmins as $email){
+            Mail::to($email)->queue(new AdviceStage($user, $date, $time, $project, $stageName));
+        }
+        foreach ($emailsPMOs as $email){
+            Mail::to($email)->queue(new AdviceStage($user, $date, $time, $project, $stageName));
+        }
+        foreach ($emailsUsers as $email){
+            Mail::to($email)->queue(new AdviceStage($user, $date, $time, $project, $stageName));
+        }
 
         return redirect('/etapas')->with('mensaje', "Nueva etapa agregada correctamente");
     }

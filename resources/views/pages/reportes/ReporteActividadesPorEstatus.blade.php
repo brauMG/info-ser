@@ -23,7 +23,7 @@
                             <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fase</th>
                             <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Participante</th>
                             <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">RolRASIC</th>
-                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Seguimiento</th>
+                            <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Pendiente por Hacer</th>
                         </tr>
                     </thead>
                     <tbody>

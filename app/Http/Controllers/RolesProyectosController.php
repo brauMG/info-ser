@@ -213,29 +213,29 @@ class RolesProyectosController extends Controller
             ]);
 
             //A QUIEN DIRIGIR EL CORREO
-//            $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
-//            $emailsAdmins = $emailsAdmins->pluck('email');
-//            $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
-//            $emailsPMOs = $emailsPMOs->pluck('email');
-//            $emailsUsers = DB::table('usuarios')
-//                ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
-//                ->select('usuarios.email')
-//                ->where('roles_proyectos.id_proyecto', $projectId)
-//                ->where('usuarios.envio_de_correo', 1)
-//                ->where('usuarios.id_rol', 3)
-//                ->get();
-//            $emailsUsers = $emailsUsers->pluck('email');
+            $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+            $emailsAdmins = $emailsAdmins->pluck('email');
+            $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+            $emailsPMOs = $emailsPMOs->pluck('email');
+            $emailsUsers = DB::table('usuarios')
+                ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+                ->select('usuarios.email')
+                ->where('roles_proyectos.id_proyecto', $projectId)
+                ->where('usuarios.envio_de_correo', 1)
+                ->where('usuarios.id_rol', 3)
+                ->get();
+            $emailsUsers = $emailsUsers->pluck('email');
 
             //ENVIO DE CORREOS
-//            foreach ($emailsAdmins as $email){
-//                Mail::to($email)->queue(new AdviceUserProject($pmo, $user, $project, $rol));
-//            }
-//            foreach ($emailsPMOs as $email){
-//                Mail::to($email)->queue(new AdviceUserProject($pmo, $user, $project, $rol));
-//            }
-//            foreach ($emailsUsers as $email){
-//                Mail::to($email)->queue(new AdviceUserProject($pmo, $user, $project, $rol));
-//            }
+            foreach ($emailsAdmins as $email){
+                Mail::to($email)->queue(new AdviceUserProject($pmo, $user, $project, $rol));
+            }
+            foreach ($emailsPMOs as $email){
+                Mail::to($email)->queue(new AdviceUserProject($pmo, $user, $project, $rol));
+            }
+            foreach ($emailsUsers as $email){
+                Mail::to($email)->queue(new AdviceUserProject($pmo, $user, $project, $rol));
+            }
 
             return redirect('/roles-proyectos')->with('mensaje', "Usuario agregado correctamente al proyecto");
         }

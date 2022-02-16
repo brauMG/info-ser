@@ -297,37 +297,37 @@ class ProyectosController extends Controller
             ]);
 
             // DATOS DEL CORREO
-//            $user = Auth::user()->nombres;
-//            $project = Proyecto::where('id', $id)->get();
-//            $projectId = $project[0]->id;
-//            $project = $project[0]->descripcion;
-//            $phase = Fase::where('id', $fase['fase'])->get();
-//            $phase = $phase[0]->descripcion;
+            $user = Auth::user()->nombres;
+            $project = Proyecto::where('id', $id)->get();
+            $projectId = $project[0]->id;
+            $project = $project[0]->descripcion;
+            $phase = Fase::where('id', $fase['fase'])->get();
+            $phase = $phase[0]->descripcion;
 
             //A QUIEN DIRIGIR EL CORREO
-//            $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
-//            $emailsAdmins = $emailsAdmins->pluck('email');
-//            $emailsPMOs = User::where('id_compania', Auth::user()->Clave_Compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
-//            $emailsPMOs = $emailsPMOs->pluck('email');
-//            $emailsUsers = DB::table('usuarios')
-//                ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
-//                ->select('usuarios.email')
-//                ->where('roles_proyectos.id_proyecto', $projectId)
-//                ->where('usuarios.envio_de_correo', 1)
-//                ->where('usuarios.id_rol', 3)
-//                ->get();
-//            $emailsUsers = $emailsUsers->pluck('email');
-//
+            $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+            $emailsAdmins = $emailsAdmins->pluck('email');
+            $emailsPMOs = User::where('id_compania', Auth::user()->Clave_Compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+            $emailsPMOs = $emailsPMOs->pluck('email');
+            $emailsUsers = DB::table('usuarios')
+                ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+                ->select('usuarios.email')
+                ->where('roles_proyectos.id_proyecto', $projectId)
+                ->where('usuarios.envio_de_correo', 1)
+                ->where('usuarios.id_rol', 3)
+                ->get();
+            $emailsUsers = $emailsUsers->pluck('email');
+
 //            //ENVIO DE CORREOS
-//            foreach ($emailsAdmins as $email){
-//                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
-//            }
-//            foreach ($emailsPMOs as $email){
-//                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
-//            }
-//            foreach ($emailsUsers as $email){
-//                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
-//            }
+            foreach ($emailsAdmins as $email){
+                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
+            }
+            foreach ($emailsPMOs as $email){
+                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
+            }
+            foreach ($emailsUsers as $email){
+                Mail::to($email)->queue(new ChangePhase($user, $project, $phase));
+            }
 
             return redirect('/proyectos')->with('mensaje', "La fase del proyecto fue actualizada correctamente");
         }
@@ -354,29 +354,29 @@ class ProyectosController extends Controller
         $status = $status[0]->estado;
 
         //A QUIEN DIRIGIR EL CORREO
-//        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
-//        $emailsAdmins = $emailsAdmins->pluck('email');
-//        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
-//        $emailsPMOs = $emailsPMOs->pluck('email');
-//        $emailsUsers = DB::table('usuarios')
-//            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
-//            ->select('usuarios.email')
-//            ->where('roles_proyectos.id_proyecto', $projectId)
-//            ->where('usuarios.envio_de_correo', 1)
-//            ->where('usuarios.id_rol', 3)
-//            ->get();
-//        $emailsUsers = $emailsUsers->pluck('email');
+        $emailsAdmins = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 2)->where('envio_de_correo', true)->get();
+        $emailsAdmins = $emailsAdmins->pluck('email');
+        $emailsPMOs = User::where('id_compania', Auth::user()->id_compania)->where('id_rol', 4)->where('envio_de_correo', true)->get();
+        $emailsPMOs = $emailsPMOs->pluck('email');
+        $emailsUsers = DB::table('usuarios')
+            ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
+            ->select('usuarios.email')
+            ->where('roles_proyectos.id_proyecto', $projectId)
+            ->where('usuarios.envio_de_correo', 1)
+            ->where('usuarios.id_rol', 3)
+            ->get();
+        $emailsUsers = $emailsUsers->pluck('email');
 
         //ENVIO DE CORREOS
-//        foreach ($emailsAdmins as $email){
-//            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
-//        }
-//        foreach ($emailsPMOs as $email){
-//            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
-//        }
-//        foreach ($emailsUsers as $email){
-//            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
-//        }
+        foreach ($emailsAdmins as $email){
+            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
+        }
+        foreach ($emailsPMOs as $email){
+            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
+        }
+        foreach ($emailsUsers as $email){
+            Mail::to($email)->queue(new ChangeStatus($user, $lock, $project, $status));
+        }
 
         return redirect('/proyectos')->with('mensaje', "El estado del proyecto fue actualizado correctamente");
     }

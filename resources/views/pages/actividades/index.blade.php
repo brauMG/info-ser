@@ -68,8 +68,8 @@
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fase</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Etapa</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Usuario</th>
-                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Descripción</th>
-                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Seguimiento</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">¿Qué se hizo?</th>
+                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Pendiente por Hacer</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Evidencia</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Fecha de Creación</th>
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Estado de Revisión</th>
