@@ -86,7 +86,7 @@ class EtapasController extends Controller
             $gerencias = Gerencia::where('id_gerente', Auth::user()->id)->get();
         }
 
-        if (Auth::user()->id_rol == 4) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 3) {
             $etapa = DB::table('etapas')
                 ->leftJoin('proyectos', 'etapas.id_proyecto', '=', 'proyectos.id')
                 ->leftJoin('fases', 'etapas.id_fase', '=', 'fases.id')
