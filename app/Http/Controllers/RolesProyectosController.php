@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 //use App\Mail\AdviceActivity;
 //use App\Mail\AdviceUserProject;
+use App\Mail\AdviceUserProject;
 use App\Models\Direccion;
 use App\Models\Gerencia;
 use Illuminate\Support\Facades\Mail;

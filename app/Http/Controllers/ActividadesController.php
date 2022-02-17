@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 //use App\Mail\AdviceActivity;
 //use App\Mail\AdviceActivityStatus;
 
+use App\Mail\AdviceActivity;
+use App\Mail\AdviceActivityStatus;
 use App\Models\Direccion;
 use App\Models\Gerencia;
 use Carbon\Carbon;

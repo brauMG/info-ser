@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ChangePhase;
+use App\Mail\ChangeStatus;
 use App\Models\Direccion;
 use App\Models\Gerencia;
 use App\Models\Rol;
