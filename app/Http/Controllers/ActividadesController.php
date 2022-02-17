@@ -140,14 +140,14 @@ class ActividadesController extends Controller
 
     public function sub_index($id)
     {
-        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7 || Auth::user()->id_rol == 6) {
+//        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 7 || Auth::user()->id_rol == 6 ) {
             $rol = Auth::user()->id_rol;
             $companyId = Auth::user()->id_compania;
             $datetime = Carbon::now();
             $datetime->setTimezone('GMT-7');
             $date = $datetime->toDateString();
             $time = $datetime->toTimeString();
-            if (Auth::user()->id_rol == 4) {
+            if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 3) {
                 $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
             }
             if (Auth::user()->id_rol == 7) {
@@ -162,7 +162,7 @@ class ActividadesController extends Controller
             }
 
             $compania = Companias::where('id', Auth::user()->id_compania)->first();
-            if (Auth::user()->id_rol == 4) {
+            if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 3) {
                 $actividad = DB::table('actividades')
                     ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
                     ->leftJoin('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
@@ -204,47 +204,33 @@ class ActividadesController extends Controller
                     ->where('actividades.id_proyecto', $id)
                     ->get();
             }
-            if (Auth::user()->id_rol == 3) {
-                $actividad = DB::table('actividades')
-                    ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
-                    ->leftJoin('proyectos', 'actividades.id_proyecto', '=', 'proyectos.id')
-                    ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
-                    ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
-                    ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
-                    ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
-                    ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado')
-                    ->where('actividades.id_compania', '=', $companyId)
-                    ->where('gerencias.id_gerente', Auth::user()->id)
-                    ->where('actividades.id_proyecto', $id)
-                    ->get();
-            }
 
             return view('pages.proyectos.seeActivities', ['gerencias'=>$gerencias,'actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol, 'id_proyecto' =>  $id]);
-        }
+//        }
 
-        if (Auth::user()->id_rol == 3) {
-            $rol = Auth::user()->id_rol;
-            $companyId = Auth::user()->id_compania;
-            $datetime = Carbon::now();
-            $datetime->setTimezone('GMT-7');
-            $date = $datetime->toDateString();
-            $time = $datetime->toTimeString();
-            $compania = Companias::where('id', Auth::user()->id_compania)->first();
-
-            $actividad = DB::table('actividades')
-                ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
-                ->leftJoin('roles_proyectos', 'actividades.id_proyecto', '=', 'roles_proyectos.id_proyecto')
-                ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
-                ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
-                ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
-                ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
-                ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
-                ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado')
-                ->where('actividades.id_compania', '=', $companyId)
-                ->where('roles_proyectos.id_usuario', Auth::user()->id)
-                ->get();
-            return view('pages.actividades.index', ['actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol]);
-        }
+//        if (Auth::user()->id_rol == 3) {
+//            $rol = Auth::user()->id_rol;
+//            $companyId = Auth::user()->id_compania;
+//            $datetime = Carbon::now();
+//            $datetime->setTimezone('GMT-7');
+//            $date = $datetime->toDateString();
+//            $time = $datetime->toTimeString();
+//            $compania = Companias::where('id', Auth::user()->id_compania)->first();
+//
+//            $actividad = DB::table('actividades')
+//                ->leftJoin('companias', 'actividades.id_compania', '=', 'companias.id')
+//                ->leftJoin('roles_proyectos', 'actividades.id_proyecto', '=', 'roles_proyectos.id_proyecto')
+//                ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
+//                ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
+//                ->leftJoin('usuarios', 'actividades.id_usuario', '=', 'usuarios.id')
+//                ->leftJoin('etapas', 'actividades.id_etapa', '=', 'etapas.id')
+//                ->leftJoin('fases', 'actividades.id_fase', '=', 'fases.id')
+//                ->select('gerencias.nombre as gerencia','actividades.id as id', 'companias.descripcion as compania', 'proyectos.descripcion as proyecto', 'etapas.descripcion as etapa', 'fases.descripcion as fase', 'actividades.descricion as descripcion', 'actividades.fecha_vencimiento', 'actividades.hora_vencimiento', 'actividades.fecha_revision', 'actividades.hora_revision', 'actividades.decision', 'usuarios.nombres as usuario', 'actividades.fecha_creacion', 'actividades.estado')
+//                ->where('actividades.id_compania', '=', $companyId)
+//                ->where('roles_proyectos.id_usuario', Auth::user()->id)
+//                ->get();
+//            return view('pages.actividades.index', ['actividad' => $actividad, 'compania' => $compania, 'date' => $date, 'time' => $time, 'rol' => $rol]);
+//        }
     }
 
     public function edit($id){

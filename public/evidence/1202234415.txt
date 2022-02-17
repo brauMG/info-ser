@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow:
+
+Sitemap:https://happykoala.io/sitemap_index.xml

@@ -6,6 +6,7 @@
                 <i class="material-icons">close</i>
             </button>
         </div>
+        @if($rol === 4)
         <div class="card-header card-header-primary">
             <div style="display: flex; flex-wrap: wrap">
                 <div class="col-md-8">
@@ -15,6 +16,7 @@
                 </div>
             </div>
         </div>
+        @endif
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered data-table-modal">

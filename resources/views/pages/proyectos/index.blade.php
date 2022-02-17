@@ -76,8 +76,9 @@
                                         <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Gerencia</th>
                                     @endif
                                     <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Área</th>
-                                    <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Acciones</th>
-
+                                    @if($rol == 4 || $rol == 7)
+                                        <th data-toggle="tooltip" data-placement="top" title="presiona para ordenar" style="cursor: pointer">Acciones</th>
+                                    @endif
                                     </thead>
                                     <tbody>
                                     @foreach ($proyecto as $item)
@@ -128,7 +129,7 @@
                                                     </td>
                                                 @endif
                                                 <td style="text-align: center">
-                                                    <button type="button" class="btn btn-sm btn-dark text-white" data-toggle="tooltip" data-placement="top" title="Debido al estado del proyecto, no es posible registrar actividades"><i class="material-icons">edit</i> Registrar Actividad</button>
+                                                    <button type="button" class="btn btn-sm btn-dark text-white" data-toggle="tooltip" data-placement="top" title="Debido al estado del proyecto, no es posible registrar actividades"><i class="material-icons">edit</i> Ver Actividades</button>
                                                 </td>
                                             <td style="text-align: center">
                                                 <button type="button" class="btn btn-sm btn-dark text-white" data-toggle="tooltip" data-placement="top" title="Debido al estado del proyecto, no se puede cambiar de fase" style="cursor: not-allowed"><i class="material-icons">edit</i> {{$item->fase}}</button>

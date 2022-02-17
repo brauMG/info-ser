@@ -79,7 +79,7 @@ class EtapasController extends Controller
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
         $time = $datetime->toTimeString();
-        if (Auth::user()->id_rol == 4) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 3) {
             $gerencias = Gerencia::where('id_compania', Auth::user()->id_compania)->get();
         }
         if (Auth::user()->id_rol == 7) {

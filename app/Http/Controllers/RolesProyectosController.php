@@ -76,7 +76,7 @@ class RolesProyectosController extends Controller
         $estado = DB::table('proyectos')->leftJoin('estado', 'proyectos.id_estado', '=', 'estado.id')->where('proyectos.id', $id)->select('estado.activo')->get();
         $estado = $estado[0]->activo;
         $rol = Auth::user()->id_rol;
-        if (Auth::user()->id_rol == 4) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 3) {
             $gerencias = Gerencia::all();
         }
         if (Auth::user()->id_rol == 7) {
@@ -85,7 +85,7 @@ class RolesProyectosController extends Controller
 
         $compania=Companias::where('id',Auth::user()->id_compania)->first();
 
-        if (Auth::user()->id_rol == 4) {
+        if (Auth::user()->id_rol == 4 || Auth::user()->id_rol == 3) {
             $rolPROYECTO = DB::table('roles_proyectos')
                 ->leftJoin('proyectos', 'roles_proyectos.id_proyecto', '=', 'proyectos.id')
                 ->leftJoin('gerencias', 'gerencias.id', '=', 'proyectos.id_gerencia')
