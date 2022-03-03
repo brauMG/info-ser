@@ -332,7 +332,7 @@ class ActividadesController extends Controller
         $emailsUsers = DB::table('usuarios')
             ->leftJoin('roles_proyectos', 'usuarios.id', 'roles_proyectos.id_usuario')
             ->select('usuarios.email')
-            ->where('roles_proyectos.id_proyectos', $projectId)
+            ->where('roles_proyectos.id_proyecto', $projectId)
             ->where('usuarios.envio_de_correo', 1)
             ->where('usuarios.id_rol', 3)
             ->get();
