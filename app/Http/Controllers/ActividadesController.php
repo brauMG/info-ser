@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\AdviceActivity;
 use App\Mail\AdviceActivityStatus;
+use App\Mail\WarningStage;
 use App\Models\Direccion;
 use App\Models\Gerencia;
 use Carbon\Carbon;
@@ -358,7 +359,7 @@ class ActividadesController extends Controller
         $datetime = Carbon::now();
         $datetime->setTimezone('GMT-7');
         $date = $datetime->toDateString();
-        $etapas = Etapas::where('id_proyecto', $proyectoID)->where('fecha_vencimiento', '>', $date)->get();
+        $etapas = Etapas::where('id_proyecto', $proyectoID)->where('fecha_vencimiento', '>=', $date)->get();
         $proyectoName = Proyecto::find($proyectoID);
 
         return view('pages.actividades.type',compact('proyectoID', 'compania', 'etapas', 'proyectoName'));
