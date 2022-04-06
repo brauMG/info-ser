@@ -46,9 +46,9 @@
                                                 <td class="esd-container-frame" width="560" valign="top" align="center">
                                                     <table width="100%" cellspacing="0" cellpadding="0">
                                                         <tbody>
-                                                        <tr>
-                                                            <td class="esd-block-image" align="center" style="font-size:0;"><a href="https://info-app.now/" target="_blank"><img src="https://i.imgur.com/fSh7ATr.png" alt="SER logo" title="SER logo" style="max-width: 500px !important; max-height: 150px !important;padding-bottom: 6% !important;padding-right: 6% !important;"></a></td>
-                                                        </tr>
+{{--                                                        <tr>--}}
+{{--                                                            <td class="esd-block-image" align="center" style="font-size:0;"><a href="https://info-app.now/" target="_blank"><img src="https://i.imgur.com/fSh7ATr.png" alt="SER logo" title="SER logo" style="max-width: 500px !important; max-height: 150px !important;padding-bottom: 6% !important;padding-right: 6% !important;"></a></td>--}}
+{{--                                                        </tr>--}}
                                                         </tbody>
                                                     </table>
                                                 </td>

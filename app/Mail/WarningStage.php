@@ -9,9 +9,9 @@ use Illuminate\Queue\SerializesModels;
 
 class WarningStage extends Mailable
 {
-    public $vence_;
+    public $vence;
     public $etapa;
-    public $subject = "Nueva Etapa Registrada En Proyecto De SER";
+    public $subject = "Etapa por expirar";
 
     use Queueable, SerializesModels;
 
@@ -33,7 +33,7 @@ class WarningStage extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.advice-stage')->with(
+        return $this->view('emails.warning-stage')->with(
             [
                 'vence'=>$this->vence,
                 'etapa'=>$this->etapa,

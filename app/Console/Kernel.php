@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:SendActivitiesTimeline')->dailyAt('8:00');
-        $schedule->command('command:EtapaExpiraEmail')->dailyAt('13:00');
+        $schedule->command('command:SendExpire')->dailyAt('12:00');
     }
 
     /**
