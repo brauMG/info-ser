@@ -69,12 +69,14 @@ class SendExpire extends Command
             $stage_name = $project['etapa'];
             if (isset($users)) {
                 foreach ($users as $user) {
-                    $emailsUser [$i] = [
-                        'email' => $user->email,
-                        'etapa' => $stage_name,
-                        'vence' => $project['vence']
-                    ];
-                    $i++;
+                    if(isset($user->email)) {
+                        $emailsUser [$i] = [
+                            'email' => $user->email,
+                            'etapa' => $stage_name,
+                            'vence' => $project['vence']
+                        ];
+                        $i++;
+                    }
                 }
             }
         }
