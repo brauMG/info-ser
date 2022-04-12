@@ -56,6 +56,8 @@ class SendExpire extends Command
             $i++;
         }
 
+        dd($projects);
+
         $i = 0;
         $emailsUser = [];
         foreach ($projects as $project) {
