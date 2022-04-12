@@ -95,8 +95,6 @@ class EtapaExpiraEmail extends Command
             }
         }
 
-        dd($emailsUser);
-
         foreach($emailsUser as $emailUser) {
             if(Carbon::parse($emailUser[0]['vence'])->diffInDays(Carbon::now()) == 2){
                 Mail::to($emailUser[0]['email'])->queue(new WarningStage($emailsUser[0]['etapa'], $emailsUser[0]['vence']));

@@ -93,6 +93,8 @@ class SendExpire extends Command
             }
         }
 
+        dd($emailsUser);
+
         foreach($emailsUser as $emailUser) {
             if(Carbon::parse($emailUser['vence'])->diffInDays(Carbon::now()) <= 2){
                 Mail::to($emailUser['email'])->queue(new WarningStage($emailUser['vence'], $emailUser['etapa'] ));
