@@ -93,7 +93,7 @@ class SendExpire extends Command
             }
         }
 
-        dd($emailsUser);
+        dd($emailsUser, $emailsPMO);
 
         foreach($emailsUser as $emailUser) {
             if(Carbon::parse($emailUser['vence'])->diffInDays(Carbon::now()) <= 2){
