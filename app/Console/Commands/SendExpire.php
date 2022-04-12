@@ -67,7 +67,7 @@ class SendExpire extends Command
                 ->get();
 
             $stage_name = $project['etapa'];
-            if (isset($users->email)) {
+            if (isset($users)) {
                 foreach ($users as $user) {
                     $emailsUser [$i] = [
                         'email' => $user->email,
