@@ -64,7 +64,7 @@ class SendExpire extends Command
                 ->leftJoin('usuarios', 'roles_proyectos.id_usuario', 'usuarios.id')
                 ->select('usuarios.email')
                 ->where('roles_proyectos.id_proyecto', $project['proyecto'])
-                ->first();
+                ->get();
 
             $stage_name = $project['etapa'];
             if (isset($users->email)) {
