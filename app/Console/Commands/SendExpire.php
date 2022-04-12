@@ -56,7 +56,6 @@ class SendExpire extends Command
             $i++;
         }
 
-        dd($projects);
 
         $i = 0;
         $emailsUser = [];
@@ -68,14 +67,14 @@ class SendExpire extends Command
                 ->first();
 
             $stage_name = $project['etapa'];
-            if (isset($user->email)) {
+//            if (isset($user->email)) {
                 $emailsUser [$i] = [
                     'email' => $user->email,
                     'etapa' => $stage_name,
                     'vence' => $project['vence']
                 ];
                 $i++;
-            }
+//            }
         }
 
         $i = 0;
@@ -95,7 +94,7 @@ class SendExpire extends Command
             }
         }
 
-        dd($emailsUser, $emailsPMO);
+        dd($emailsUser);
 
         foreach($emailsUser as $emailUser) {
             if(Carbon::parse($emailUser['vence'])->diffInDays(Carbon::now()) <= 2){
