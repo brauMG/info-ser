@@ -60,20 +60,22 @@ class SendExpire extends Command
         $i = 0;
         $emailsUser = [];
         foreach ($projects as $project) {
-            $user = DB::table('roles_proyectos')
+            $users = DB::table('roles_proyectos')
                 ->leftJoin('usuarios', 'roles_proyectos.id_usuario', 'usuarios.id')
                 ->select('usuarios.email')
                 ->where('roles_proyectos.id_proyecto', $project['proyecto'])
                 ->first();
 
             $stage_name = $project['etapa'];
-            if (isset($user->email)) {
-                $emailsUser [$i] = [
-                    'email' => $user->email,
-                    'etapa' => $stage_name,
-                    'vence' => $project['vence']
-                ];
-                $i++;
+            if (isset($users->email)) {
+                foreach ($users as $user) {
+                    $emailsUser [$i] = [
+                        'email' => $user->email,
+                        'etapa' => $stage_name,
+                        'vence' => $project['vence']
+                    ];
+                    $i++;
+                }
             }
         }
 
@@ -94,7 +96,7 @@ class SendExpire extends Command
             }
         }
 
-        dd($emailsUser, $emailsPMO);
+        dd($emailsUser);
 
         foreach($emailsUser as $emailUser) {
             if(Carbon::parse($emailUser['vence'])->diffInDays(Carbon::now()) <= 2){
