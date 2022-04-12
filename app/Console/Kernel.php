@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:SendActivitiesTimeline')->dailyAt('8:00');
-        $schedule->command('command:SendExpire')->dailyAt('21:15');
+        $schedule->command('command:SendExpire')->dailyAt('21:20');
     }
 
     /**
