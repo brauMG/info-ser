@@ -11,11 +11,11 @@ use App\Mail\AdviceActivityStatus;
 use App\Mail\WarningStage;
 use App\Models\Direccion;
 use App\Models\Gerencia;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade as PDF;
 
 use App\Models\Areas;
 use App\Models\Etapas;
