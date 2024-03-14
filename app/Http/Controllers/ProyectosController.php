@@ -9,7 +9,7 @@ use App\Models\Gerencia;
 use App\Models\Rol;
 use App\Models\RolProyecto;
 use Carbon\Carbon;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;

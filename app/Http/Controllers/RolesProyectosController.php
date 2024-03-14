@@ -9,7 +9,7 @@ use App\Models\Direccion;
 use App\Models\Gerencia;
 use Illuminate\Support\Facades\Mail;
 
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;

@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Actividad;
 use App\Models\RolProyecto;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Excel;
-use Barryvdh\DomPDF\Facade as PDF;
 
 use App\Models\Enfoques;
 use App\Models\Fase;
